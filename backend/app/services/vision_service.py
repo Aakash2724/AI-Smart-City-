@@ -49,10 +49,13 @@ CIVIC_DEFECT_MAP = {
 class VisionService:
     def __init__(self):
         self.yolo_model = None
-        self._load_yolo_model()
+        self._model_loaded = False
 
-    def _load_yolo_model(self):
-        """Initializes the Ultralytics YOLOv8 computer vision model."""
+    def _ensure_model(self):
+        """Lazy-loads the YOLOv8 model on first use (not at server startup)."""
+        if self._model_loaded:
+            return
+        self._model_loaded = True
         try:
             import torch
             _orig_torch_load = torch.load
@@ -73,6 +76,9 @@ class VisionService:
         Main Entry Point:
         Analyzes an image and returns detected defects with bounding boxes and confidence scores.
         """
+        # Lazy-load the model only when first needed
+        self._ensure_model()
+
         if not os.path.exists(image_path):
             return []
 

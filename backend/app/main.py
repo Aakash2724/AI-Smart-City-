@@ -57,6 +57,7 @@ def on_startup():
         print(f"[Main] Seed database notice: {e}")
 
 @app.get("/")
+@app.head("/")
 def root():
     return {
         "status": "online",

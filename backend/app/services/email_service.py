@@ -369,7 +369,7 @@ class EmailService:
 
       <!-- Direct Tracking CTA Button -->
       <div class="cta-container">
-        <a href="http://127.0.0.1:5173/?ticket={ticket_number}" class="btn-track">Track Grievance Online &rarr;</a>
+        <a href="{settings.FRONTEND_URL}/?ticket={ticket_number}" class="btn-track">Track Grievance Online &rarr;</a>
       </div>
 
     </div>

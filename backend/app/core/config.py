@@ -51,6 +51,9 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "SmartGov AI Municipal Redressal")
     SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() in ("true", "1", "yes")
 
+    # Frontend URL for email links (Track Grievance button)
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://ai-smart-city-two.vercel.app")
+
     class Config:
         case_sensitive = True
         extra = "allow"

@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  --graphite-bg: #0b0c10;
+  --graphite-canvas: #111317;
+  --graphite-card: #111317;
+  --graphite-inset: #0e1014;
+  --graphite-border: #23252d;
+  --graphite-border-subtle: #1a1c22;
+  --graphite-hover: #181a20;
+  --graphite-text-main: #f8fafc;
+  --graphite-text-muted: #88909d;
+  --graphite-teal: #2dd4bf;
+  --graphite-teal-bg: #0c2e28;
+  --graphite-teal-border: #175249;
+  --radius: 16px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: #0b0c10;
+  color: #f8fafc;
+}
+
+/* Headings & Navigation geometric typography */
+h1, h2, h3, h4, h5, h6, nav, button, label {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+/* Monospace numerals, stat figures, tags, dates, code snippets, small metadata */
+.font-mono,
+.stat-number,
+.ticket-badge,
+.step-number,
+.axis-date,
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Custom Dark Graphite Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Graphite Badge Styles */
+.badge-critical {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+.badge-high {
+  background: rgba(249, 115, 22, 0.12);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.25);
+}
+.badge-medium {
+  background: rgba(45, 212, 191, 0.12);
+  color: #2dd4bf;
+  border: 1px solid rgba(45, 212, 191, 0.25);
+}
+.badge-low {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+/* Leaflet Container Styles */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  border-radius: 16px;
+  background-color: #f1f3f4 !important;
+}
+
+.custom-leaflet-popup .leaflet-popup-content-wrapper {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+.custom-leaflet-popup .leaflet-popup-tip {
+  background: #ffffff;
+}
+
+/* Leaflet Dark-Themed Zoom Control */
+.leaflet-bar {
+  border: 1px solid #23252d !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+}
+
+.leaflet-bar a {
+  background-color: #111317 !important;
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #23252d !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  transition: all 0.15s ease;
+}
+
+.leaflet-bar a:hover {
+  background-color: #1c1e25 !important;
+  color: #2dd4bf !important;
+}
+
+.leaflet-bottom.leaflet-right {
+  margin-bottom: 12px !important;
+  margin-right: 12px !important;
+}

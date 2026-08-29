@@ -1,0 +1,169 @@
+import React, { useState } from 'react';
+import Sidebar from './components/common/Sidebar';
+import Header from './components/common/Header';
+import SmartCityDashboard from './components/admin/SmartCityDashboard';
+import ComplaintForm from './components/citizen/ComplaintForm';
+import GISHotspotMap from './components/admin/GISHotspotMap';
+import TrackHistory from './components/citizen/TrackHistory';
+import ProfileSettingsPage from './components/citizen/ProfileSettingsPage';
+import AICopilotPage from './components/admin/AICopilotPage';
+import RiskForecastPanel from './components/admin/RiskForecastPanel';
+import AuthPage from './components/auth/AuthPage';
+
+import LoginModal from './components/auth/LoginModal';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+function MainApp() {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('citizen');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [latestComplaint, setLatestComplaint] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [dashboardKey, setDashboardKey] = useState(0);
+
+  // If no authenticated user session exists, present the Login & Registration screen first
+  if (!user) {
+    return <AuthPage />;
+  }
+
+  React.useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ticketParam = params.get('ticket');
+      const tabParam = params.get('tab');
+      if (ticketParam) {
+        setActiveTab('agents');
+        setLatestComplaint({ ticket_number: ticketParam, id: ticketParam });
+      } else if (tabParam) {
+        setActiveTab(tabParam);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const handleComplaintSubmitted = (complaint) => {
+    setLatestComplaint(complaint);
+  };
+
+  const handleNavigateToHistory = (complaintOrTicket) => {
+    if (complaintOrTicket && typeof complaintOrTicket === 'object') {
+      setLatestComplaint(complaintOrTicket);
+    }
+    setActiveTab('agents');
+  };
+
+  const handleRefreshAll = async () => {
+    setDashboardKey(prev => prev + 1);
+  };
+
+  return (
+    <div className="h-screen w-screen flex flex-col bg-[#0b0c10] text-slate-100 font-sans overflow-hidden">
+      
+      {/* 1. Full-Width Edge-to-Edge Header */}
+      <div className="w-full flex-shrink-0 z-20">
+        <Header 
+          selectedCity={selectedCity} 
+          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          onRefreshAll={handleRefreshAll}
+          onNavigateToHistory={handleNavigateToHistory}
+          onNavigateToSettings={() => setActiveTab('settings')}
+        />
+      </div>
+
+      {/* 2. Main Body Container (Sidebar + Content) */}
+      <div className="flex-1 flex min-h-0 w-full overflow-hidden">
+        
+        {/* Responsive Left Sidebar */}
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          isOpen={isSidebarOpen}
+        />
+
+        {/* Dynamic Full Screen Main Content Area */}
+        <main className="flex-1 min-w-0 bg-[#0b0c10] overflow-y-auto p-4 sm:p-6 lg:p-7">
+          <div className="max-w-[1600px] mx-auto w-full space-y-6">
+            
+            {/* 1. Overview Dashboard */}
+            {activeTab === 'dashboard' && (
+              <div key={dashboardKey} className="animate-in fade-in duration-150">
+                <SmartCityDashboard onNavigateTab={(t) => setActiveTab(t)} />
+              </div>
+            )}
+
+            {/* 2. Citizen Services */}
+            {activeTab === 'citizen' && (
+              <div className="animate-in fade-in duration-150">
+                <ComplaintForm 
+                  onSubmitted={handleComplaintSubmitted}
+                  onNavigateToHistory={handleNavigateToHistory}
+                />
+              </div>
+            )}
+
+            {/* 3. GIS & Risk Radar */}
+            {activeTab === 'gis' && (
+              <div className="animate-in fade-in duration-150 space-y-3">
+                <div className="bg-[#111317] p-4 sm:p-5 rounded-2xl border border-[#23252d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 flex-shrink-0">
+                  <div>
+                    <h2 className="text-base font-bold text-white">GIS & Risk Radar</h2>
+                    <p className="text-xs text-slate-400 mt-0.5">Interactive map with real-time complaints and 7-day predictive risk forecast for high-risk areas.</p>
+                  </div>
+                  <span className="px-3 py-1 bg-[#0c2e28] text-[#2dd4bf] text-xs font-semibold rounded-full border border-[#175249] self-start sm:self-auto">
+                    Live Map + Forecast
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+                  {/* Left: Map (Equal 50% width) */}
+                  <div className="h-[calc(100vh-220px)] min-h-[480px] rounded-2xl overflow-hidden border border-[#23252d] relative shadow-lg">
+                    <GISHotspotMap />
+                  </div>
+                  {/* Right: 7-Day Risk Forecast Panel (Equal 50% width) */}
+                  <div className="h-[calc(100vh-220px)] min-h-[480px]">
+                    <RiskForecastPanel />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 7. Track & History */}
+            {activeTab === 'agents' && (
+              <div className="animate-in fade-in duration-150">
+                <TrackHistory latestComplaint={latestComplaint} />
+              </div>
+            )}
+
+            {/* 8. Dedicated Profile & Ward Settings Page */}
+            {activeTab === 'settings' && (
+              <div className="animate-in fade-in duration-150">
+                <ProfileSettingsPage onNavigateTab={(t) => setActiveTab(t)} />
+              </div>
+            )}
+
+            {/* 9. Dedicated AI Copilot Page */}
+            {activeTab === 'copilot' && (
+              <div className="animate-in fade-in duration-150">
+                <AICopilotPage />
+              </div>
+            )}
+
+          </div>
+        </main>
+
+      </div>
+
+      {/* Login / Auth Modal */}
+      <LoginModal />
+
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}

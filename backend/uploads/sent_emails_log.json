@@ -1,0 +1,641 @@
+[
+  {
+    "timestamp": "2026-08-20T10:04:29.341118",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260820-79EE",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260820-79EE",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-20T10:15:46.806882",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260820-27B9",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260820-27B9",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:01:33.908827",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-DF75",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-DF75",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:02:37.986214",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-6CD9",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-6CD9",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:04:13.358798",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-FD7B",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-FD7B",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:15:01.378865",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-134E",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-134E",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:16:21.519123",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-15D5",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-15D5",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:17:31.674531",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-8ED4",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-8ED4",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:19:06.326884",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-E85F",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-E85F",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:26.139488",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-C399",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-C399",
+    "municipality_head": "Eng. Vikramaditya Rao",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:26.181132",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-737F",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-737F",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:26.212790",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-C2E3",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-C2E3",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:26.247734",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-FF34",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-FF34",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:26.286224",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-506A",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-506A",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:54.402042",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-B809",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-B809",
+    "municipality_head": "Eng. Vikramaditya Rao",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:54.450074",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-1A6A",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-1A6A",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:54.488924",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-D39D",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-D39D",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:54.529683",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-D7DD",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-D7DD",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:23:54.559833",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-F7B4",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-F7B4",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:24:34.923090",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-F30E",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-F30E",
+    "municipality_head": "Eng. Vikramaditya Rao",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:26:47.201231",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-0B53",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-0B53",
+    "municipality_head": "Mr. Arvind Swamy",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T06:51:02.070388",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-6956",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-6956",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T07:54:33.925954",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-43B6",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-43B6",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T07:55:22.341044",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-C76E",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-C76E",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T07:58:58.853147",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-82DF",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-82DF",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T08:09:31.360299",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260825-0ACD",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-0ACD",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T09:11:40.618452",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260825-36AF",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-36AF",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T09:12:45.771445",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260825-1B4A",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-1B4A",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T09:13:10.771786",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260825-056F",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-056F",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T09:13:44.327609",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260825-DDEE",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-DDEE",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-25T09:21:14.387821",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260825-C1FC",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260825-C1FC",
+    "municipality_head": "Eng. Vikramaditya Rao",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-26T12:45:04.301832",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260826-6BEB",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260826-6BEB",
+    "municipality_head": "Eng. Vikramaditya Rao",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-27T13:51:36.127793",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260827-65D1",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260827-65D1",
+    "municipality_head": "Mrs. Ananya Deshmukh",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-27T13:58:04.342012",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260827-A711",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260827-A711",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-27T13:59:40.249880",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260827-227B",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260827-227B",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-27T14:01:08.427676",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-0D55",
+    "subject": "\ud83c\udfdb\ufe0f SmartGov Complaint Confirmation & Directive - #CMP-20260827-0D55",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "DELIVERED"
+  },
+  {
+    "timestamp": "2026-08-27T14:07:10.973066",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-3116",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-3116 - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "LOGGED_LOCAL_NO_SMTP_CREDS"
+  },
+  {
+    "timestamp": "2026-08-27T14:14:49.132307",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-8122",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-8122 - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "LOGGED_LOCAL_NO_EMAIL_CREDS"
+  },
+  {
+    "timestamp": "2026-08-27T14:16:25.954019",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-LIVE",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-LIVE - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "LOGGED_LOCAL_NO_EMAIL_CREDS"
+  },
+  {
+    "timestamp": "2026-08-27T14:16:43.780889",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260827-LIVE",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-LIVE - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_RESEND_API"
+  },
+  {
+    "timestamp": "2026-08-27T14:18:17.315841",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-BCF0",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-BCF0 - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "LOGGED_LOCAL_NO_EMAIL_CREDS"
+  },
+  {
+    "timestamp": "2026-08-27T15:22:17.132821",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-TEST",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-TEST - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "LOGGED_LOCAL"
+  },
+  {
+    "timestamp": "2026-08-27T15:23:35.579029",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-30DC",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-30DC - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Sunita Narayan",
+    "status": "LOGGED_LOCAL_NO_EMAIL_CREDS"
+  },
+  {
+    "timestamp": "2026-08-27T15:25:11.570794",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-LIVE-TEST",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-LIVE-TEST - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "LOGGED_LOCAL"
+  },
+  {
+    "timestamp": "2026-08-27T15:29:47.957676",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-SUCCESS",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-SUCCESS - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T15:30:53.673128",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260827-0CD2",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-0CD2 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T16:51:04.471187",
+    "to_email": "testingmaild100@gmail",
+    "ticket_number": "CMP-20260827-CC49",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-CC49 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T16:53:45.862408",
+    "to_email": "testingmail100d@gmail",
+    "ticket_number": "CMP-20260827-3365",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-3365 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T16:55:58.254343",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "TEST-1234",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #TEST-1234 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Prabhas",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T16:58:24.673120",
+    "to_email": "testingmail100d@gmail.com",
+    "ticket_number": "CMP-TEST-555",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-TEST-555 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-27T16:59:07.080695",
+    "to_email": "testingmail100d@gmail",
+    "ticket_number": "CMP-20260827-CAA0",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260827-CAA0 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-28T07:11:43.812115",
+    "to_email": "citizen@smartcity.gov",
+    "ticket_number": "CMP-20260828-1FD1",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260828-1FD1 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-28T07:23:12.300940",
+    "to_email": "testingmail100d@gmail.com",
+    "ticket_number": "CMP-20260828-2216",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260828-2216 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-28T10:08:40.750768",
+    "to_email": "admin@ghmc.gov.in",
+    "ticket_number": "CMP-20260828-3B17",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260828-3B17 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-28T16:38:15.064240",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260828-A634",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260828-A634 - Water & Sewage",
+    "category": "Water & Sewage",
+    "municipality_head": "Mr. Ram Charan Tej Konidela",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-28T16:54:48.306748",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260828-91CB",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260828-91CB - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T01:51:37.151595",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-A207",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-A207 - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Allu Arjun",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T01:54:58.248242",
+    "to_email": "testingmail100d@gmail.com",
+    "ticket_number": "CMP-20260829-591E",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-591E - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T01:57:36.313674",
+    "to_email": "testingmail100@gmail.com",
+    "ticket_number": "CMP-20260829-18AF",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-18AF - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T11:01:36.751439",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-06E4",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-06E4 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T11:04:44.429208",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-3B5D",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-3B5D - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T11:07:11.179793",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-47EE",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-47EE - Electrical & Power",
+    "category": "Electrical & Power",
+    "municipality_head": "Dr. Allu Arjun",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T11:13:01.185869",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-05BB",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-05BB - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T17:24:01.208982",
+    "to_email": "aakash.varma@gmail.com",
+    "ticket_number": "CMP-2026-TEST1",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-2026-TEST1 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T17:24:05.655172",
+    "to_email": "priya.sharma@gmail.com",
+    "ticket_number": "CMP-2026-TEST2",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-2026-TEST2 - Water Supply",
+    "category": "Water Supply",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T18:10:35.614262",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-5DE5",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-5DE5 - Sanitation & Waste",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Mr. Nandamuri Taraka Rama Rao Jr",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T18:21:42.928254",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260829-C048",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260829-C048 - Water & Sewage",
+    "category": "Water & Sewage",
+    "municipality_head": "Mr. Ram Charan Tej Konidela",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:00:38.691214",
+    "to_email": "akash@smartcity.gov",
+    "ticket_number": "415",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #415 - Water Supply",
+    "category": "Water Supply",
+    "municipality_head": "Er. K. V. Ramanathan",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:05:12.012985",
+    "to_email": "akash@smartcity.gov",
+    "ticket_number": "CMP-TEST-SMTP",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-TEST-SMTP - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:06:52.758632",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260830-2FF2",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260830-2FF2 - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:09:41.376031",
+    "to_email": "akash@smartcity.gov",
+    "ticket_number": "CMP-TEST-SMTP",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-TEST-SMTP - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:13:25.533231",
+    "to_email": "akash@smartcity.gov",
+    "ticket_number": "CMP-TEST-SMTP",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-TEST-SMTP - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:36:28.068025",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260830-3BFD",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260830-3BFD - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:38:35.450235",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260830-B24B",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260830-B24B - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-29T20:41:14.980615",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260830-A71A",
+    "subject": "\ud83c\udfdb\ufe0f [SmartGov Confirmation] Civic Grievance #CMP-20260830-A71A - Roads & Infrastructure",
+    "category": "Roads & Infrastructure",
+    "municipality_head": "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju",
+    "status": "SENT_SMTP"
+  }
+]

@@ -1,0 +1,53 @@
+# ==============================================================================
+# AI Smart City - Docker Compose (Oracle Cloud / Self-Hosted)
+# ==============================================================================
+# Usage:
+#   docker compose up -d --build     # Build & start everything
+#   docker compose logs -f           # Watch live logs
+#   docker compose down              # Stop everything
+# ==============================================================================
+
+services:
+  # ── Backend: FastAPI + AI/ML Pipeline ──────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartcity-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads_data:/app/uploads
+      - db_data:/app/data
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite:///./data/smart_city.db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+  # ── Frontend: React + Vite served by Nginx ────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # When using Nginx proxy, frontend calls same-origin /api/ paths
+        # Nginx proxies them to http://backend:8000
+        VITE_API_URL: "/"
+    container_name: smartcity-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  uploads_data:
+  db_data:

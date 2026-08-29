@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+.env.example
+uploads/
+smart_city.db
+*.db
+node_modules/
+.venv/
+venv/

@@ -9,12 +9,13 @@ import {
   ArrowRight, 
   X, 
   Copy, 
-  Check,
+  Check, 
   Tag, 
   Building2, 
   Scan, 
-  FileText
+  FileText 
 } from 'lucide-react';
+import { SERVER_ORIGIN } from '../../services/api';
 
 const CLASS_TITLES = {
   water_leakage: 'Water Main Leakage & Drainage Overflow',
@@ -40,7 +41,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   const head = complaint.municipality_head;
   const hours = complaint.estimated_resolution_hours || 12;
-  const imageUrl = complaint.image_url ? `http://127.0.0.1:8000${complaint.image_url}` : uploadedImagePreview;
+  const imageUrl = complaint.image_url ? (complaint.image_url.startsWith('http') ? complaint.image_url : `${SERVER_ORIGIN}${complaint.image_url}`) : uploadedImagePreview;
 
   // Extract vision detections if available
   const visionDets = complaint.vision_detections || [];

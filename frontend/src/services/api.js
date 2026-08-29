@@ -4,9 +4,11 @@ const rawBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 export const SERVER_ORIGIN = rawBase.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
 export const API_BASE_URL = `${SERVER_ORIGIN}/api/v1`;
 
+console.log('[SmartGov API] Active API URL:', API_BASE_URL);
+
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 45000,
+  timeout: 120000,
 });
 
 export const submitComplaint = async (formData) => {

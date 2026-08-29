@@ -32,13 +32,14 @@ app = FastAPI(
     description="End-to-End Intelligent Decision & Predictive Analytics Platform for Smart Cities."
 )
 
-# Configure CORS
+# Configure CORS - Allow all origins for public API access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Serve uploaded media files

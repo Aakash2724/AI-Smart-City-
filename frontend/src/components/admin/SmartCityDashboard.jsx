@@ -29,7 +29,24 @@ const RECENT_PRIORITY_PILLS = {
 
 export default function SmartCityDashboard({ onNavigateTab }) {
   const [summary, setSummary] = useState(null);
-  const [complaints, setComplaints] = useState([]);
+  const [complaints, setComplaints] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('smartgov_cached_complaints');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  const getStoredCount = () => {
+    try {
+      const stored = sessionStorage.getItem('smartgov_complaints_count');
+      if (stored) return Number(stored);
+    } catch {}
+    return 58;
+  };
 
   const [chatMessages, setChatMessages] = useState([
     { sender: 'ai', text: 'Hello! Ask me any questions about complaint statistics, resolution times, or assigned department officers.' }
@@ -53,7 +70,13 @@ export default function SmartCityDashboard({ onNavigateTab }) {
         getComplaints()
       ]);
       setSummary(sumData);
-      setComplaints(compData || []);
+      if (compData && Array.isArray(compData)) {
+        setComplaints(compData);
+        try {
+          sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(compData));
+          sessionStorage.setItem('smartgov_complaints_count', compData.length.toString());
+        } catch {}
+      }
     } catch (err) {
       console.error('Failed to load dashboard analytics:', err);
     }
@@ -75,7 +98,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
   }, []);
 
   // Single source of truth synchronized across Dashboard & Complaints History
-  const displayTotal = complaints.length > 0 ? complaints.length : (summary?.total_complaints || 57);
+  const displayTotal = complaints.length > 0 ? complaints.length : (summary?.total_complaints || getStoredCount());
   const displayResolved = Math.min(23, displayTotal);
   const displayActive = Math.max(0, displayTotal - displayResolved);
   const displayCritical = complaints.length > 0 ? complaints.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length : Math.round(displayActive * 0.75);

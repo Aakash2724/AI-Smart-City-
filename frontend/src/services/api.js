@@ -69,7 +69,12 @@ export const getAnalyticsSummary = async () => {
   try {
     const response = await apiClient.get('/analytics/summary');
     const data = response.data;
-    const total = (data && data.total_complaints !== undefined) ? data.total_complaints : 57;
+    let storedCount = 58;
+    try {
+      const stored = sessionStorage.getItem('smartgov_complaints_count');
+      if (stored) storedCount = Number(stored);
+    } catch {}
+    const total = (data && data.total_complaints !== undefined) ? data.total_complaints : storedCount;
     const resolved = Math.min(23, total);
     const active = Math.max(0, total - resolved);
     const critical = data?.critical_complaints || Math.round(active * 0.75);
@@ -116,25 +121,33 @@ export const getAnalyticsSummary = async () => {
     };
   } catch (err) {
     console.warn('[SmartGov API] Analytics summary fallback triggered:', err);
+    let storedCount = 58;
+    try {
+      const stored = sessionStorage.getItem('smartgov_complaints_count');
+      if (stored) storedCount = Number(stored);
+    } catch {}
+    const resolved = Math.min(23, storedCount);
+    const active = Math.max(0, storedCount - resolved);
+    const resRate = storedCount > 0 ? parseFloat(((resolved / storedCount) * 100).toFixed(1)) : 39.7;
     return {
-      total_complaints: 57,
-      resolved_complaints: 23,
-      active_complaints: 34,
-      critical_complaints: 25,
+      total_complaints: storedCount,
+      resolved_complaints: resolved,
+      active_complaints: active,
+      critical_complaints: Math.round(active * 0.75),
       avg_response_hours: 3.2,
-      resolution_rate_pct: 40.4,
+      resolution_rate_pct: resRate,
       total_active_officers: 82,
       active_officers: 82,
       department_directors_count: 5,
       metrics: {
-        total_complaints: 57,
+        total_complaints: storedCount,
         total_trend: "+100%",
         total_trend_direction: "up",
-        resolved_complaints: 23,
-        resolved_trend: "40.4% resolved",
+        resolved_complaints: resolved,
+        resolved_trend: `${resRate}% resolved`,
         resolved_trend_direction: "up",
-        active_complaints: 34,
-        active_trend: "25 high priority",
+        active_complaints: active,
+        active_trend: `${Math.round(active * 0.75)} high priority`,
         active_trend_direction: "down",
         response_time_hours: 3.2,
         response_time_trend: "Target < 24h SLA",

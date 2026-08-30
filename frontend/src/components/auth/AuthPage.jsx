@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { API_BASE_URL } from '../../services/api';
 import {
   AlertCircle,
   UserPlus,
@@ -226,7 +227,7 @@ export default function AuthPage() {
 
     // Register or login silently in backend database
     try {
-      await fetch(`http://localhost:8000/api/v1/auth/login`, {
+      await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -322,7 +323,7 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/auth/login`, {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -399,7 +400,7 @@ export default function AuthPage() {
     const extractedWard = ward.split(' - ')[0] || ward;
 
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/auth/register`, {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

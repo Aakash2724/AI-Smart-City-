@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { API_BASE_URL } from '../../services/api';
 import { LogIn, UserPlus, X, Mail, Lock, MapPin, User as UserIcon } from 'lucide-react';
 
 function GoogleIcon({ className = "w-4 h-4" }) {
@@ -172,7 +173,7 @@ export default function LoginModal() {
         ? { name: name.trim(), email: cleanEmail, password: password, location: location.trim(), ward: location.split(' - ')[0] || location }
         : { email: cleanEmail, password: password };
 
-      const res = await fetch(`http://localhost:8000${endpoint}`, {
+      const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

@@ -153,7 +153,7 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
       setImagePreview(null);
     } catch (err) {
       console.error('Complaint submission error:', err);
-      const detail = err.response?.data?.detail || (err.code === 'ERR_NETWORK' ? 'Cannot connect to backend server at http://localhost:8000. Please ensure the backend is running.' : err.message);
+      const detail = err.response?.data?.detail || (err.code === 'ERR_NETWORK' ? 'Cannot connect to backend server. Please ensure the backend is running.' : err.message);
       alert(`Error submitting complaint: ${detail}`);
     } finally {
       setLoading(false);

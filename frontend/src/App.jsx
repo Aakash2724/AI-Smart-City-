@@ -21,12 +21,9 @@ function MainApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardKey, setDashboardKey] = useState(0);
 
-  // If no authenticated user session exists, present the Login & Registration screen first
-  if (!user) {
-    return <AuthPage />;
-  }
-
+  // This useEffect MUST be before any early return to respect React's rules of hooks
   React.useEffect(() => {
+    if (!user) return;
     try {
       const params = new URLSearchParams(window.location.search);
       const ticketParam = params.get('ticket');
@@ -40,7 +37,12 @@ function MainApp() {
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [user]);
+
+  // If no authenticated user session exists, present the Login & Registration screen first
+  if (!user) {
+    return <AuthPage />;
+  }
 
   const handleComplaintSubmitted = (complaint) => {
     setLatestComplaint(complaint);
@@ -159,6 +161,7 @@ function MainApp() {
     </div>
   );
 }
+
 
 export default function App() {
   return (

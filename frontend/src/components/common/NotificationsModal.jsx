@@ -248,7 +248,17 @@ export default function NotificationsModal({ isOpen, onClose, onNavigateToTicket
                     <span className="truncate">{officer}</span>
                   </span>
                   <button 
-                    onClick={() => { onClose(); if (onNavigateToTicket) onNavigateToTicket(c.ticket_number); }} 
+                    onClick={() => {
+                      // Mark this notification as read
+                      const updatedReadIds = [...readIds, c.id, c.ticket_number].filter(Boolean);
+                      const uniqueReadIds = [...new Set(updatedReadIds)];
+                      setReadIds(uniqueReadIds);
+                      localStorage.setItem(storageKey, JSON.stringify(uniqueReadIds));
+                      // Dispatch event so Header badge count updates
+                      window.dispatchEvent(new Event('smartgov_notifications_read'));
+                      onClose();
+                      if (onNavigateToTicket) onNavigateToTicket(c.ticket_number);
+                    }} 
                     className="text-[#2dd4bf] hover:underline font-bold flex items-center gap-1 text-[11px] cursor-pointer"
                   >
                     <span>View Details</span> <ArrowRight className="h-3 w-3" />

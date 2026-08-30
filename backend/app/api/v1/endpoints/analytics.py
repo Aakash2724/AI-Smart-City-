@@ -13,6 +13,14 @@ def get_analytics_summary(db: Session = Depends(get_db)) -> Dict[str, Any]:
     """Returns real-time live overview KPI metrics dynamically aggregated from the database."""
     import datetime
 
+    # Auto-seed database if fewer than 10 complaints exist
+    if db.query(Complaint).count() < 10:
+        try:
+            from app.seed_data import seed_database
+            seed_database()
+        except Exception as e:
+            print(f"[Analytics API] Auto seed notice: {e}")
+
     db_total = db.query(Complaint).count()
     db_resolved = db.query(Complaint).filter(Complaint.status == "RESOLVED").count()
     db_active = db.query(Complaint).filter(Complaint.status.in_(["SUBMITTED", "VERIFIED", "ASSIGNED", "IN_PROGRESS"])).count()

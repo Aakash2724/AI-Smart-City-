@@ -272,6 +272,14 @@ async def create_complaint(
 @router.get("", response_model=List[ComplaintResponseSchema])
 def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session = Depends(get_db)):
     """Lists complaints with optional email filter, vision detections, agent reasoning logs, and assigned department."""
+    # Auto-seed database if fewer than 10 complaints exist
+    if not email and db.query(Complaint).count() < 10:
+        try:
+            from app.seed_data import seed_database
+            seed_database()
+        except Exception as e:
+            print(f"[Complaints API] Auto seed notice: {e}")
+
     query = db.query(Complaint)
     if email:
         query = query.filter(Complaint.registered_email.ilike(email.strip()))
@@ -349,6 +357,14 @@ def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session =
         )
         results.append(res)
     return results
+
+@router.post("/seed-sample-data", tags=["Complaints"])
+def seed_sample_complaints(db: Session = Depends(get_db)):
+    """Triggers database seeding with comprehensive Indian complaints and resolved cases."""
+    from app.seed_data import seed_database
+    seed_database()
+    total = db.query(Complaint).count()
+    return {"status": "success", "message": f"Database seeded with {total} complaints."}
 
 @router.get("/{complaint_id}", response_model=ComplaintResponseSchema)
 def get_complaint(complaint_id: str, db: Session = Depends(get_db)):

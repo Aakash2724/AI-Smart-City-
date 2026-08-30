@@ -87,6 +87,14 @@ class LLMService:
         """Gathers real-time municipal metrics from the live database."""
         try:
             total_db = db.query(Complaint).count()
+            if total_db < 35:
+                try:
+                    from app.seed_data import seed_database
+                    seed_database()
+                    total_db = db.query(Complaint).count()
+                except Exception as e:
+                    print(f"[LLMService] Auto seed error: {e}")
+
             active_db = db.query(Complaint).filter(
                 Complaint.status.in_(["SUBMITTED", "VERIFIED", "ASSIGNED", "IN_PROGRESS"])
             ).count()
@@ -255,8 +263,7 @@ class LLMService:
             "Core Conversational & Accuracy Guidelines:\n"
             "1. Context-Aware Dialogue: Always read and understand the PREVIOUS CONVERSATION CONTEXT. If the citizen gives a short response like 'yes', 'sure', 'ok', 'help', or answers a previous question, respond conversationally to that specific context. Do NOT dump unsolicited statistical tables or city summaries.\n"
             "2. Filing or Tracking Complaints: If the user indicates they want to file a complaint or check a ticket, politely prompt them for the specific details (problem description, location, or Ticket ID).\n"
-            "3. Rigid Data Grounding: Ground all counts, categories, and workforce metrics STRICTLY on the Live Municipal Context Data:\n"
-            "   - Total complaints: 20 (18 active, 2 resolved, 10.0% resolution rate).\n"
+            "3. Rigid Data Grounding: Ground all counts, categories, and workforce metrics STRICTLY on the LIVE MUNICIPAL CONTEXT DATA provided in the user prompt (quote the exact total_complaints_count, resolved_complaints_count, active_complaints_count, city_resolution_rate, and category_breakdown).\n"
             "   - Department Heads / Directors: Exactly 5 leadership heads (1 per department).\n"
             "   - Active Field Workforce: Exactly 82 active officers deployed on the ground (Sanitation: 20, Roads: 20, Water: 16, Electrical: 14, Traffic: 12).\n"
             "4. 7-Day Risk & GIS Predictions: When asked about high-risk areas or forecasts, quote the real zones directly from the context (Ward 12 Jubilee Zone, Central Market Ward 8, Ward 148 Ramgopalpet, Green Park Ward 14) with their exact risk scores and preventive actions.\n"

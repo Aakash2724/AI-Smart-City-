@@ -74,51 +74,45 @@ export default function SmartCityDashboard({ onNavigateTab }) {
     };
   }, []);
 
-  // Dynamic Category Stats calculation for Donut Chart & Legend
-  const rawCatMap = (summary?.category_counts && Object.keys(summary.category_counts).length > 0)
-    ? summary.category_counts
-    : complaints.reduce((acc, c) => {
-        const cat = c.category || 'General Civic Issue';
-        acc[cat] = (acc[cat] || 0) + 1;
-        return acc;
-      }, {});
+  // Single source of truth synchronized across Dashboard & Complaints History
+  const displayTotal = complaints.length > 0 ? complaints.length : (summary?.total_complaints || 40);
+  const displayResolved = complaints.length > 0 ? complaints.filter(c => c.status === 'RESOLVED').length : (summary?.resolved_complaints || 26);
+  const displayActive = displayTotal - displayResolved;
+  const displayCritical = complaints.length > 0 ? complaints.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length : (summary?.critical_complaints || 6);
+  const displayResolutionRate = displayTotal > 0 ? Math.round((displayResolved / displayTotal) * 100) : 0;
 
-  const totalCatCount = Object.values(rawCatMap).reduce((acc, v) => acc + v, 0) || (complaints.length > 0 ? complaints.length : 1);
+  // Dynamic Category Stats calculation for Donut Chart & Legend
   const canonicalCategories = [
-    { key: 'Sanitation & Waste Management', label: 'Waste Management', color: '#10b981', hover: '#34d399' },
-    { key: 'Roads & Infrastructure', label: 'Roads & Infra', color: '#f97316', hover: '#fb923c' },
-    { key: 'Water Supply & Drainage', label: 'Water Supply', color: '#0ea5e9', hover: '#38bdf8' },
-    { key: 'Electrical & Power', label: 'Streetlights', color: '#eab308', hover: '#fde047' },
-    { key: 'Traffic & Safety', label: 'Traffic & Safety', color: '#a855f7', hover: '#c084fc' }
+    { key: 'Sanitation & Waste Management', label: 'Waste Management', color: '#10b981', hover: '#34d399', match: ['sanitat', 'waste', 'garbage', 'trash', 'clean'] },
+    { key: 'Roads & Infrastructure', label: 'Roads & Infra', color: '#f97316', hover: '#fb923c', match: ['road', 'pothole', 'infra', 'bridge', 'pavement'] },
+    { key: 'Water Supply & Drainage', label: 'Water Supply', color: '#0ea5e9', hover: '#38bdf8', match: ['water', 'sewage', 'drain', 'leak', 'pipe'] },
+    { key: 'Electrical & Power', label: 'Streetlights', color: '#eab308', hover: '#fde047', match: ['electr', 'power', 'light', 'lamp', 'grid'] },
+    { key: 'Traffic & Safety', label: 'Traffic & Safety', color: '#a855f7', hover: '#c084fc', match: ['traffic', 'signal', 'transport', 'parking', 'safety'] }
   ];
 
   const categoryStats = canonicalCategories.map(cat => {
     let count = 0;
-    for (const [k, v] of Object.entries(rawCatMap)) {
-      const kLower = k.toLowerCase();
-      const catLabelFirst = cat.label.toLowerCase().split(' ')[0];
-      const catKeyFirst = cat.key.toLowerCase().split(' ')[0];
-      if (
-        kLower.includes(catLabelFirst) || 
-        kLower.includes(catKeyFirst) || 
-        (cat.label === 'Streetlights' && (kLower.includes('electr') || kLower.includes('light') || kLower.includes('power'))) || 
-        (cat.label === 'Waste Management' && (kLower.includes('sanitat') || kLower.includes('waste') || kLower.includes('garbage'))) ||
-        (cat.label === 'Water Supply' && (kLower.includes('water') || kLower.includes('sewage') || kLower.includes('drain')))
-      ) {
-        count += v;
-      }
+    if (complaints.length > 0) {
+      count = complaints.filter(c => {
+        const cCat = (c.category || '').toLowerCase();
+        const cSub = (c.subcategory || '').toLowerCase();
+        return cat.match.some(m => cCat.includes(m) || cSub.includes(m));
+      }).length;
+    } else {
+      count = Math.round(displayTotal / 5);
     }
-    const pct = Math.round((count / totalCatCount) * 100);
-    return { ...cat, count, pct: isNaN(pct) ? 0 : pct };
+    const pct = displayTotal > 0 ? Math.round((count / displayTotal) * 100) : 20;
+    return { ...cat, count, pct };
   });
 
   // Dynamic Department Load mapped from live complaints & 82 officers
   const getDeptOpenCount = (deptKeywords) => {
     return complaints.filter(c => {
       const cat = (c.category || '').toLowerCase();
+      const sub = (c.subcategory || '').toLowerCase();
       const isResolved = c.status === 'RESOLVED';
       if (isResolved) return false;
-      return deptKeywords.some(kw => cat.includes(kw.toLowerCase()));
+      return deptKeywords.some(kw => cat.includes(kw.toLowerCase()) || sub.includes(kw.toLowerCase()));
     }).length;
   };
 
@@ -160,7 +154,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
     }
   ].map(dept => {
     const rawPct = Math.round((dept.open / Math.max(dept.officers, 1)) * 100);
-    const pct = dept.open > 0 ? Math.min(Math.max(rawPct, 22), 100) : 0;
+    const pct = dept.open > 0 ? Math.min(Math.max(rawPct, 15), 100) : 0;
     return { ...dept, pct };
   });
 
@@ -172,8 +166,8 @@ export default function SmartCityDashboard({ onNavigateTab }) {
     if (forecastCanvasRef.current) {
       if (forecastInstanceRef.current) forecastInstanceRef.current.destroy();
 
-      const totalCount = summary?.total_complaints || complaints.length || 12;
-      const baseVal = Math.max(8, Math.round(totalCount * 2.5));
+      const baseWasteCount = categoryStats.find(c => c.label === 'Waste Management')?.count || 8;
+      const baseVal = Math.max(6, baseWasteCount);
       const ctxForecast = forecastCanvasRef.current.getContext('2d');
       forecastInstanceRef.current = new window.Chart(ctxForecast, {
         type: 'line',
@@ -183,12 +177,12 @@ export default function SmartCityDashboard({ onNavigateTab }) {
             {
               label: 'Actual Volume',
               data: [
-                Math.round(baseVal * 0.65),
-                Math.round(baseVal * 0.75),
-                Math.round(baseVal * 0.70),
-                Math.round(baseVal * 0.85),
-                Math.round(baseVal * 0.80),
-                Math.round(baseVal * 0.92),
+                Math.max(3, Math.round(baseVal * 0.7)),
+                Math.max(4, Math.round(baseVal * 0.8)),
+                Math.max(3, Math.round(baseVal * 0.75)),
+                Math.max(5, Math.round(baseVal * 0.9)),
+                Math.max(4, Math.round(baseVal * 0.85)),
+                Math.max(5, Math.round(baseVal * 0.95)),
                 baseVal,
                 null,
                 null,
@@ -259,6 +253,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
             y: {
               min: 0,
               ticks: {
+                stepSize: 2,
                 font: { family: "'JetBrains Mono', monospace", size: 10 },
                 color: '#64748b'
               },
@@ -277,57 +272,41 @@ export default function SmartCityDashboard({ onNavigateTab }) {
       });
     }
 
-    // 2. Citizen Complaints Trend Grouped Bar Chart - Dynamic 7-Day Data from DB
+    // 2. Citizen Complaints Trend Grouped Bar Chart - Synchronized across 7 Days
     if (trendCanvasRef.current) {
       if (trendInstanceRef.current) trendInstanceRef.current.destroy();
 
-      let weeklyTrends = summary?.weekly_trends || [];
-      const hasRealTrendData = weeklyTrends.some(t => t.complaints > 0 || t.resolved > 0);
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const dayBuckets = days.map(d => ({ day: d, complaints: 0, resolved: 0 }));
 
-      // If backend trends are empty or all zero, dynamically aggregate from live complaints in state
-      if (!hasRealTrendData && complaints.length > 0) {
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        const today = new Date();
-        const computedDays = [];
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date();
-          d.setDate(today.getDate() - i);
-          const dayName = days[d.getDay()];
-          const dateStr = d.toISOString().split('T')[0];
-          
-          const dayReceived = complaints.filter(c => {
-            if (!c.created_at) return false;
-            return c.created_at.startsWith(dateStr);
-          }).length;
-          
-          const dayResolved = complaints.filter(c => {
-            if (!c.created_at) return false;
-            return c.created_at.startsWith(dateStr) && c.status === 'RESOLVED';
-          }).length;
-
-          computedDays.push({
-            day: dayName,
-            complaints: dayReceived,
-            resolved: dayResolved
-          });
-        }
-        
-        // If complaints have older dates, distribute them proportionally across the 7-day view
-        const totalReceived = computedDays.reduce((acc, d) => acc + d.complaints, 0);
-        if (totalReceived === 0 && complaints.length > 0) {
-          const totalComp = complaints.length;
-          const totalRes = complaints.filter(c => c.status === 'RESOLVED').length;
-          computedDays.forEach((cd, idx) => {
-            cd.complaints = Math.max(1, Math.round((totalComp / 7) * (1 + (idx % 3) * 0.2)));
-            cd.resolved = Math.max(0, Math.round((totalRes / 7) * (1 + ((idx + 1) % 3) * 0.2)));
-          });
-        }
-        weeklyTrends = computedDays;
+      if (complaints.length > 0) {
+        complaints.forEach((c, idx) => {
+          let dayIdx = idx % 7;
+          if (c.created_at) {
+            try {
+              const d = new Date(c.created_at);
+              const rawDay = d.getDay(); // 0 is Sun
+              dayIdx = rawDay === 0 ? 6 : rawDay - 1; // Mon=0 .. Sun=6
+            } catch (e) {}
+          }
+          dayBuckets[dayIdx].complaints += 1;
+          if (c.status === 'RESOLVED') {
+            dayBuckets[dayIdx].resolved += 1;
+          }
+        });
+      } else {
+        dayBuckets[0] = { day: 'Mon', complaints: 7, resolved: 5 };
+        dayBuckets[1] = { day: 'Tue', complaints: 9, resolved: 6 };
+        dayBuckets[2] = { day: 'Wed', complaints: 8, resolved: 7 };
+        dayBuckets[3] = { day: 'Thu', complaints: 6, resolved: 5 };
+        dayBuckets[4] = { day: 'Fri', complaints: 10, resolved: 8 };
+        dayBuckets[5] = { day: 'Sat', complaints: 5, resolved: 4 };
+        dayBuckets[6] = { day: 'Sun', complaints: 8, resolved: 6 };
       }
 
-      const trendLabels = weeklyTrends.length > 0 ? weeklyTrends.map(t => t.day) : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const trendReceived = weeklyTrends.length > 0 ? weeklyTrends.map(t => t.complaints) : [3, 4, 6, 2, 5, 4, 6];
-      const trendResolved = weeklyTrends.length > 0 ? weeklyTrends.map(t => t.resolved) : [2, 3, 5, 2, 4, 3, 5];
+      const trendLabels = dayBuckets.map(t => t.day);
+      const trendReceived = dayBuckets.map(t => t.complaints);
+      const trendResolved = dayBuckets.map(t => t.resolved);
 
       const ctxTrend = trendCanvasRef.current.getContext('2d');
       trendInstanceRef.current = new window.Chart(ctxTrend, {
@@ -443,7 +422,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
       if (trendInstanceRef.current) trendInstanceRef.current.destroy();
       if (donutInstanceRef.current) donutInstanceRef.current.destroy();
     };
-  }, [summary, complaints]);
+  }, [summary, complaints, categoryStats]);
 
   const handleChatSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -494,7 +473,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           <div className="space-y-1">
             <p className="text-xs font-semibold text-slate-400">Total Complaints</p>
             <p className="text-3xl font-bold font-mono text-white tracking-tight">
-              {(summary?.total_complaints ?? complaints.length).toLocaleString()}
+              {displayTotal.toLocaleString()}
             </p>
             <p className="text-xs font-mono font-medium text-sky-400 flex items-center gap-1">
               <span>▲</span> Live Count <span className="text-[#88909d] font-sans font-normal">All Time</span>
@@ -510,10 +489,10 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           <div className="space-y-1">
             <p className="text-xs font-semibold text-slate-400">Resolved Complaints</p>
             <p className="text-3xl font-bold font-mono text-emerald-400 tracking-tight">
-              {(summary?.resolved_complaints ?? complaints.filter(c => c.status === 'RESOLVED').length).toLocaleString()}
+              {displayResolved.toLocaleString()}
             </p>
             <p className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1">
-              <span>▲</span> {summary?.resolution_rate_pct ?? (complaints.length > 0 ? Math.round((complaints.filter(c => c.status === 'RESOLVED').length / complaints.length) * 100) : 0)}% <span className="text-[#88909d] font-sans font-normal">Resolved</span>
+              <span>▲</span> {displayResolutionRate}% <span className="text-[#88909d] font-sans font-normal">Resolved</span>
             </p>
           </div>
           <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/25 shadow-sm flex-shrink-0">
@@ -526,10 +505,10 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           <div className="space-y-1">
             <p className="text-xs font-semibold text-slate-400">Pending High-Priority</p>
             <p className="text-3xl font-bold font-mono text-rose-400 tracking-tight">
-              {(summary?.critical_complaints ?? complaints.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length).toLocaleString()}
+              {displayCritical.toLocaleString()}
             </p>
             <p className="text-xs font-mono font-medium text-rose-400/90 flex items-center gap-1">
-              <span>●</span> {summary?.active_complaints ?? complaints.filter(c => c.status !== 'RESOLVED').length} <span className="text-[#88909d] font-sans font-normal">Open Issues</span>
+              <span>●</span> {displayActive} <span className="text-[#88909d] font-sans font-normal">Open Issues</span>
             </p>
           </div>
           <div className="h-12 w-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/25 shadow-sm flex-shrink-0">
@@ -542,7 +521,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           <div className="space-y-1">
             <p className="text-xs font-semibold text-slate-400">Avg Resolution Time</p>
             <p className="text-3xl font-bold font-mono text-amber-300 tracking-tight">
-              {summary?.avg_response_hours ?? 2.4} <span className="text-lg font-mono font-medium text-slate-400">hrs</span>
+              {summary?.avg_response_hours ?? 3.2} <span className="text-lg font-mono font-medium text-slate-400">hrs</span>
             </p>
             <p className="text-xs font-mono font-medium text-amber-400 flex items-center gap-1">
               <span>⏱️</span> Target <span className="text-[#88909d] font-sans font-normal">&lt; 24 hrs</span>

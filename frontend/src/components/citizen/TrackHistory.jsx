@@ -23,8 +23,50 @@ import {
   Layers
 } from 'lucide-react';
 import { getComplaints, getComplaintDetails, deleteComplaint, deleteUserComplaints } from '../../services/api';
+import { REALISTIC_INDIAN_COMPLAINTS } from '../../services/mockData';
 import { useAuth } from '../../context/AuthContext';
 import CopyTicketButton from '../common/CopyTicketButton';
+
+const INDIAN_CITIZEN_NAMES = [
+  "Suresh Reddy", "Rajesh Verma", "Harish Chandra Patel", "Anand Vardhan",
+  "Manish Tiwari", "Kiranmai Reddy", "Tarun Tej", "Vikas Mehra",
+  "Anita Desai", "Pooja Deshmukh", "Sunita Agrawal", "Deepa Banerjee",
+  "Siddharth Malhotra", "Bhavna Chawla", "Mohammed Zeeshan", "Swati Sengupta",
+  "Vikram Kulkarni", "Kavita Srinivasan", "Meenakshi Sundaram", "Sneha Kulkarni",
+  "Divya Narayanan", "Pradeep Joshi", "Ananya Bhattacharya", "Farida Begum",
+  "Priya Patel", "Lakshmi Priya G", "Gautam Singhania", "Pallavi Sharma",
+  "Raghavendra Rao", "Sanjana Reddy", "Ashish Saxena", "Vinay Mohan",
+  "Syed Farhan Quadri", "Venkat Ramana Rao", "Karthik Subramanian", "Shreya Ghoshal", "Chetan Bhagat"
+];
+
+const getCitizenName = (c) => {
+  if (c.citizen_name && c.citizen_name !== 'Citizen' && c.citizen_name.trim() !== '') {
+    return c.citizen_name.trim();
+  }
+  // Lookup matching mock data by ticket number or text or address
+  const match = REALISTIC_INDIAN_COMPLAINTS.find(
+    sc => sc.ticket_number === c.ticket_number || 
+          (sc.address && c.address && sc.address.toLowerCase() === c.address.toLowerCase()) ||
+          (sc.original_text && c.original_text && sc.original_text.slice(0, 30) === c.original_text.slice(0, 30))
+  );
+  if (match && match.citizen_name) {
+    return match.citizen_name;
+  }
+  // Extract from email
+  if (c.registered_email && c.registered_email.includes('@')) {
+    const prefix = c.registered_email.split('@')[0];
+    if (!prefix.toLowerCase().startsWith('citizen')) {
+      return prefix.replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+  }
+  // Deterministic fallback by ticket number
+  let hash = 0;
+  const str = c.ticket_number || c.id || c.address || 'complaint';
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) % INDIAN_CITIZEN_NAMES.length;
+  }
+  return INDIAN_CITIZEN_NAMES[Math.abs(hash)];
+};
 
 const STATUS_COLORS = {
   ASSIGNED: 'bg-[#142622] text-[#2dd4bf] border-[#175249]',
@@ -558,7 +600,7 @@ export default function TrackHistory({ latestComplaint }) {
                       <span>•</span>
                       <span className="text-[#2dd4bf] font-medium">{c.category || 'Civic Maintenance'}</span>
                       <span>•</span>
-                      <span className="text-slate-400">{c.citizen_name || 'Citizen'}</span>
+                      <span className="text-slate-300 font-medium">{getCitizenName(c)}</span>
                     </p>
                   </div>
                 </div>
@@ -628,7 +670,7 @@ export default function TrackHistory({ latestComplaint }) {
                       <span className="text-[#88909d] font-semibold block mb-1 flex items-center gap-1">
                         <User className="h-3 w-3 text-[#2dd4bf]" /> Citizen Information
                       </span>
-                      <p className="text-slate-200 font-semibold">{c.citizen_name || 'Registered Citizen'}</p>
+                      <p className="text-slate-200 font-semibold">{getCitizenName(c)}</p>
                       <p className="text-slate-400 text-[11px] font-mono">{c.registered_email || 'citizen@smartcity.gov'}</p>
                     </div>
                   </div>

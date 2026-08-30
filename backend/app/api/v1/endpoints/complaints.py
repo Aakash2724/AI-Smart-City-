@@ -272,8 +272,8 @@ async def create_complaint(
 @router.get("", response_model=List[ComplaintResponseSchema])
 def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session = Depends(get_db)):
     """Lists complaints with optional email filter, vision detections, agent reasoning logs, and assigned department."""
-    # Auto-seed database if fewer than 10 complaints exist
-    if not email and db.query(Complaint).count() < 10:
+    # Auto-seed database if fewer than 35 complaints exist
+    if not email and db.query(Complaint).count() < 35:
         try:
             from app.seed_data import seed_database
             seed_database()

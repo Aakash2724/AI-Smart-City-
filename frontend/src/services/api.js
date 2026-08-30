@@ -203,11 +203,14 @@ export const processVoiceComplaint = async (spokenText, locationHint = '') => {
   return response.data;
 };
 
-export const sendAIChat = async (query, history = []) => {
+export const sendAIChat = async (query, history = [], clientContext = null) => {
   const formData = new FormData();
   formData.append('query', query);
   if (Array.isArray(history) && history.length > 0) {
     formData.append('history', JSON.stringify(history));
+  }
+  if (clientContext) {
+    formData.append('client_context', JSON.stringify(clientContext));
   }
   const response = await apiClient.post('/nlp/chat', formData);
   return response.data;

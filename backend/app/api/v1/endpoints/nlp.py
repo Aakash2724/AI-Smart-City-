@@ -42,6 +42,7 @@ def process_voice_complaint(payload: VoiceProcessPayload) -> Dict[str, Any]:
 def ai_assistant_chat(
     query: str = Form(...),
     history: Optional[str] = Form(None),
+    client_context: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """
@@ -56,4 +57,17 @@ def ai_assistant_chat(
             parsed_history = json.loads(history)
         except Exception:
             pass
-    return llm_service.generate_copilot_response(query=query, db=db, conversation_history=parsed_history)
+
+    parsed_context = None
+    if client_context:
+        try:
+            parsed_context = json.loads(client_context)
+        except Exception:
+            pass
+
+    return llm_service.generate_copilot_response(
+        query=query,
+        db=db,
+        conversation_history=parsed_history,
+        client_context=parsed_context
+    )

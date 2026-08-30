@@ -358,13 +358,13 @@ def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session =
         results.append(res)
     return results
 
-@router.post("/seed-sample-data", tags=["Complaints"])
+@router.api_route("/seed-sample-data", methods=["GET", "POST"], tags=["Complaints"])
 def seed_sample_complaints(db: Session = Depends(get_db)):
     """Triggers database seeding with comprehensive Indian complaints and resolved cases."""
     from app.seed_data import seed_database
     seed_database()
     total = db.query(Complaint).count()
-    return {"status": "success", "message": f"Database seeded with {total} complaints."}
+    return {"status": "success", "message": f"Database seeded successfully with {total} complaints."}
 
 @router.get("/{complaint_id}", response_model=ComplaintResponseSchema)
 def get_complaint(complaint_id: str, db: Session = Depends(get_db)):

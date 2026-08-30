@@ -327,9 +327,9 @@ export default function VoiceInputButton({
         </button>
       </div>
 
-      {/* ─── Minimalist Dropdown Menu (Theme-Consistent) ─── */}
+      {/* ─── Minimalist Dropdown Menu (Theme-Consistent Pop-Upwards) ─── */}
       {showLangPicker && (
-        <div className="absolute top-full right-0 mt-1.5 z-50 bg-[#12151e]/98 backdrop-blur-xl border border-[#232836] rounded-xl p-1 shadow-2xl shadow-black/80 min-w-[135px] animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute bottom-full right-0 mb-1.5 z-50 bg-[#12151e]/98 backdrop-blur-xl border border-[#232836] rounded-xl p-1 shadow-2xl shadow-black/80 min-w-[135px] animate-in fade-in zoom-in-95 duration-150">
           <div className="px-2 py-1 text-[10px] uppercase font-bold tracking-wider text-[#88909d] border-b border-[#232836]/60 mb-0.5">
             Select Language
           </div>
@@ -361,9 +361,9 @@ export default function VoiceInputButton({
         </div>
       )}
 
-      {/* ─── Compact Error Toast ─── */}
+      {/* ─── Compact Error Toast (Pops Upwards) ─── */}
       {errorMsg && (
-        <div className="absolute right-0 top-full mt-1.5 z-50 bg-[#2b1619] border border-rose-500/50 text-rose-300 rounded-lg px-2.5 py-1 text-[11px] shadow-lg whitespace-nowrap animate-in fade-in">
+        <div className="absolute right-0 bottom-full mb-1.5 z-50 bg-[#2b1619] border border-rose-500/50 text-rose-300 rounded-lg px-2.5 py-1 text-[11px] shadow-lg whitespace-nowrap animate-in fade-in">
           {errorMsg}
         </div>
       )}

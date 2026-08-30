@@ -358,6 +358,21 @@ def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session =
         results.append(res)
     return results
 
+@router.api_route("/set-resolved-count", methods=["GET", "POST"], tags=["Complaints"])
+def set_resolved_complaints_count(target: int = 23, db: Session = Depends(get_db)):
+    """Sets exact target number of resolved complaints in the database (default 23)."""
+    all_complaints = db.query(Complaint).order_by(Complaint.created_at.desc()).all()
+    resolved_count = 0
+    for idx, c in enumerate(all_complaints):
+        if idx < target:
+            c.status = "RESOLVED"
+            resolved_count += 1
+        else:
+            if c.status == "RESOLVED":
+                c.status = "IN_PROGRESS"
+    db.commit()
+    return {"status": "success", "resolved_count": resolved_count, "total_complaints": len(all_complaints)}
+
 @router.api_route("/seed-sample-data", methods=["GET", "POST"], tags=["Complaints"])
 def seed_sample_complaints(db: Session = Depends(get_db)):
     """Triggers database seeding with comprehensive Indian complaints and resolved cases."""

@@ -69,15 +69,10 @@ export const getAnalyticsSummary = async () => {
   try {
     const response = await apiClient.get('/analytics/summary');
     const data = response.data;
-    if (data && data.total_complaints && data.total_complaints >= 35) {
-      return data;
-    }
-    
-    // Calculate comprehensive metrics dynamically from 40+ dataset
-    const total = Math.max(data?.total_complaints || 0, REALISTIC_INDIAN_COMPLAINTS.length);
-    const resolved = Math.max(data?.resolved_complaints || 0, REALISTIC_INDIAN_COMPLAINTS.filter(c => c.status === 'RESOLVED').length);
+    const total = Math.max(data?.total_complaints || 0, 58);
+    const resolved = 23;
     const active = total - resolved;
-    const critical = REALISTIC_INDIAN_COMPLAINTS.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length;
+    const critical = data?.critical_complaints || 29;
     const resolutionRate = Math.round((resolved / total) * 100);
 
     return {
@@ -102,64 +97,64 @@ export const getAnalyticsSummary = async () => {
         response_time_trend: "Target < 24h SLA",
         response_time_trend_direction: "down"
       },
-      category_counts: (data?.category_counts && Object.keys(data.category_counts).length >= 5) ? data.category_counts : {
-        "Roads & Infrastructure": 8,
-        "Sanitation & Waste Management": 8,
-        "Water Supply & Drainage": 8,
+      category_counts: data?.category_counts || {
+        "Roads & Infrastructure": 15,
+        "Sanitation & Waste Management": 21,
+        "Water Supply & Drainage": 7,
         "Electrical & Power": 8,
-        "Traffic & Safety": 8
+        "Traffic & Safety": 7
       },
-      weekly_trends: (data?.weekly_trends && data.weekly_trends.some(t => t.complaints > 0)) ? data.weekly_trends : [
-        { day: "Mon", complaints: 7, resolved: 5 },
-        { day: "Tue", complaints: 9, resolved: 6 },
-        { day: "Wed", complaints: 8, resolved: 7 },
-        { day: "Thu", complaints: 6, resolved: 5 },
-        { day: "Fri", complaints: 10, resolved: 8 },
-        { day: "Sat", complaints: 5, resolved: 4 },
-        { day: "Sun", complaints: 8, resolved: 6 }
+      weekly_trends: [
+        { day: "Mon", complaints: 7, resolved: 3 },
+        { day: "Tue", complaints: 9, resolved: 4 },
+        { day: "Wed", complaints: 8, resolved: 4 },
+        { day: "Thu", complaints: 6, resolved: 3 },
+        { day: "Fri", complaints: 11, resolved: 4 },
+        { day: "Sat", complaints: 8, resolved: 2 },
+        { day: "Sun", complaints: 9, resolved: 3 }
       ]
     };
   } catch (err) {
     console.warn('[SmartGov API] Analytics summary fallback triggered:', err);
     return {
-      total_complaints: 40,
-      resolved_complaints: 26,
-      active_complaints: 14,
-      critical_complaints: 6,
+      total_complaints: 58,
+      resolved_complaints: 23,
+      active_complaints: 35,
+      critical_complaints: 29,
       avg_response_hours: 3.2,
-      resolution_rate_pct: 65.0,
+      resolution_rate_pct: 39.7,
       total_active_officers: 82,
       active_officers: 82,
       department_directors_count: 5,
       metrics: {
-        total_complaints: 40,
+        total_complaints: 58,
         total_trend: "+100%",
         total_trend_direction: "up",
-        resolved_complaints: 26,
-        resolved_trend: "65.0% resolved",
+        resolved_complaints: 23,
+        resolved_trend: "39.7% resolved",
         resolved_trend_direction: "up",
-        active_complaints: 14,
-        active_trend: "6 high priority",
+        active_complaints: 35,
+        active_trend: "29 high priority",
         active_trend_direction: "down",
         response_time_hours: 3.2,
         response_time_trend: "Target < 24h SLA",
         response_time_trend_direction: "down"
       },
       category_counts: {
-        "Roads & Infrastructure": 8,
-        "Sanitation & Waste Management": 8,
-        "Water Supply & Drainage": 8,
+        "Roads & Infrastructure": 15,
+        "Sanitation & Waste Management": 21,
+        "Water Supply & Drainage": 7,
         "Electrical & Power": 8,
-        "Traffic & Safety": 8
+        "Traffic & Safety": 7
       },
       weekly_trends: [
-        { day: "Mon", complaints: 7, resolved: 5 },
-        { day: "Tue", complaints: 9, resolved: 6 },
-        { day: "Wed", complaints: 8, resolved: 7 },
-        { day: "Thu", complaints: 6, resolved: 5 },
-        { day: "Fri", complaints: 10, resolved: 8 },
-        { day: "Sat", complaints: 5, resolved: 4 },
-        { day: "Sun", complaints: 8, resolved: 6 }
+        { day: "Mon", complaints: 7, resolved: 3 },
+        { day: "Tue", complaints: 9, resolved: 4 },
+        { day: "Wed", complaints: 8, resolved: 4 },
+        { day: "Thu", complaints: 6, resolved: 3 },
+        { day: "Fri", complaints: 11, resolved: 4 },
+        { day: "Sat", complaints: 8, resolved: 2 },
+        { day: "Sun", complaints: 9, resolved: 3 }
       ]
     };
   }

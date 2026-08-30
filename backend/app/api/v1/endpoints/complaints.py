@@ -118,6 +118,7 @@ async def create_complaint(
     complaint = Complaint(
         ticket_number=ticket_num,
         citizen_id=user_record.id if user_record else None,
+        citizen_name=final_citizen_name,
         registered_email=clean_reg_email or "citizen@smartcity.gov",
         original_text=original_text,
         detected_language=nlp_data.get("detected_language", "English"),
@@ -311,9 +312,9 @@ def list_complaints(email: Optional[str] = None, limit: int = 100, db: Session =
         ]
         m_schema = MunicipalityHeadSchema.from_orm(c.municipality_head) if c.municipality_head else None
 
-        # Look up citizen name from registered email
+        # Look up citizen name from record or registered email
         citizen_user = db.query(User).filter(User.email == c.registered_email).first() if c.registered_email else None
-        citizen_name = citizen_user.name if citizen_user else None
+        citizen_name = c.citizen_name or (citizen_user.name if citizen_user else None) or "Citizen"
 
         res = ComplaintResponseSchema(
             id=c.id,

@@ -87,10 +87,12 @@ export default function TrackHistory({ latestComplaint }) {
 
   useEffect(() => {
     if (latestComplaint) {
-      if (latestComplaint.ticket_number) {
+      // Only auto-fill search query if user specifically requested direct navigation
+      if (latestComplaint.isDirectNavigation && latestComplaint.ticket_number) {
         setSearchQuery(latestComplaint.ticket_number);
         // Switch to ALL if viewing a specific ticket so it's always found
         setViewScope('ALL');
+        setExpandedId(latestComplaint.id || latestComplaint.ticket_number);
       }
       setComplaints((prev) => {
         const exists = prev.some((c) => c.id === latestComplaint.id || c.ticket_number === latestComplaint.ticket_number);
@@ -100,7 +102,6 @@ export default function TrackHistory({ latestComplaint }) {
         }
         return prev;
       });
-      setExpandedId(latestComplaint.id || latestComplaint.ticket_number);
     }
   }, [latestComplaint]);
 

@@ -44,16 +44,25 @@ function MainApp() {
     return <AuthPage />;
   }
 
+  const handleTabChange = (tabId) => {
+    // When navigating from sidebar/menus, clear sticky ticket filter
+    if (tabId === 'agents') {
+      setLatestComplaint(null);
+    }
+    setActiveTab(tabId);
+  };
+
   const handleComplaintSubmitted = (complaint) => {
-    setLatestComplaint(complaint);
+    // Just cache the submitted complaint without forcing direct navigation filter
+    setLatestComplaint({ ...complaint, isDirectNavigation: false });
   };
 
   const handleNavigateToHistory = (complaintOrTicket) => {
     if (complaintOrTicket && typeof complaintOrTicket === 'object') {
-      setLatestComplaint(complaintOrTicket);
+      setLatestComplaint({ ...complaintOrTicket, isDirectNavigation: true });
     } else if (complaintOrTicket && typeof complaintOrTicket === 'string') {
-      // From notifications — wrap ticket number string into an object for TrackHistory
-      setLatestComplaint({ ticket_number: complaintOrTicket, id: complaintOrTicket });
+      // From notifications or track button — wrap ticket number string with isDirectNavigation
+      setLatestComplaint({ ticket_number: complaintOrTicket, id: complaintOrTicket, isDirectNavigation: true });
     }
     setActiveTab('agents');
   };
@@ -82,7 +91,7 @@ function MainApp() {
         {/* Responsive Left Sidebar */}
         <Sidebar 
           activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
+          setActiveTab={handleTabChange} 
           isOpen={isSidebarOpen}
         />
 
@@ -93,7 +102,7 @@ function MainApp() {
             {/* 1. Overview Dashboard */}
             {activeTab === 'dashboard' && (
               <div key={dashboardKey} className="animate-in fade-in duration-150">
-                <SmartCityDashboard onNavigateTab={(t) => setActiveTab(t)} />
+                <SmartCityDashboard onNavigateTab={(t) => handleTabChange(t)} />
               </div>
             )}
 

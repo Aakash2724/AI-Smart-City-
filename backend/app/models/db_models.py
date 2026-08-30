@@ -76,6 +76,7 @@ class Complaint(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     ticket_number = Column(String(30), nullable=False, unique=True)
     citizen_id = Column(String(36), ForeignKey("users.id"), nullable=True)
+    citizen_name = Column(String(100), nullable=True)
     registered_email = Column(String(100), nullable=True)
     
     # Text Inputs & Processing Results

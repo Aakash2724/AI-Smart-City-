@@ -51,6 +51,9 @@ function MainApp() {
   const handleNavigateToHistory = (complaintOrTicket) => {
     if (complaintOrTicket && typeof complaintOrTicket === 'object') {
       setLatestComplaint(complaintOrTicket);
+    } else if (complaintOrTicket && typeof complaintOrTicket === 'string') {
+      // From notifications — wrap ticket number string into an object for TrackHistory
+      setLatestComplaint({ ticket_number: complaintOrTicket, id: complaintOrTicket });
     }
     setActiveTab('agents');
   };

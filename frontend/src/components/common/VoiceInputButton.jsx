@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
+import { Mic, MicOff, Loader2, Globe } from 'lucide-react';
 import { processVoiceComplaint } from '../../services/api';
 
 /**
  * VoiceInputButton:
- * Robust, continuous multilingual microphone component.
- * Allows citizens and operators to speak complete sentences in Telugu, Hindi, or English.
- * Automatically recognizes speech continuously, detects language, translates to English,
+ * Robust, continuous multilingual microphone component with language selection.
+ * Allows citizens to choose Telugu, Hindi, or English before speaking.
+ * Automatically recognizes speech continuously, detects language, translates,
  * and extracts civic entities.
  */
+
+const VOICE_LANGUAGES = [
+  { code: 'te-IN', label: 'తెలుగు', short: 'TE' },
+  { code: 'hi-IN', label: 'हिंदी', short: 'HI' },
+  { code: 'en-IN', label: 'English', short: 'EN' },
+];
+
 export default function VoiceInputButton({ 
   onResult,
   onInterim,
@@ -21,6 +28,10 @@ export default function VoiceInputButton({
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showLangPicker, setShowLangPicker] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(() => {
+    try { return localStorage.getItem('smartgov_voice_lang') || 'te-IN'; } catch { return 'te-IN'; }
+  });
   
   const recognitionRef = useRef(null);
   const isListeningRef = useRef(false);
@@ -28,12 +39,18 @@ export default function VoiceInputButton({
   const silenceTimerRef = useRef(null);
   const onInterimRef = useRef(onInterim);
   const onResultRef = useRef(onResult);
+  const selectedLangRef = useRef(selectedLang);
 
   // Keep callback refs updated without re-triggering useEffect
   useEffect(() => {
     onInterimRef.current = onInterim;
     onResultRef.current = onResult;
   });
+
+  useEffect(() => {
+    selectedLangRef.current = selectedLang;
+    try { localStorage.setItem('smartgov_voice_lang', selectedLang); } catch {}
+  }, [selectedLang]);
 
   const clearSilenceTimer = () => {
     if (silenceTimerRef.current) {
@@ -78,89 +95,107 @@ export default function VoiceInputButton({
     }
   };
 
-  // Initialize SpeechRecognition ONCE on mount
-  useEffect(() => {
+  // Create a fresh SpeechRecognition instance with the given language
+  const createRecognition = (langCode) => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true; // Keep listening continuously across pauses
-      recognition.interimResults = true; // Real-time interim results
-      recognition.lang = 'en-IN'; // Multi-accent English/Indian voice model
+    if (!SpeechRecognition) return null;
 
-      recognition.onstart = () => {
-        setIsListening(true);
-        isListeningRef.current = true;
-        setErrorMsg('');
-      };
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 3; // Better accuracy with multiple alternatives
+    recognition.lang = langCode;
 
-      recognition.onresult = (event) => {
-        let finalChunk = '';
-        let interimChunk = '';
+    recognition.onstart = () => {
+      setIsListening(true);
+      isListeningRef.current = true;
+      setErrorMsg('');
+    };
 
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalChunk += event.results[i][0].transcript;
-          } else {
-            interimChunk += event.results[i][0].transcript;
-          }
+    recognition.onresult = (event) => {
+      let finalChunk = '';
+      let interimChunk = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        // Pick the best alternative (highest confidence)
+        const bestAlt = event.results[i][0];
+        if (event.results[i].isFinal) {
+          finalChunk += bestAlt.transcript;
+        } else {
+          interimChunk += bestAlt.transcript;
         }
+      }
 
-        if (finalChunk) {
-          accumulatedTranscriptRef.current += (accumulatedTranscriptRef.current ? ' ' : '') + finalChunk.trim();
+      if (finalChunk) {
+        accumulatedTranscriptRef.current += (accumulatedTranscriptRef.current ? ' ' : '') + finalChunk.trim();
+      }
+
+      const currentSpoken = (accumulatedTranscriptRef.current + (interimChunk ? ' ' + interimChunk : '')).trim();
+      
+      // Stream live spoken words into the textbox in real-time
+      if (onInterimRef.current && currentSpoken) {
+        onInterimRef.current(currentSpoken);
+      }
+
+      // Reset silence timer on active speech
+      // Use longer timeout for non-English (speakers may pause more between words)
+      const silenceMs = selectedLangRef.current === 'en-IN' ? 3500 : 5000;
+      clearSilenceTimer();
+      silenceTimerRef.current = setTimeout(() => {
+        if (isListeningRef.current) {
+          stopListening();
         }
+      }, silenceMs);
+    };
 
-        const currentSpoken = (accumulatedTranscriptRef.current + (interimChunk ? ' ' + interimChunk : '')).trim();
-        
-        // Directly stream live spoken words into the textbox in real-time
-        if (onInterimRef.current && currentSpoken) {
-          onInterimRef.current(currentSpoken);
-        }
+    recognition.onerror = (event) => {
+      console.warn('Speech Recognition Event Error:', event.error);
+      if (event.error === 'not-allowed') {
+        setErrorMsg('Microphone access blocked. Please allow mic permission.');
+        setIsListening(false);
+        isListeningRef.current = false;
+      }
+      // 'no-speech' errors are normal for pauses — keep listening
+    };
 
-        // Reset silence timer on active speech (auto-finalize after 3.5s of silence)
-        clearSilenceTimer();
-        silenceTimerRef.current = setTimeout(() => {
-          if (isListeningRef.current) {
-            stopListening();
-          }
-        }, 3500);
-      };
-
-      recognition.onerror = (event) => {
-        console.warn('Speech Recognition Event Error:', event.error);
-        if (event.error === 'not-allowed') {
-          setErrorMsg('Microphone access blocked. Please allow mic permission.');
+    recognition.onend = () => {
+      // Auto-restart if user hasn't explicitly stopped
+      if (isListeningRef.current) {
+        try {
+          recognition.start();
+        } catch (e) {
           setIsListening(false);
           isListeningRef.current = false;
-        } else if (event.error === 'no-speech') {
-          // If no speech detected in initial chunk, keep listening unless silence timer expires
+          finalizeAndProcessSpeech(accumulatedTranscriptRef.current);
         }
-      };
+      }
+    };
 
-      recognition.onend = () => {
-        // If the browser ends the session automatically but user hasn't explicitly stopped
-        if (isListeningRef.current) {
-          try {
-            recognition.start();
-          } catch (e) {
-            setIsListening(false);
-            isListeningRef.current = false;
-            finalizeAndProcessSpeech(accumulatedTranscriptRef.current);
-          }
-        }
-      };
+    return recognition;
+  };
 
-      recognitionRef.current = recognition;
-    }
+  // Initialize on mount
+  useEffect(() => {
+    recognitionRef.current = createRecognition(selectedLang);
 
     return () => {
       clearSilenceTimer();
       if (recognitionRef.current) {
-        try {
-          recognitionRef.current.abort();
-        } catch (e) {}
+        try { recognitionRef.current.abort(); } catch (e) {}
       }
     };
-  }, []); // Empty dependency array ensures it is NEVER destroyed on state changes!
+  }, []);
+
+  const handleLanguageChange = (langCode) => {
+    setSelectedLang(langCode);
+    setShowLangPicker(false);
+    
+    // Recreate recognition with new language
+    if (recognitionRef.current) {
+      try { recognitionRef.current.abort(); } catch {}
+    }
+    recognitionRef.current = createRecognition(langCode);
+  };
 
   const startListening = () => {
     setErrorMsg('');
@@ -173,6 +208,12 @@ export default function VoiceInputButton({
       setTimeout(() => setErrorMsg(''), 4000);
       return;
     }
+
+    // Recreate with current language to ensure it's fresh
+    if (recognitionRef.current) {
+      try { recognitionRef.current.abort(); } catch {}
+    }
+    recognitionRef.current = createRecognition(selectedLang);
 
     try {
       if (recognitionRef.current) {
@@ -204,19 +245,55 @@ export default function VoiceInputButton({
       } catch (e) {}
     }
 
-    // Immediately finalize and translate the accumulated text
     finalizeAndProcessSpeech(accumulatedTranscriptRef.current);
   };
 
+  const currentLangObj = VOICE_LANGUAGES.find(l => l.code === selectedLang) || VOICE_LANGUAGES[2];
+
   return (
-    <div className={`relative inline-flex items-center ${className}`}>
+    <div className={`relative inline-flex items-center gap-1 ${className}`}>
       
+      {/* Language Selector Button */}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setShowLangPicker(!showLangPicker)}
+          disabled={isListening || isProcessing}
+          title={`Voice language: ${currentLangObj.label}. Click to change.`}
+          className="h-8 px-1.5 flex items-center gap-0.5 text-[10px] font-bold text-slate-400 hover:text-[#2dd4bf] bg-[#1a1d24]/90 hover:bg-[#262b35] border border-[#303644] hover:border-[#2dd4bf]/50 rounded-lg transition-all cursor-pointer"
+        >
+          <Globe className="h-3 w-3" />
+          <span>{currentLangObj.short}</span>
+        </button>
+
+        {/* Language Dropdown */}
+        {showLangPicker && (
+          <div className="absolute bottom-full mb-1 left-0 z-50 bg-[#16181e] border border-[#23252d] rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-150 min-w-[120px]">
+            {VOICE_LANGUAGES.map(lang => (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`w-full text-left px-3 py-2 text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                  selectedLang === lang.code
+                    ? 'bg-[#0c2e28] text-[#2dd4bf]'
+                    : 'text-slate-300 hover:bg-[#1f222a] hover:text-white'
+                }`}
+              >
+                <span className="font-mono text-[10px] text-slate-500 w-5">{lang.short}</span>
+                <span>{lang.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* ─── Main Microphone Button ─── */}
       <button
         type="button"
         onClick={isListening ? stopListening : startListening}
         disabled={isProcessing}
-        title={isListening ? "Listening... Click to finish speaking" : "Speak in Telugu, Hindi, or English"}
+        title={isListening ? `Listening in ${currentLangObj.label}... Click to finish` : `Speak in ${currentLangObj.label}`}
         className={`group relative flex items-center justify-center gap-1.5 font-bold transition-all rounded-lg cursor-pointer select-none ${
           !showLabel || variant === 'icon'
             ? isListening
@@ -274,5 +351,3 @@ export default function VoiceInputButton({
     </div>
   );
 }
-
-

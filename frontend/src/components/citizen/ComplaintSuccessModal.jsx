@@ -325,10 +325,10 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
                 <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5">
                   <span className="text-xs font-bold text-[#2dd4bf] uppercase tracking-wider flex items-center gap-1.5">
                     <Scan className="h-3.5 w-3.5" />
-                    Evidence Inspection
+                    Uploaded Evidence
                   </span>
                   <span className="text-[10px] bg-[#0c2e28] text-[#5eead4] font-bold px-2.5 py-0.5 rounded-full border border-[#175249]">
-                    AI Verified ({detectionConfidence}%)
+                    AI Verified
                   </span>
                 </div>
 
@@ -338,45 +338,17 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
                     alt="Uploaded Evidence" 
                     className="w-full h-48 object-cover rounded-xl"
                   />
+                </div>
 
-                  {/* AI Bounding Box Overlay */}
-                  <div 
-                    className="absolute pointer-events-none rounded-lg"
-                    style={{
-                      ...boxStyle,
-                      border: '2.5px solid #2dd4bf',
-                      background: 'rgba(45, 212, 191, 0.08)',
-                      boxShadow: '0 0 18px rgba(45, 212, 191, 0.25), inset 0 0 12px rgba(45, 212, 191, 0.06)'
-                    }}
-                  >
-                    <div 
-                      style={{
-                        position: 'absolute',
-                        bottom: '6px',
-                        left: '6px',
-                        right: '6px',
-                        background: 'rgba(9, 13, 11, 0.92)',
-                        border: '1px solid rgba(45, 212, 191, 0.5)',
-                        borderRadius: '6px',
-                        padding: '4px 8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                      }}
-                    >
-                      <span style={{ 
-                        width: '6px', height: '6px', borderRadius: '50%', 
-                        background: '#2dd4bf', flexShrink: 0,
-                        boxShadow: '0 0 6px #2dd4bf'
-                      }} />
-                      <span style={{ 
-                        color: '#2dd4bf', fontSize: '10px', fontWeight: 700, 
-                        lineHeight: '1.3', wordBreak: 'break-word'
-                      }}>
-                        {displayProblemTitle}
-                      </span>
-                    </div>
-                  </div>
+                {/* Classification Result from Backend AI */}
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#0c2e28]/60 border border-[#175249]/50">
+                  <span className="h-2 w-2 rounded-full bg-[#2dd4bf] flex-shrink-0 animate-pulse" />
+                  <span className="text-xs text-slate-200">
+                    Classified as <strong className="text-[#5eead4]">{complaint.category || 'Civic Issue'}</strong>
+                    {complaint.subcategory && complaint.subcategory !== complaint.category && (
+                      <span className="text-[#88909d]"> — {complaint.subcategory}</span>
+                    )}
+                  </span>
                 </div>
               </div>
             )}

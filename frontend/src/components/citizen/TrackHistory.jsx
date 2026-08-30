@@ -103,7 +103,16 @@ const PRIORITY_ORDER = {
 
 export default function TrackHistory({ latestComplaint }) {
   const { user } = useAuth();
-  const [complaints, setComplaints] = useState([]);
+  const [complaints, setComplaints] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('smartgov_cached_complaints');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return REALISTIC_INDIAN_COMPLAINTS;
+  });
   const [historyLoading, setHistoryLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [viewScope, setViewScope] = useState('ALL');
@@ -116,10 +125,10 @@ export default function TrackHistory({ latestComplaint }) {
   const [sortBy, setSortBy] = useState('NEWEST');
 
   useEffect(() => {
-    loadHistory();
+    loadHistory(false);
 
     const handleSync = () => {
-      loadHistory();
+      loadHistory(false);
     };
     window.addEventListener('smartgov_complaints_updated', handleSync);
     return () => {
@@ -140,19 +149,28 @@ export default function TrackHistory({ latestComplaint }) {
         const exists = prev.some((c) => c.id === latestComplaint.id || c.ticket_number === latestComplaint.ticket_number);
         if (exists) return prev;
         if (latestComplaint.category) {
-          return [latestComplaint, ...prev];
+          const updated = [latestComplaint, ...prev];
+          try {
+            sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(updated));
+            sessionStorage.setItem('smartgov_complaints_count', updated.length.toString());
+          } catch {}
+          return updated;
         }
         return prev;
       });
     }
   }, [latestComplaint]);
 
-  const loadHistory = async () => {
-    setHistoryLoading(true);
+  const loadHistory = async (showLoading = false) => {
+    if (showLoading) setHistoryLoading(true);
     try {
       const data = await getComplaints();
-      if (data) {
+      if (data && Array.isArray(data) && data.length > 0) {
         setComplaints(data);
+        try {
+          sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(data));
+          sessionStorage.setItem('smartgov_complaints_count', data.length.toString());
+        } catch {}
       }
     } catch (err) {
       console.error('Failed to load history:', err);
@@ -171,7 +189,14 @@ export default function TrackHistory({ latestComplaint }) {
 
     try {
       await deleteComplaint(complaintId);
-      setComplaints((prev) => prev.filter((c) => c.id !== complaintId && c.ticket_number !== ticketNumber));
+      setComplaints((prev) => {
+        const updated = prev.filter((c) => c.id !== complaintId && c.ticket_number !== ticketNumber);
+        try {
+          sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(updated));
+          sessionStorage.setItem('smartgov_complaints_count', updated.length.toString());
+        } catch {}
+        return updated;
+      });
       window.dispatchEvent(new Event('smartgov_complaints_updated'));
     } catch (err) {
       console.error('Error deleting complaint:', err);
@@ -185,7 +210,14 @@ export default function TrackHistory({ latestComplaint }) {
 
     try {
       await deleteUserComplaints(userEmail);
-      setComplaints((prev) => prev.filter((c) => c.registered_email?.toLowerCase() !== userEmail.toLowerCase()));
+      setComplaints((prev) => {
+        const updated = prev.filter((c) => c.registered_email?.toLowerCase() !== userEmail.toLowerCase());
+        try {
+          sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(updated));
+          sessionStorage.setItem('smartgov_complaints_count', updated.length.toString());
+        } catch {}
+        return updated;
+      });
       window.dispatchEvent(new Event('smartgov_complaints_updated'));
       alert(`Complaints for ${userEmail} cleared.`);
     } catch (err) {

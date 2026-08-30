@@ -28,17 +28,15 @@ export const getComplaints = async (params = {}) => {
     if (queryParams.email) {
       const emailLower = queryParams.email.toLowerCase();
       const liveFiltered = liveData.filter(c => c.registered_email?.toLowerCase() === emailLower);
-      const seedFiltered = REALISTIC_INDIAN_COMPLAINTS.filter(c => c.registered_email?.toLowerCase() === emailLower);
-      const combined = [...liveFiltered];
-      seedFiltered.forEach(sc => {
-        if (!combined.some(c => c.ticket_number === sc.ticket_number || c.id === sc.id)) {
-          combined.push(sc);
-        }
-      });
-      return combined;
+      if (liveFiltered.length > 0) return liveFiltered;
+      return REALISTIC_INDIAN_COMPLAINTS.filter(c => c.registered_email?.toLowerCase() === emailLower);
     }
 
-    // Merge live database complaints with full 40+ Indian dataset
+    if (liveData.length >= 35) {
+      return liveData;
+    }
+
+    // Merge live database complaints with full Indian dataset if fewer
     const combined = [...liveData];
     REALISTIC_INDIAN_COMPLAINTS.forEach(sc => {
       if (!combined.some(c => c.ticket_number === sc.ticket_number || c.id === sc.id)) {
@@ -47,7 +45,7 @@ export const getComplaints = async (params = {}) => {
     });
     return combined;
   } catch (err) {
-    console.warn('[SmartGov API] Using local 40+ complaints dataset fallback:', err);
+    console.warn('[SmartGov API] Using local complaints dataset fallback:', err);
     if (queryParams.email) {
       const emailLower = queryParams.email.toLowerCase();
       return REALISTIC_INDIAN_COMPLAINTS.filter(c => c.registered_email?.toLowerCase() === emailLower);

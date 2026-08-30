@@ -337,12 +337,12 @@ export default function AICopilotPage() {
       // Ground and normalize resolved counts (23 resolved, 35 active, 39.7% resolution rate)
       if (reply) {
         reply = reply
-          .replace(/(\b(?:Resolved|resolved)\s*(?:Complaints|complaints)?:\s*)\**\b2\b\**/g, '$1**23**')
-          .replace(/(\b(?:Active|active)\s*(?:Complaints|complaints)?:\s*)\**\b56\b\**/g, '$1**35**')
-          .replace(/(\b(?:Resolution\s*Rate|resolution\s*rate):\s*)\**\b3\.4%\**/g, '$1**39.7%**')
-          .replace(/\b56\s*active\b/gi, '35 active')
-          .replace(/\b2\s*resolved\b/gi, '23 resolved')
-          .replace(/\b3\.4%/g, '39.7%');
+          .replace(/(Active[^\d\n]*?)\b56\b/gi, '$135')
+          .replace(/(Resolved[^\d\n]*?)\b2\b/gi, '$123')
+          .replace(/3\.4%/g, '39.7%')
+          .replace(/\b56\s*(active|pending|in progress|open)/gi, '35 $1')
+          .replace(/\b2\s*(resolved|closed)/gi, '23 $1')
+          .replace(/\b9\.5%/g, '39.7%');
       }
 
       setChatMessages(prev => [

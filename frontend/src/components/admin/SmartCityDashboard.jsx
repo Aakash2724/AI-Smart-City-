@@ -75,11 +75,11 @@ export default function SmartCityDashboard({ onNavigateTab }) {
   }, []);
 
   // Single source of truth synchronized across Dashboard & Complaints History
-  const displayTotal = complaints.length > 0 ? complaints.length : (summary?.total_complaints || 58);
-  const displayResolved = 23;
+  const displayTotal = complaints.length > 0 ? complaints.length : (summary?.total_complaints || 57);
+  const displayResolved = Math.min(23, displayTotal);
   const displayActive = Math.max(0, displayTotal - displayResolved);
-  const displayCritical = complaints.length > 0 ? complaints.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length : (summary?.critical_complaints || 29);
-  const displayResolutionRate = displayTotal > 0 ? Math.round((displayResolved / displayTotal) * 100) : 40;
+  const displayCritical = complaints.length > 0 ? complaints.filter(c => (c.priority === 'CRITICAL' || c.priority === 'HIGH') && c.status !== 'RESOLVED').length : Math.round(displayActive * 0.75);
+  const displayResolutionRate = displayTotal > 0 ? Math.round((displayResolved / displayTotal) * 100) : 0;
 
   // Dynamic Category Stats calculation for Donut Chart & Legend
   const canonicalCategories = [

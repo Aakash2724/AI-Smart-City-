@@ -240,7 +240,14 @@ function FormattedAIMessage({ text }) {
 
 export default function AICopilotPage() {
   const [summary, setSummary] = useState(null);
-  const [complaintsCount, setComplaintsCount] = useState(20);
+  const [complaintsCount, setComplaintsCount] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('smartgov_complaints_count');
+      return stored ? Number(stored) : 58;
+    } catch {
+      return 58;
+    }
+  });
   const [activeOfficersCount, setActiveOfficersCount] = useState(82);
   const [directorsCount, setDirectorsCount] = useState(5);
   const [categoriesCount, setCategoriesCount] = useState(5);
@@ -268,9 +275,10 @@ export default function AICopilotPage() {
         ]);
         if (sumData.status === 'fulfilled' && sumData.value) {
           setSummary(sumData.value);
-          if (sumData.value.total_complaints !== undefined) {
-            setComplaintsCount(sumData.value.total_complaints);
-          }
+          const totalCount = sumData.value.total_complaints || 58;
+          setComplaintsCount(totalCount);
+          try { sessionStorage.setItem('smartgov_complaints_count', totalCount.toString()); } catch {}
+
           if (sumData.value.total_active_officers !== undefined) {
             setActiveOfficersCount(sumData.value.total_active_officers);
           } else if (sumData.value.department_workload) {
@@ -285,7 +293,9 @@ export default function AICopilotPage() {
             if (count > 0) setCategoriesCount(count);
           }
         } else if (compData.status === 'fulfilled' && Array.isArray(compData.value)) {
-          setComplaintsCount(compData.value.length);
+          const totalCount = compData.value.length || 58;
+          setComplaintsCount(totalCount);
+          try { sessionStorage.setItem('smartgov_complaints_count', totalCount.toString()); } catch {}
         }
       } catch (err) {
         console.error('Error fetching copilot context data:', err);

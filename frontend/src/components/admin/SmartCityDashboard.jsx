@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sendAIChat, getAnalyticsSummary, getComplaints } from '../../services/api';
 import { useTheme } from '../../context/ThemeContext';
+import LiveGeospatialIncidentMap from '../common/LiveGeospatialIncidentMap';
 import {
   FolderArchive,
   CheckSquare,
@@ -771,83 +772,19 @@ export default function SmartCityDashboard({ onNavigateTab }) {
         <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[340px]">
           <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
             <div>
-              <h3 className="text-sm font-bold text-white">Complaints by Ward</h3>
-              <p className="text-[11px] text-[#88909d]">Activity by ward area</p>
+              <h3 className="text-sm font-bold text-white">Live Ward Hotspot Map</h3>
+              <p className="text-[11px] text-[#88909d]">Real-time geospatial incident pins</p>
             </div>
             <button
               onClick={() => onNavigateTab && onNavigateTab('gis')}
-              className="text-xs text-sky-400 hover:text-sky-300 hover:underline font-bold flex items-center gap-1"
+              className="text-xs text-[#2dd4bf] hover:text-[#5eead4] font-bold flex items-center gap-1 cursor-pointer"
             >
-              Open Map →
+              Full GIS Map →
             </button>
           </div>
 
-          <div className="relative flex-1 w-full rounded-xl overflow-hidden bg-[#0e1014] border border-[#23252d] flex items-center justify-center min-h-0 my-1">
-            <svg viewBox="0 0 400 240" className="w-full h-full">
-              <defs>
-                <radialGradient id="hotspotRed" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.9" />
-                  <stop offset="60%" stopColor="#f43f5e" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
-                </radialGradient>
-                <radialGradient id="hotspotAmber" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.9" />
-                  <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-                </radialGradient>
-                <radialGradient id="hotspotBlue" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.9" />
-                  <stop offset="60%" stopColor="#0ea5e9" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0" />
-                </radialGradient>
-                <radialGradient id="hotspotPurple" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0.9" />
-                  <stop offset="60%" stopColor="#a855f7" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-                </radialGradient>
-                <radialGradient id="hotspotEmerald" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.9" />
-                  <stop offset="60%" stopColor="#10b981" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-
-              {/* Grid / Radar lines */}
-              <circle cx="200" cy="120" r="100" fill="none" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeDasharray="3,3" strokeWidth="1" />
-              <circle cx="200" cy="120" r="60" fill="none" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeDasharray="3,3" strokeWidth="1" />
-              <line x1="200" y1="20" x2="200" y2="220" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeWidth="1" />
-              <line x1="100" y1="120" x2="300" y2="120" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeWidth="1" />
-
-              {/* City Ward Boundary Path */}
-              <path d="M40 60 Q120 20 220 50 T360 80 L350 200 Q200 230 40 190 Z" fill={isDark ? "#141822" : "#e2e8f0"} stroke={isDark ? "#2c3444" : "#cbd5e1"} strokeWidth="1.5"></path>
-
-              {/* Hotspot 1: Critical Waste Overflow (Rose/Red) */}
-              <circle cx="115" cy="95" r="32" fill="url(#hotspotRed)"></circle>
-              <circle cx="115" cy="95" r="6" fill="#f43f5e"></circle>
-
-              {/* Hotspot 2: High Road Issue (Amber / Sun Orange) */}
-              <circle cx="230" cy="145" r="36" fill="url(#hotspotAmber)"></circle>
-              <circle cx="230" cy="145" r="7" fill="#f59e0b"></circle>
-
-              {/* Hotspot 3: Water Pipeline Leak (Ocean Blue) */}
-              <circle cx="290" cy="85" r="26" fill="url(#hotspotBlue)"></circle>
-              <circle cx="290" cy="85" r="5" fill="#0ea5e9"></circle>
-
-              {/* Hotspot 4: Traffic Congestion (Violet/Purple) */}
-              <circle cx="155" cy="175" r="24" fill="url(#hotspotPurple)"></circle>
-              <circle cx="155" cy="175" r="5" fill="#a855f7"></circle>
-
-              {/* Hotspot 5: Green / Low Risk Zone (Emerald) */}
-              <circle cx="210" cy="80" r="20" fill="url(#hotspotEmerald)"></circle>
-              <circle cx="210" cy="80" r="4" fill="#10b981"></circle>
-            </svg>
-            <div className={`absolute bottom-2.5 left-2.5 text-[9px] font-mono px-2.5 py-1 rounded-lg border backdrop-blur-md flex items-center gap-2 ${isDark ? 'text-slate-200 bg-[#0b0c10]/95 border-[#23252d]' : 'text-slate-700 bg-white/95 border-slate-200 shadow-xs'
-              }`}>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f43f5e]"></span> Ward 12</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span> Ward 8</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]"></span> Ward 14</span>
-              <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#a855f7]"></span> Ward 4</span>
-            </div>
+          <div className="relative flex-1 w-full rounded-xl overflow-hidden min-h-0 my-1">
+            <LiveGeospatialIncidentMap complaints={complaints} />
           </div>
         </div>
 

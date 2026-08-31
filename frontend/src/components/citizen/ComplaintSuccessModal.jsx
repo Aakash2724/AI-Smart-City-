@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { SERVER_ORIGIN } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import ResolutionTimeline from '../common/ResolutionTimeline';
 
 const CLASS_TITLES = {
   water_leakage: 'Water Main Leakage & Drainage Overflow',
@@ -180,6 +181,9 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
             </div>
 
           </div>
+
+          {/* ── LIVE RESOLUTION PIPELINE TRACKER ── */}
+          <ResolutionTimeline complaint={complaint} />
 
           {/* ── ASSIGNED OFFICER SECTION ── */}
           {head && (

@@ -300,13 +300,15 @@ export default function VoiceInputButton({
           }`}
         >
           <div className="relative flex items-center justify-center">
-            {isListening && (
-              <span className="absolute -inset-1 rounded-full bg-rose-500/40 animate-ping" />
-            )}
             {isProcessing ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2dd4bf]" />
             ) : isListening ? (
-              <Mic className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
+              <div className="flex items-center gap-0.5 h-3.5 px-0.5" title="Listening to speech...">
+                <span className="w-0.5 h-2.5 bg-rose-400 rounded-full animate-[pulse_0.4s_ease-in-out_infinite]" />
+                <span className="w-0.5 h-4 bg-rose-400 rounded-full animate-[pulse_0.3s_ease-in-out_infinite_0.1s]" />
+                <span className="w-0.5 h-2 bg-rose-400 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_0.15s]" />
+                <span className="w-0.5 h-3.5 bg-rose-400 rounded-full animate-[pulse_0.35s_ease-in-out_infinite_0.05s]" />
+              </div>
             ) : (
               <Mic className="w-3.5 h-3.5 text-[#2dd4bf]" />
             )}
@@ -314,9 +316,11 @@ export default function VoiceInputButton({
 
           {/* Optional Label (for full variants) */}
           {showLabel && variant !== 'icon' && (
-            <span className="text-[11px] font-medium tracking-tight">
+            <span className="text-[11px] font-medium tracking-tight flex items-center gap-1.5">
               {isListening ? (
-                <span className="text-rose-300">Listening...</span>
+                <span className="text-rose-300 font-bold flex items-center gap-1">
+                  <span>Listening...</span>
+                </span>
               ) : isProcessing ? (
                 <span className="text-[#5eead4]">Analyzing...</span>
               ) : (

@@ -12,7 +12,9 @@ import {
   AlertTriangle,
   Zap,
   ShieldCheck,
-  Cpu
+  Cpu,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { getAnalyticsSummary, getComplaints, sendAIChat, getRiskForecast } from '../../services/api';
 import VoiceInputButton from '../common/VoiceInputButton';
@@ -255,7 +257,33 @@ export default function AICopilotPage() {
   const [chatMessages, setChatMessages] = useState(getStoredChatMessages);
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+  const [speakingIdx, setSpeakingIdx] = useState(null);
   const messagesEndRef = useRef(null);
+
+  const handleSpeak = (text, idx) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      alert('Speech synthesis is not supported in this browser.');
+      return;
+    }
+
+    if (speakingIdx === idx) {
+      window.speechSynthesis.cancel();
+      setSpeakingIdx(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/\*\*/g, '').replace(/[#•*_|`]/g, ' ').replace(/\s+/g, ' ').trim();
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+
+    utterance.onend = () => setSpeakingIdx(null);
+    utterance.onerror = () => setSpeakingIdx(null);
+
+    setSpeakingIdx(idx);
+    window.speechSynthesis.speak(utterance);
+  };
 
   // Persist chat across tab switches
   useEffect(() => {
@@ -516,7 +544,37 @@ export default function AICopilotPage() {
                 </div>
               )}
               {msg.sender === 'ai' ? (
-                <FormattedAIMessage text={msg.text} />
+                <>
+                  <FormattedAIMessage text={msg.text} />
+                  <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-[#23252d]/80 text-[10px]">
+                    <span className="text-[#88909d] flex items-center gap-1">
+                      <Zap className="h-3 w-3 text-[#2dd4bf]" />
+                      SmartGov Voice Intelligence
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleSpeak(msg.text, idx)}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-bold ${
+                        speakingIdx === idx 
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse' 
+                          : 'bg-[#151921] hover:bg-[#1c222e] text-slate-300 hover:text-[#2dd4bf] border-[#232734]'
+                      }`}
+                      title={speakingIdx === idx ? "Stop speaking" : "Listen to answer aloud"}
+                    >
+                      {speakingIdx === idx ? (
+                        <>
+                          <VolumeX className="h-3 w-3 text-rose-400" />
+                          <span>Stop Audio</span>
+                        </>
+                      ) : (
+                        <>
+                          <Volume2 className="h-3 w-3 text-[#2dd4bf]" />
+                          <span>Listen to Answer</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </>
               ) : (
                 <div className="whitespace-pre-line font-medium text-white">{msg.text}</div>
               )}

@@ -487,14 +487,50 @@ html.light .shadow-xl {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04) !important;
 }
 
-/* Tab switch transition animation */
-@keyframes fadeSlideIn {
-  from {
+/* ==============================================================================
+   Smooth App-Wide View Transitions & Tab Switching Keyframes
+   ============================================================================== */
+
+@keyframes viewFadeSlide {
+  0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(6px) scale(0.997);
   }
-  to {
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tabSwitchFade {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-view-transition {
+  animation: viewFadeSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-tab-switch {
+  animation: tabSwitchFade 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.smooth-transition {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+

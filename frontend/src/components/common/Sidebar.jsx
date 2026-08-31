@@ -85,7 +85,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             </span>
           )}
           
-          <nav className={`flex flex-col gap-2 text-xs ${isOpen ? 'w-full' : 'items-center w-full'}`}>
+          <nav className={`flex flex-col gap-1.5 text-xs ${isOpen ? 'w-full' : 'items-center w-full'}`}>
             {MENU_ITEMS.map((item) => {
               const isActive = activeTab === item.id;
               
@@ -94,18 +94,18 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`px-3 py-2.5 rounded-xl font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                    className={`group px-3 py-2.5 rounded-xl font-semibold flex items-center justify-between transition-all duration-200 ease-out cursor-pointer active:scale-[0.98] ${
                       isActive
                         ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs'
                         : 'text-[#88909d] hover:text-white hover:bg-[#181a20] border border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <i className={`ti ${item.icon} text-base ${isActive ? 'text-[#2dd4bf]' : 'text-slate-500'}`} />
+                      <i className={`ti ${item.icon} text-base transition-all duration-200 ${isActive ? 'text-[#2dd4bf] scale-105' : 'text-slate-500 group-hover:text-slate-300'}`} />
                       <span className="truncate">{item.label}</span>
                     </div>
                     {item.badge && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold ${
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold transition-all duration-200 ${
                         isActive ? 'bg-[#175249] text-[#2dd4bf]' : 'bg-[#16181e] text-[#2dd4bf] border border-[#23252d]'
                       }`}>
                         {item.badge}
@@ -121,13 +121,13 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   title={item.label}
-                  className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+                  className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all duration-200 ease-out cursor-pointer active:scale-[0.95] ${
                     isActive
-                      ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs'
+                      ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs scale-105'
                       : 'text-[#88909d] hover:text-white hover:bg-[#181a20] border border-transparent'
                   }`}
                 >
-                  <i className={`ti ${item.icon} text-base ${isActive ? 'text-[#2dd4bf]' : 'text-slate-400'}`} />
+                  <i className={`ti ${item.icon} text-base transition-all duration-200 ${isActive ? 'text-[#2dd4bf]' : 'text-slate-400'}`} />
                 </button>
               );
             })}

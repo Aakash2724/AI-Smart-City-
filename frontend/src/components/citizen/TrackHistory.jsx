@@ -344,22 +344,26 @@ export default function TrackHistory({ latestComplaint }) {
     <div className="w-full space-y-4 text-slate-100 font-sans animate-in fade-in duration-200">
 
       {/* ─── 1. SCOPE TOGGLE BAR (ALL COMPLAINTS vs MY COMPLAINTS) ─── */}
-      <div className="bg-[#111317] p-3 sm:p-3.5 rounded-xl border border-[#23252d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-[#111317] p-2.5 sm:p-3 rounded-2xl border border-[#23252d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         
-        {/* Scope Toggle Buttons */}
-        <div className="flex items-center bg-[#0e1014] p-1 rounded-xl border border-[#23252d] shadow-inner gap-1">
+        {/* Sleek Segmented Scope Toggle Buttons */}
+        <div className="relative inline-flex items-center bg-[#0a0c0f] p-1 rounded-xl border border-[#23252d] shadow-inner select-none gap-1">
           <button
             type="button"
             onClick={() => setViewScope('ALL')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-bold transition-all duration-300 ease-in-out ${
+            className={`relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer active:scale-[0.97] ${
               viewScope === 'ALL'
-                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm scale-[1.02]'
-                : 'text-slate-400 hover:text-white hover:bg-[#181a20] scale-100'
+                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm font-bold scale-[1.01]'
+                : 'text-slate-400 hover:text-white hover:bg-[#14161d] border border-transparent font-medium'
             }`}
           >
-            <Globe className="h-3.5 w-3.5 text-[#2dd4bf]" />
+            <Globe className={`h-3.5 w-3.5 transition-transform duration-200 ${viewScope === 'ALL' ? 'text-[#2dd4bf] scale-110' : 'text-slate-500'}`} />
             <span>All Complaints</span>
-            <span className="bg-[#16181e] text-[#2dd4bf] border border-[#23252d] px-2 py-0.5 rounded-full text-[10px] font-mono font-bold">
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold transition-all duration-200 ${
+              viewScope === 'ALL'
+                ? 'bg-[#16181e] text-[#2dd4bf] border border-[#23252d]'
+                : 'bg-[#12141a] text-slate-400 border border-[#1c1e25]'
+            }`}>
               {complaints.length}
             </span>
           </button>
@@ -367,15 +371,19 @@ export default function TrackHistory({ latestComplaint }) {
           <button
             type="button"
             onClick={() => setViewScope('MINE')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-bold transition-all duration-300 ease-in-out ${
+            className={`relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer active:scale-[0.97] ${
               viewScope === 'MINE'
-                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm scale-[1.02]'
-                : 'text-slate-400 hover:text-white hover:bg-[#181a20] scale-100'
+                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm font-bold scale-[1.01]'
+                : 'text-slate-400 hover:text-white hover:bg-[#14161d] border border-transparent font-medium'
             }`}
           >
-            <User className="h-3.5 w-3.5 text-[#2dd4bf]" />
+            <User className={`h-3.5 w-3.5 transition-transform duration-200 ${viewScope === 'MINE' ? 'text-[#2dd4bf] scale-110' : 'text-slate-500'}`} />
             <span>My Complaints</span>
-            <span className="bg-[#16181e] text-[#2dd4bf] border border-[#23252d] px-2 py-0.5 rounded-full text-[10px] font-mono font-bold">
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold transition-all duration-200 ${
+              viewScope === 'MINE'
+                ? 'bg-[#16181e] text-[#2dd4bf] border border-[#23252d]'
+                : 'bg-[#12141a] text-slate-400 border border-[#1c1e25]'
+            }`}>
               {complaints.filter(c => c.registered_email?.toLowerCase() === (user?.email || 'citizen@smartcity.gov').toLowerCase()).length}
             </span>
           </button>
@@ -389,10 +397,10 @@ export default function TrackHistory({ latestComplaint }) {
             type="button"
             onClick={loadHistory}
             disabled={historyLoading}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 hover:text-white border border-[#23252d] rounded-lg text-[11px] font-semibold transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 hover:text-white border border-[#23252d] rounded-xl text-xs font-semibold transition-all duration-200 shadow-xs disabled:opacity-50 cursor-pointer active:scale-[0.97]"
             title="Refresh list"
           >
-            <RefreshCw className={`h-3 w-3 text-[#2dd4bf] ${historyLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 text-[#2dd4bf] ${historyLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
 
@@ -401,10 +409,10 @@ export default function TrackHistory({ latestComplaint }) {
             <button
               type="button"
               onClick={handleDeleteAllMyComplaints}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-[11px] font-bold transition-all shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition-all duration-200 shadow-xs cursor-pointer active:scale-[0.97]"
               title="Delete all my complaints"
             >
-              <Trash2 className="h-3 w-3" />
+              <Trash2 className="h-3.5 w-3.5" />
               <span>Delete All</span>
             </button>
           )}
@@ -556,7 +564,7 @@ export default function TrackHistory({ latestComplaint }) {
       </div>
 
       {/* ─── 3. COMPLAINTS LIST FEED ─── */}
-      <div key={viewScope} className="space-y-3" style={{ animation: 'fadeSlideIn 0.3s ease-out' }}>
+      <div key={viewScope} className="space-y-3 animate-tab-switch">
         {historyLoading && filteredComplaints.length === 0 ? (
           <div className="bg-[#111317] p-12 rounded-2xl border border-[#23252d] text-center text-slate-400 text-xs sm:text-sm flex flex-col items-center justify-center gap-2">
             <RefreshCw className="h-5 w-5 animate-spin text-[#2dd4bf]" />

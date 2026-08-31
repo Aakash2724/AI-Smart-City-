@@ -102,14 +102,14 @@ function MainApp() {
             
             {/* 1. Overview Dashboard */}
             {activeTab === 'dashboard' && (
-              <div key={dashboardKey} className="animate-in fade-in duration-150">
+              <div key={`dashboard-${dashboardKey}`} className="animate-view-transition">
                 <SmartCityDashboard onNavigateTab={(t) => handleTabChange(t)} />
               </div>
             )}
 
             {/* 2. Citizen Services */}
             {activeTab === 'citizen' && (
-              <div className="animate-in fade-in duration-150">
+              <div key="citizen" className="animate-view-transition">
                 <ComplaintForm 
                   onSubmitted={handleComplaintSubmitted}
                   onNavigateToHistory={handleNavigateToHistory}
@@ -119,7 +119,7 @@ function MainApp() {
 
             {/* 3. GIS & Risk Radar */}
             {activeTab === 'gis' && (
-              <div className="animate-in fade-in duration-150 space-y-3">
+              <div key="gis" className="animate-view-transition space-y-3">
                 <div className="bg-[#111317] p-4 sm:p-5 rounded-2xl border border-[#23252d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 flex-shrink-0">
                   <div>
                     <h2 className="text-base font-bold text-white">GIS & Risk Radar</h2>
@@ -142,23 +142,23 @@ function MainApp() {
               </div>
             )}
 
-            {/* 7. Track & History */}
+            {/* 4. Track & History */}
             {activeTab === 'agents' && (
-              <div className="animate-in fade-in duration-150">
+              <div key="agents" className="animate-view-transition">
                 <TrackHistory latestComplaint={latestComplaint} />
               </div>
             )}
 
-            {/* 8. Dedicated Profile & Ward Settings Page */}
+            {/* 5. Dedicated Profile & Ward Settings Page */}
             {activeTab === 'settings' && (
-              <div className="animate-in fade-in duration-150">
+              <div key="settings" className="animate-view-transition">
                 <ProfileSettingsPage onNavigateTab={(t) => setActiveTab(t)} />
               </div>
             )}
 
-            {/* 9. Dedicated AI Copilot Page */}
+            {/* 6. Dedicated AI Copilot Page */}
             {activeTab === 'copilot' && (
-              <div className="animate-in fade-in duration-150">
+              <div key="copilot" className="animate-view-transition">
                 <AICopilotPage />
               </div>
             )}

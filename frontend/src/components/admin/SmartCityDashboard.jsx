@@ -793,10 +793,10 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           {/* 4 Core Civic Vital Signs Progress Meters */}
           <div className="flex-1 flex flex-col justify-around py-1.5 min-h-0 text-xs">
             {[
-              { label: 'Road Surface Integrity', score: '91/100', note: '12 active potholes', color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 91 },
-              { label: 'Clean Water Network', score: '96/100', note: '3 active pipeline leaks', color: 'from-[#38bdf8] to-[#6366f1]', pct: 96 },
-              { label: 'Urban Sanitation', score: '93/100', note: '4 overflow spots', color: 'from-[#10b981] to-[#34d399]', pct: 93 },
-              { label: 'Smart Grid Lighting', score: '95/100', note: '5 dark spots reported', color: 'from-[#f59e0b] to-[#fbbf24]', pct: 95 },
+              { label: 'Roads & Infrastructure', score: '91/100', note: '12 active potholes', color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 91 },
+              { label: 'Water & Sewage', score: '96/100', note: '3 active pipeline leaks', color: 'from-[#38bdf8] to-[#6366f1]', pct: 96 },
+              { label: 'Sanitation & Waste', score: '93/100', note: '4 overflow spots', color: 'from-[#10b981] to-[#34d399]', pct: 93 },
+              { label: 'Electrical & Power', score: '95/100', note: '5 dark spots reported', color: 'from-[#f59e0b] to-[#fbbf24]', pct: 95 },
             ].map((vital, idx) => (
               <div key={idx} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">

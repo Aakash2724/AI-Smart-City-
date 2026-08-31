@@ -56,31 +56,23 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
     try {
       const all = await getComplaints();
       if (all && all.length > 0) {
-        const myEmail = user.email.toLowerCase().trim();
-        const mine = all.filter(c => (c.registered_email || '').toLowerCase().trim() === myEmail);
+        const myEmail = (user.email || '').toLowerCase().trim();
+        const mine = all.filter(c => {
+          const reg = (c.registered_email || '').toLowerCase().trim();
+          return reg === myEmail || reg === (user.name || '').toLowerCase().trim();
+        });
         
-        // Read persisted read tracking from localStorage
         const storageKey = `smartgov_read_ids_${myEmail}`;
-        const lastReadTimeKey = `smartgov_last_read_time_${myEmail}`;
-        
         let readIds = [];
         try {
           readIds = JSON.parse(localStorage.getItem(storageKey) || '[]');
         } catch (e) {
           readIds = [];
         }
-        const lastReadTime = parseInt(localStorage.getItem(lastReadTimeKey) || '0', 10);
 
-        // A complaint is unread ONLY if not in readIds and created after lastReadTime
         const unread = mine.filter(c => {
-          if (readIds.includes(c.id) || readIds.includes(c.ticket_number)) {
-            return false;
-          }
-          if (c.created_at) {
-            const createdAtMs = new Date(c.created_at).getTime();
-            if (createdAtMs <= lastReadTime) return false;
-          }
-          return true;
+          const isRead = readIds.includes(c.id) || readIds.includes(c.ticket_number);
+          return !isRead;
         });
 
         setUnreadCount(unread.length);
@@ -109,14 +101,20 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
     try {
       const myEmail = user.email.toLowerCase().trim();
       const storageKey = `smartgov_read_ids_${myEmail}`;
-      const lastReadTimeKey = `smartgov_last_read_time_${myEmail}`;
       
       const all = await getComplaints();
       const mine = (all || []).filter(c => (c.registered_email || '').toLowerCase().trim() === myEmail);
-      const allIds = mine.map(c => c.id).concat(mine.map(c => c.ticket_number));
+      const allIds = mine.map(c => c.id).concat(mine.map(c => c.ticket_number)).filter(Boolean);
       
-      localStorage.setItem(storageKey, JSON.stringify(allIds));
-      localStorage.setItem(lastReadTimeKey, Date.now().toString());
+      let existingRead = [];
+      try {
+        existingRead = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      } catch (e) {
+        existingRead = [];
+      }
+
+      const merged = [...new Set([...existingRead, ...allIds])];
+      localStorage.setItem(storageKey, JSON.stringify(merged));
     } catch (e) {
       console.warn('Error saving read state:', e);
     }

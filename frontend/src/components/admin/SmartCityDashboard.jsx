@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sendAIChat, getAnalyticsSummary, getComplaints } from '../../services/api';
 import { useTheme } from '../../context/ThemeContext';
-import LiveGeospatialIncidentMap from '../common/LiveGeospatialIncidentMap';
 import {
   FolderArchive,
   CheckSquare,
@@ -19,7 +18,9 @@ import {
   PieChart as PieChartIcon,
   Radar,
   RefreshCw,
-  Send
+  Send,
+  ShieldCheck,
+  Zap
 } from 'lucide-react';
 
 const RECENT_PRIORITY_PILLS = {
@@ -768,24 +769,60 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           </div>
         </div>
 
-        {/* Tab 3: Complaints by Ward Map */}
+        {/* Tab 3: Ward SLA & Resolution Efficiency Card */}
         <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[340px]">
+          
+          {/* Header */}
           <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
             <div>
-              <h3 className="text-sm font-bold text-white">Live Ward Hotspot Map</h3>
-              <p className="text-[11px] text-[#88909d]">Real-time geospatial incident pins</p>
+              <h3 className="text-sm font-bold text-white">Ward SLA & Efficiency</h3>
+              <p className="text-[11px] text-[#88909d]">Zonal response & turnaround</p>
             </div>
+            <span className="text-[10px] font-bold text-[#2dd4bf] bg-[#0c2e28] px-2.5 py-0.5 rounded-full border border-[#175249]">
+              94.2% On-Time
+            </span>
+          </div>
+
+          {/* Top Wards Performance Items */}
+          <div className="flex-1 flex flex-col justify-around py-1.5 min-h-0 text-xs">
+            {[
+              { ward: 'Ward 12 - Jubilee Zone', rate: '96%', avgTime: '3.1h', officers: 18, color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 96 },
+              { ward: 'Ward 8 - Central Market Zone', rate: '94%', avgTime: '4.2h', officers: 14, color: 'from-[#38bdf8] to-[#6366f1]', pct: 94 },
+              { ward: 'Ward 15 - IT Corridor Zone', rate: '91%', avgTime: '2.8h', officers: 22, color: 'from-[#a855f7] to-[#ec4899]', pct: 91 },
+              { ward: 'Ward 14 - Green Park Zone', rate: '93%', avgTime: '3.6h', officers: 16, color: 'from-[#f59e0b] to-[#10b981]', pct: 93 },
+            ].map((item, idx) => (
+              <div key={idx} className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-200 truncate">{item.ward}</span>
+                  <span className="font-mono text-[11px] text-[#2dd4bf] font-bold">
+                    {item.rate} <span className="text-slate-400 font-normal">({item.avgTime} avg)</span>
+                  </span>
+                </div>
+                <div className="w-full bg-[#0e1014] rounded-full h-1.5 overflow-hidden border border-[#23252d]">
+                  <div
+                    className={`h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
+                    style={{ width: `${item.pct}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Action Footer */}
+          <div className="pt-2 border-t border-[#23252d] flex items-center justify-between flex-shrink-0 text-xs">
+            <span className="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
+              <Zap className="h-3.5 w-3.5 text-amber-400" />
+              <span>Avg SLA: <strong>3.4h</strong></span>
+            </span>
             <button
-              onClick={() => onNavigateTab && onNavigateTab('gis')}
+              onClick={() => onNavigateTab && onNavigateTab('forecast')}
               className="text-xs text-[#2dd4bf] hover:text-[#5eead4] font-bold flex items-center gap-1 cursor-pointer"
             >
-              Full GIS Map →
+              <span>Predictive Radar</span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          <div className="relative flex-1 w-full rounded-xl overflow-hidden min-h-0 my-1">
-            <LiveGeospatialIncidentMap complaints={complaints} />
-          </div>
         </div>
 
       </div>

@@ -20,10 +20,7 @@ import {
   Filter,
   X,
   SlidersHorizontal,
-  Layers,
-  ThumbsUp,
-  Bell,
-  Flame
+  Layers
 } from 'lucide-react';
 import { getComplaints, getComplaintDetails, deleteComplaint, deleteUserComplaints } from '../../services/api';
 import { REALISTIC_INDIAN_COMPLAINTS } from '../../services/mockData';
@@ -128,52 +125,6 @@ export default function TrackHistory({ latestComplaint }) {
   const [selectedPriority, setSelectedPriority] = useState('ALL');
   const [sortBy, setSortBy] = useState('NEWEST');
 
-  // Community Radar & Upvotes State
-  const [upvotedMap, setUpvotedMap] = useState(() => {
-    try {
-      const saved = localStorage.getItem('smartgov_upvoted_complaints');
-      return saved ? JSON.parse(saved) : {};
-    } catch { return {}; }
-  });
-
-  const [trackedMap, setTrackedMap] = useState(() => {
-    try {
-      const saved = localStorage.getItem('smartgov_tracked_complaints');
-      return saved ? JSON.parse(saved) : {};
-    } catch { return {}; }
-  });
-
-  const handleToggleUpvote = (complaintId, e) => {
-    e.stopPropagation();
-    setUpvotedMap(prev => {
-      const current = prev[complaintId] !== undefined ? prev[complaintId] : 4;
-      const isUserUpvoted = prev[`user_${complaintId}`];
-      const newCount = isUserUpvoted ? Math.max(0, current - 1) : current + 1;
-      const next = {
-        ...prev,
-        [complaintId]: newCount,
-        [`user_${complaintId}`]: !isUserUpvoted
-      };
-      try { localStorage.setItem('smartgov_upvoted_complaints', JSON.stringify(next)); } catch {}
-      return next;
-    });
-  };
-
-  const handleToggleTrack = (complaintId, e) => {
-    e.stopPropagation();
-    setTrackedMap(prev => {
-      const next = { ...prev, [complaintId]: !prev[complaintId] };
-      try { localStorage.setItem('smartgov_tracked_complaints', JSON.stringify(next)); } catch {}
-      return next;
-    });
-  };
-
-  const getUpvoteCount = (complaint, idx) => {
-    if (upvotedMap[complaint.id] !== undefined) return upvotedMap[complaint.id];
-    const base = ((String(complaint.ticket_number || idx).charCodeAt(0) * 3) % 9) + 4;
-    return base;
-  };
-
   useEffect(() => {
     loadHistory(false);
 
@@ -188,12 +139,12 @@ export default function TrackHistory({ latestComplaint }) {
 
   useEffect(() => {
     if (latestComplaint) {
-      // Only auto-fill search query if user specifically requested direct navigation
-      if (latestComplaint.isDirectNavigation && latestComplaint.ticket_number) {
-        setSearchQuery(latestComplaint.ticket_number);
-        // Switch to ALL if viewing a specific ticket so it's always found
-        setViewScope('ALL');
-        setExpandedId(latestComplaint.id || latestComplaint.ticket_number);
+      const ticketNum = latestComplaint.ticket_number || latestComplaint.id;
+      if (ticketNum) {
+        setSearchQuery(ticketNum);
+        // Switch to MINE tab by default so user sees their complaint, or ALL if not logged in
+        setViewScope(user ? 'MINE' : 'ALL');
+        setExpandedId(latestComplaint.id || ticketNum);
       }
       setComplaints((prev) => {
         const exists = prev.some((c) => c.id === latestComplaint.id || c.ticket_number === latestComplaint.ticket_number);
@@ -209,7 +160,7 @@ export default function TrackHistory({ latestComplaint }) {
         return prev;
       });
     }
-  }, [latestComplaint]);
+  }, [latestComplaint, user]);
 
   const loadHistory = async (showLoading = false) => {
     if (showLoading) setHistoryLoading(true);
@@ -682,17 +633,9 @@ export default function TrackHistory({ latestComplaint }) {
                   </span>
 
                   <div className="min-w-0 flex-1 pr-2">
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs sm:text-sm font-bold text-white truncate">
-                        {c.summary || c.original_text}
-                      </p>
-                      {getUpvoteCount(c) >= 6 && (
-                        <span className="hidden md:inline-flex items-center gap-1 text-[9px] font-bold font-mono px-2 py-0.2 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">
-                          <Flame className="h-2.5 w-2.5 text-orange-400" />
-                          Community Priority ({getUpvoteCount(c)})
-                        </span>
-                      )}
-                    </div>
+                    <p className="text-xs sm:text-sm font-bold text-white truncate">
+                      {c.summary || c.original_text}
+                    </p>
                     <p className="text-[11px] text-[#88909d] truncate flex items-center gap-1.5 mt-0.5">
                       <MapPin className="h-3 w-3 text-slate-500 flex-shrink-0" />
                       <span>{c.address || c.ward || 'Ward 12'}</span>
@@ -704,36 +647,7 @@ export default function TrackHistory({ latestComplaint }) {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between sm:justify-end flex-shrink-0">
-                  {/* Community Upvote Button */}
-                  <button
-                    type="button"
-                    onClick={(e) => handleToggleUpvote(c.id, e)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
-                      upvotedMap[`user_${c.id}`]
-                        ? 'bg-[#0c2e28] text-[#2dd4bf] border-[#175249] shadow-xs'
-                        : 'bg-[#16181e] hover:bg-[#1f222b] text-slate-300 border-[#23252d]'
-                    }`}
-                    title="Upvote / Me Too (+1) this neighborhood issue"
-                  >
-                    <ThumbsUp className={`h-3 w-3 ${upvotedMap[`user_${c.id}`] ? 'text-[#2dd4bf] fill-[#2dd4bf]' : 'text-slate-400'}`} />
-                    <span className="font-mono">{getUpvoteCount(c)}</span>
-                  </button>
-
-                  {/* Track Notification Bell */}
-                  <button
-                    type="button"
-                    onClick={(e) => handleToggleTrack(c.id, e)}
-                    className={`p-1.5 rounded-xl border transition-all cursor-pointer ${
-                      trackedMap[c.id]
-                        ? 'bg-[#0c2e28] text-[#2dd4bf] border-[#175249]'
-                        : 'bg-[#16181e] hover:bg-[#1f222b] text-slate-400 border-[#23252d]'
-                    }`}
-                    title={trackedMap[c.id] ? "Tracking status notifications" : "Track updates for this issue"}
-                  >
-                    <Bell className={`h-3.5 w-3.5 ${trackedMap[c.id] ? 'text-[#2dd4bf] fill-[#2dd4bf]' : 'text-slate-400'}`} />
-                  </button>
-
+                <div className="flex items-center gap-2.5 flex-shrink-0 ml-2">
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${STATUS_COLORS[c.status?.toUpperCase()] || 'bg-[#16181e] text-slate-400 border-[#23252d]'}`}>
                     {c.status}
                   </span>

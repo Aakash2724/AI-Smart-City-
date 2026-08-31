@@ -45,21 +45,20 @@ export default function NotificationsModal({ isOpen, onClose, onNavigateToTicket
   const loadLiveComplaints = async () => {
     setLoading(true);
     try {
-      // Load persisted read tracking
       let storedReadIds = [];
       try {
         storedReadIds = JSON.parse(localStorage.getItem(storageKey) || '[]');
       } catch (e) {
         storedReadIds = [];
       }
-      const storedTime = parseInt(localStorage.getItem(lastReadTimeKey) || '0', 10);
       setReadIds(storedReadIds);
-      setLastReadTime(storedTime);
 
       const all = await getComplaints();
       if (all && all.length > 0) {
-        // Filter strictly for this citizen's complaints
-        const mine = all.filter(c => (c.registered_email || '').toLowerCase().trim() === myEmail);
+        const mine = all.filter(c => {
+          const reg = (c.registered_email || '').toLowerCase().trim();
+          return reg === myEmail || reg === (user?.name || '').toLowerCase().trim();
+        });
         setComplaints(mine);
       } else {
         setComplaints([]);
@@ -72,23 +71,16 @@ export default function NotificationsModal({ isOpen, onClose, onNavigateToTicket
   };
 
   const isComplaintUnread = (c) => {
-    if (readIds.includes(c.id) || readIds.includes(c.ticket_number)) {
-      return false;
-    }
-    if (c.created_at) {
-      const createdAtMs = new Date(c.created_at).getTime();
-      if (createdAtMs <= lastReadTime) return false;
-    }
-    return true;
+    if (!c) return false;
+    const isRead = readIds.includes(c.id) || readIds.includes(c.ticket_number);
+    return !isRead;
   };
 
   const handleMarkAllRead = () => {
-    const allIds = complaints.map(c => c.id).concat(complaints.map(c => c.ticket_number));
-    const now = Date.now();
-    setReadIds(allIds);
-    setLastReadTime(now);
-    localStorage.setItem(storageKey, JSON.stringify(allIds));
-    localStorage.setItem(lastReadTimeKey, now.toString());
+    const allIds = complaints.map(c => c.id).concat(complaints.map(c => c.ticket_number)).filter(Boolean);
+    const unique = [...new Set([...readIds, ...allIds])];
+    setReadIds(unique);
+    localStorage.setItem(storageKey, JSON.stringify(unique));
     if (onClearUnread) onClearUnread();
     window.dispatchEvent(new Event('smartgov_notifications_read'));
   };

@@ -96,7 +96,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   const modalContent = (
     <div 
-      className="fixed inset-0 z-[999999] overflow-y-auto overscroll-contain bg-black/60 backdrop-blur-[2px] p-3 sm:p-6 text-center animate-in fade-in duration-150"
+      className="fixed inset-0 z-[999999] overflow-y-auto overscroll-contain bg-black/25 backdrop-blur-sm p-3 sm:p-6 text-center animate-in fade-in duration-150"
       onClick={onClose}
     >
       <div className="flex min-h-full items-center justify-center p-0">

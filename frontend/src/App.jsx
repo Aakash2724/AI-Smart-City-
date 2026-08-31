@@ -20,6 +20,14 @@ function MainApp() {
   const [latestComplaint, setLatestComplaint] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardKey, setDashboardKey] = useState(0);
+  const mainScrollRef = React.useRef(null);
+
+  // When switching tabs away from copilot or to any other tab, reset main scroll to top
+  React.useEffect(() => {
+    if (mainScrollRef.current && activeTab !== 'copilot') {
+      mainScrollRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
 
   // Handle deep-link query parameters on initial authenticated load
   React.useEffect(() => {
@@ -100,7 +108,7 @@ function MainApp() {
         />
 
         {/* Dynamic Full Screen Main Content Area */}
-        <main className="flex-1 min-w-0 bg-[#0b0c10] overflow-y-auto p-4 sm:p-6 lg:p-7">
+        <main ref={mainScrollRef} className="flex-1 min-w-0 bg-[#0b0c10] overflow-y-auto p-4 sm:p-6 lg:p-7">
           <div className="max-w-[1600px] mx-auto w-full space-y-6">
             
             {/* 1. Overview Dashboard */}

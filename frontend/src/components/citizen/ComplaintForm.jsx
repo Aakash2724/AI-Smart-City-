@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, MapPin, Sparkles, ArrowRight, Image as ImageIcon, Mail, CheckCircle2, ShieldCheck, Clock, Layers, Navigation, Loader2, User, Phone, Mic } from 'lucide-react';
+import { Upload, Sparkles, ArrowRight, Mail, ShieldCheck, Clock, Layers } from 'lucide-react';
 import { submitComplaint } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { detectPreciseLocation } from '../../services/locationService';
 import ComplaintSuccessModal from './ComplaintSuccessModal';
 import VoiceInputButton from '../common/VoiceInputButton';
 import LocationSearchInput from '../common/LocationSearchInput';
@@ -74,34 +73,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
     }
   };
 
-  const handleUseMyLocation = async () => {
-    setIsLocating(true);
-    setLocationStatus('Accessing high-precision GPS coordinates...');
-
-    try {
-      const loc = await detectPreciseLocation();
-      setLatitude(loc.latitude);
-      setLongitude(loc.longitude);
-      if (loc.address) {
-        setAddress(loc.address);
-      }
-      setLocationStatus(`GPS Locked (±${loc.accuracyMeters}m accuracy): ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
-    } catch (error) {
-      let msg = 'Unable to retrieve location.';
-      if (error.code === 1) {
-        msg = 'Location permission was denied. Please allow location access in your browser settings.';
-      } else if (error.code === 2) {
-        msg = 'GPS / Location information is unavailable on this device.';
-      } else if (error.code === 3) {
-        msg = 'Location request timed out. Please try again.';
-      }
-      setLocationStatus(msg);
-    } finally {
-      setIsLocating(false);
-      setTimeout(() => setLocationStatus(''), 6000);
-    }
-  };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -124,9 +95,9 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
     try {
       const formData = new FormData();
       formData.append('original_text', text);
-      formData.append('latitude', parseFloat(latitude) || 17.4435);
-      formData.append('longitude', parseFloat(longitude) || 78.3820);
-      formData.append('address', address || user?.registered_location || 'Ward 12 - Jubilee Zone, Hyderabad');
+      formData.append('latitude', parseFloat(latitude) || 17.6688);
+      formData.append('longitude', parseFloat(longitude) || 80.8940);
+      formData.append('address', address || user?.registered_location || 'Temple Road, Bhadrachalam, Bhadradri Kothagudem - 507111');
       const resolvedEmail = (user?.email || (contact && contact.includes('@') ? contact : 'citizen@smartcity.gov')).trim().toLowerCase();
       formData.append('registered_email', resolvedEmail);
 
@@ -150,7 +121,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
       setSubmittedComplaint(response);
       setIsModalOpen(true);
 
-      // Trigger real-time synchronization across Header and Notifications
       window.dispatchEvent(new Event('smartgov_complaints_updated'));
 
       if (onSubmitted) {
@@ -171,8 +141,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
   return (
     <div className="w-full space-y-6 text-slate-100">
-
-      {/* 1. Header Banner */}
       <div className="bg-[#111317] p-6 rounded-2xl border border-[#23252d] shadow-sm border-l-4 border-l-[#2dd4bf]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
@@ -205,10 +173,7 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
         </div>
       </div>
 
-      {/* 2. Main Form Card */}
       <div className="bg-[#111317] rounded-2xl border border-[#23252d] shadow-sm p-6 sm:p-8 space-y-6">
-
-        {/* Presets / Quick Chips */}
         <div>
           <span className="text-xs font-semibold text-[#88909d] block mb-2">Common Issues:</span>
           <div className="flex flex-wrap gap-2">
@@ -226,8 +191,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
-          {/* Text Area with Embedded Microphone Icon */}
           <div>
             <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
               Complaint Description
@@ -243,7 +206,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
                 required
               />
 
-              {/* Microphone icon in the top-right corner inside the text box */}
               <div className="absolute top-3 right-3 z-10">
                 <VoiceInputButton
                   onInterim={(interim) => setText(interim)}
@@ -256,7 +218,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
             </div>
           </div>
 
-          {/* Citizen Details (Optional) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -284,7 +245,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
             </div>
           </div>
 
-          {/* Incident Location & Accurate GPS Coordinates */}
           <LocationSearchInput
             address={address}
             onAddressChange={setAddress}
@@ -299,7 +259,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
             required
           />
 
-          {/* Photo Upload Zone */}
           <div>
             <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
               Attach a Photo
@@ -341,7 +300,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="flex items-center justify-between pt-2">
             <span className="text-xs text-[#88909d] flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4 text-[#2dd4bf]" />
@@ -363,12 +321,9 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
               )}
             </button>
           </div>
-
         </form>
-
       </div>
 
-      {/* 3. Bottom Information Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-[#111317] p-4 rounded-xl border border-[#23252d] flex items-center gap-3">
           <Clock className="h-8 w-8 text-[#2dd4bf] flex-shrink-0" />
@@ -395,7 +350,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
         </div>
       </div>
 
-      {/* Complaint Registration Confirmation Popup Modal */}
       <ComplaintSuccessModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -406,7 +360,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
           if (onNavigateToHistory) onNavigateToHistory(c);
         }}
       />
-
     </div>
   );
 }

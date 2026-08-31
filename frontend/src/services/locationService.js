@@ -1,14 +1,3 @@
-/**
- * AI Smart City - High-Accuracy Geolocation & Multi-Tier Reverse Geocoding Service
- * -------------------------------------------------------------------------------
- * Features:
- *  1. Sub-meter precision GPS capture with automated fallback for laptop WiFi / mobile GPS.
- *  2. Multi-tier reverse geocoding (Nominatim -> BigDataCloud -> Open-Meteo / Nominatim v2).
- *  3. Accurate Indian address reconstruction (Door/Road -> Suburb/Colony -> City/District -> Pincode).
- *  4. Hybrid ward matching: Semantic keyword analysis + Haversine centroid coordinate proximity.
- */
-
-// Official Hyderabad Municipal Ward Zones with Geocoded Centroids & Keywords
 export const HYDERABAD_WARDS = [
   { 
     id: 'Ward 12', 
@@ -75,11 +64,8 @@ export const HYDERABAD_WARDS = [
   }
 ];
 
-/**
- * Calculate distance between two lat/lng coordinates in kilometers (Haversine formula)
- */
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth radius in km
+  const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
   const a =
@@ -90,9 +76,6 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-/**
- * Robust, high-precision GPS coordinate fetcher with automatic fallback
- */
 export function getCoordinates(options = {}) {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -110,7 +93,6 @@ export function getCoordinates(options = {}) {
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve(pos),
       (err) => {
-        // If high accuracy times out on desktop/WiFi, retry with standard accuracy
         if (err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE) {
           navigator.geolocation.getCurrentPosition(
             (pos) => resolve(pos),
@@ -126,14 +108,10 @@ export function getCoordinates(options = {}) {
   });
 }
 
-/**
- * Multi-Tier High-Accuracy Reverse Geocoding
- */
 export async function reverseGeocodeCoordinates(lat, lng) {
   let addressText = '';
   let fullData = null;
 
-  // ── Tier 1: OpenStreetMap Nominatim (High Detail) ─────────────────────────
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4000);
@@ -152,7 +130,6 @@ export async function reverseGeocodeCoordinates(lat, lng) {
         fullData = data;
         const addr = data.address || {};
         
-        // Assemble precise local road / landmark / colony
         const road = addr.road || addr.pedestrian || addr.street || addr.footway || '';
         const landmark = addr.amenity || addr.building || addr.shop || '';
         const colony = addr.suburb || addr.neighbourhood || addr.residential || addr.subdivision || addr.quarter || '';
@@ -175,11 +152,8 @@ export async function reverseGeocodeCoordinates(lat, lng) {
         }
       }
     }
-  } catch (e) {
-    // Cascade to Tier 2
-  }
+  } catch (e) {}
 
-  // ── Tier 2: BigDataCloud Reverse Geocoding (Fast, Free & Zero Rate-Limit) ──
   if (!addressText) {
     try {
       const controller = new AbortController();
@@ -208,12 +182,9 @@ export async function reverseGeocodeCoordinates(lat, lng) {
           }
         }
       }
-    } catch (e) {
-      // Cascade to Tier 3
-    }
+    } catch (e) {}
   }
 
-  // ── Tier 3: Formatted GPS Fallback if network fails ───────────────────────
   if (!addressText) {
     addressText = `Location (${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E)`;
   }
@@ -224,21 +195,15 @@ export async function reverseGeocodeCoordinates(lat, lng) {
   };
 }
 
-/**
- * Intelligent Ward Matching:
- * Combines address text keyword matching with geometric distance to ward centroids
- */
 export function resolveWardFromLocation(lat, lng, addressText = '') {
   const textLower = (addressText || '').toLowerCase();
 
-  // 1. Text keyword search
   for (const ward of HYDERABAD_WARDS) {
     if (ward.keywords.some(kw => textLower.includes(kw))) {
       return ward.label;
     }
   }
 
-  // 2. Haversine Centroid Proximity Match
   if (lat && lng) {
     let closestWard = HYDERABAD_WARDS[0];
     let minDistance = Infinity;
@@ -251,7 +216,6 @@ export function resolveWardFromLocation(lat, lng, addressText = '') {
       }
     }
 
-    // If within 35km of Hyderabad municipal region, assign closest ward
     if (minDistance <= 35) {
       return closestWard.label;
     }
@@ -260,17 +224,12 @@ export function resolveWardFromLocation(lat, lng, addressText = '') {
   return 'Ward 12 - Jubilee Hills & Banjara Hills Zone';
 }
 
-/**
- * Real-time Indian Address Autocomplete & Search
- * Supports searching any colony, temple, landmark, town, district or city (e.g., Bhadrachalam, Hyderabad, Khammam, Warangal)
- */
 export async function searchAddressSuggestions(query) {
   if (!query || query.trim().length < 2) return [];
 
   const cleanQuery = query.trim();
   const suggestions = [];
 
-  // 1. Try Photon OpenStreetMap Geocoder (Super fast & tailored for India)
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3500);
@@ -317,11 +276,8 @@ export async function searchAddressSuggestions(query) {
         }
       }
     }
-  } catch (e) {
-    // Fallback to Nominatim Search
-  }
+  } catch (e) {}
 
-  // 2. Fallback to OpenStreetMap Nominatim Search
   if (suggestions.length === 0) {
     try {
       const controller = new AbortController();
@@ -360,11 +316,7 @@ export async function searchAddressSuggestions(query) {
   return suggestions;
 }
 
-/**
- * Master All-in-One Location Detection Utility (99%+ Accuracy)
- */
 export async function detectPreciseLocation() {
-  // 1. Check if user has explicitly confirmed/pinned a precise location
   try {
     const saved = localStorage.getItem('smartgov_saved_location');
     if (saved) {
@@ -381,7 +333,6 @@ export async function detectPreciseLocation() {
     }
   } catch (e) {}
 
-  // 2. Query browser GPS
   let lat, lng, accuracy;
   try {
     const pos = await getCoordinates();
@@ -392,13 +343,9 @@ export async function detectPreciseLocation() {
     accuracy = 100000;
   }
 
-  // 3. High-Accuracy Accuracy Filter:
-  // If the browser returned a coarse ISP approximation (>5000m) or returned the generic Hyderabad Gunfoundry ISP gateway (17.3934, 78.4706)
-  // because the laptop doesn't have a satellite GPS chip:
   const isGenericISP = !accuracy || accuracy > 5000 || (Math.abs(lat - 17.3934) < 0.08 && Math.abs(lng - 78.4706) < 0.08);
 
   if (isGenericISP) {
-    // Lock to user's actual location: Bhadrachalam
     lat = 17.6688;
     lng = 80.8940;
     accuracy = 10;

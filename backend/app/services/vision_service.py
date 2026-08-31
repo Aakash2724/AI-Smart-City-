@@ -1,16 +1,3 @@
-"""
-AI Smart City - Computer Vision Service (CV & Image Analysis Module)
--------------------------------------------------------------------
-Purpose:
-  Analyzes citizen uploaded photos to detect civic infrastructure defects.
-
-Data Science Pipeline Steps:
-  1. PRIMARY: Gemini Vision multimodal analysis — sends the actual image to Gemini
-     for accurate scene understanding and civic defect classification.
-  2. SECONDARY: YOLOv8 object detection for bounding box localization.
-  3. FALLBACK: Text-based keyword inference when no API/model is available.
-"""
-
 import os
 import base64
 import json
@@ -21,7 +8,6 @@ from typing import List, Dict, Any
 from app.core.config import settings
 
 
-# Standard civic defect classes and their municipal mappings
 CIVIC_DEFECT_MAP = {
     "pothole": {
         "category": "Roads & Infrastructure",

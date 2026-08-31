@@ -28,14 +28,13 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
-  const [locationStatus, setLocationStatus] = useState('');
 
   useEffect(() => {
     if (user) {
       setName(user.name || '');
       setEmail(user.email || '');
       setPhone(user.phone || '+91 98490 12345');
-      setAddress(user.registered_location || 'Road No. 36, Jubilee Hills, Hyderabad');
+      setAddress(user.registered_location || 'Temple Road, Bhadrachalam, Bhadradri Kothagudem - 507111');
       setWard(user.ward || 'Ward 12');
       setPhotoUrl(user.photo_url || '');
     }
@@ -43,8 +42,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
 
   const handleUseMyLocation = async () => {
     setIsLocating(true);
-    setLocationStatus('Accessing high-precision GPS coordinates...');
-
     try {
       const loc = await detectPreciseLocation();
       if (loc.address) {
@@ -53,20 +50,10 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
       if (loc.ward) {
         setWard(loc.ward);
       }
-      setLocationStatus(`Location locked (±${loc.accuracyMeters}m accuracy)`);
     } catch (error) {
-      let msg = 'Unable to retrieve location.';
-      if (error.code === 1) {
-        msg = 'Location permission was denied. Please allow location access in your browser settings.';
-      } else if (error.code === 2) {
-        msg = 'GPS / Location information is unavailable on this device.';
-      } else if (error.code === 3) {
-        msg = 'Location request timed out. Please try again.';
-      }
-      setLocationStatus(msg);
+      console.warn('Location detection failed:', error);
     } finally {
       setIsLocating(false);
-      setTimeout(() => setLocationStatus(''), 5000);
     }
   };
 
@@ -113,8 +100,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto font-sans animate-in fade-in duration-200 text-slate-100">
-      
-      {/* Page Header */}
       <div className="bg-[#111317] p-6 rounded-3xl border border-[#23252d] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 rounded-2xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-xs">
@@ -134,14 +119,13 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           onClick={() => {
             if (onNavigateTab) onNavigateTab('dashboard');
           }}
-          className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 text-xs font-bold rounded-xl transition-all border border-[#23252d] self-start sm:self-auto"
+          className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 text-xs font-bold rounded-xl transition-all border border-[#23252d] self-start sm:self-auto cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Dashboard</span>
         </button>
       </div>
 
-      {/* Success Notification Banner */}
       {savedSuccess && (
         <div className="bg-[#0c2e28] border border-[#175249] p-4 rounded-2xl flex items-center gap-3 text-xs text-white animate-in fade-in duration-200 shadow-sm">
           <CheckCircle2 className="h-5 w-5 text-[#2dd4bf] flex-shrink-0" />
@@ -152,10 +136,7 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
         </div>
       )}
 
-      {/* Main Settings Form Card */}
       <form onSubmit={handleSave} className="bg-[#111317] rounded-3xl border border-[#23252d] shadow-sm p-6 sm:p-8 space-y-8">
-        
-        {/* Section 1: Profile Photo */}
         <div className="space-y-4">
           <h3 className="text-xs font-bold text-[#88909d] uppercase tracking-wider">
             Profile Photo
@@ -206,15 +187,12 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           </div>
         </div>
 
-        {/* Section 2: Personal Details */}
         <div className="space-y-4 pt-2 border-t border-[#23252d]">
           <h3 className="text-xs font-bold text-[#88909d] uppercase tracking-wider">
             Contact Information
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            {/* Full Name */}
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">Full Name</label>
               <div className="relative">
@@ -230,7 +208,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
               </div>
             </div>
 
-            {/* Email Address */}
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">Email Address</label>
               <div className="relative">
@@ -246,7 +223,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
               </div>
             </div>
 
-            {/* Mobile / Phone */}
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">Mobile Number</label>
               <div className="relative">
@@ -261,7 +237,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
               </div>
             </div>
 
-            {/* Role / Type */}
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">Account Role</label>
               <input
@@ -271,18 +246,15 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
                 className="w-full px-3.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl text-xs text-[#88909d] font-medium cursor-not-allowed"
               />
             </div>
-
           </div>
         </div>
 
-        {/* Section 3: Residential Address & Ward Routing */}
         <div className="space-y-4 pt-2 border-t border-[#23252d]">
           <h3 className="text-xs font-bold text-[#88909d] uppercase tracking-wider">
             Address & Area
           </h3>
 
           <div className="space-y-4">
-            {/* Residential Address with top Use my location button */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-bold text-slate-300">
@@ -325,7 +297,6 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
               </p>
             </div>
 
-            {/* Assigned Municipal Ward */}
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Ward / Area Zone
@@ -345,12 +316,11 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           </div>
         </div>
 
-        {/* Action Footer */}
         <div className="pt-4 border-t border-[#23252d] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <button
             type="button"
             onClick={logout}
-            className="px-4 py-2.5 text-[#f87171] hover:bg-[#2e1818] rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all border border-[#592626] text-xs"
+            className="px-4 py-2.5 text-[#f87171] hover:bg-[#2e1818] rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all border border-[#592626] text-xs cursor-pointer"
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
@@ -359,7 +329,7 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2.5 bg-[#0c2e28] hover:bg-[#113f37] text-[#2dd4bf] border border-[#175249] disabled:opacity-50 rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 text-xs"
+            className="px-6 py-2.5 bg-[#0c2e28] hover:bg-[#113f37] text-[#2dd4bf] border border-[#175249] disabled:opacity-50 rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 text-xs cursor-pointer"
           >
             {saving ? (
               <span>Saving Changes...</span>
@@ -371,9 +341,7 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
             )}
           </button>
         </div>
-
       </form>
-
     </div>
   );
 }

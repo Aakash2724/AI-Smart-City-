@@ -36,13 +36,12 @@ async def create_complaint(
     db: Session = Depends(get_db)
 ):
     """
-    Submits a new citizen complaint. Runs image vision, NLP text extraction,
-    executes Dual AI Agent workflow (Visible Public Text Box + Hidden Government Agent),
-    attaches location-matched Municipality Head photo/details, and sends feedback email notification.
+    Submits a new citizen complaint. Runs image analysis, text processing,
+    executes multi-agent workflow, attaches assigned municipality officer,
+    and dispatches acknowledgement email.
     """
     ticket_num = f"CMP-{datetime.datetime.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:4].upper()}"
     
-    # Save Image File if uploaded
     image_url = None
     file_path = None
     if image:
@@ -53,15 +52,12 @@ async def create_complaint(
             shutil.copyfileobj(image.file, buffer)
         image_url = f"/uploads/{filename}"
 
-    # 1. Computer Vision Image Analysis
     vision_dets = []
     if file_path:
         vision_dets = vision_service.analyze_image(file_path, text_hint=original_text)
 
-    # 2. NLP Pipeline
     nlp_data = nlp_service.process_complaint_text(original_text, address_hint=address)
 
-    # 3. Multi-Agent Workflow Execution
     initial_state = {
         "complaint_id": ticket_num,
         "original_text": original_text,
@@ -87,7 +83,6 @@ async def create_complaint(
 
     final_state = multi_agent_workflow.run(initial_state)
 
-    # 4. Match Municipality Head based on location/ward and classified category
     head_obj = municipality_service.get_head_by_location(
         db, 
         location_text=address or "", 
@@ -95,18 +90,15 @@ async def create_complaint(
         category=final_state.get("category", "")
     )
 
-    # Match assigned department in DB
     dept_name = final_state.get("assigned_department_name")
     dept = db.query(Department).filter(Department.name.ilike(f"%{dept_name[:10]}%")).first()
     dept_id = dept.id if dept else None
 
-    # Lookup registered User by email if available
     user_record = None
     clean_reg_email = (registered_email or "").strip().lower()
     if clean_reg_email:
         user_record = db.query(User).filter(User.email.ilike(clean_reg_email)).first()
 
-    # Determine resolved citizen name
     final_citizen_name = (citizen_name or "").strip()
     if not final_citizen_name and user_record and user_record.name:
         final_citizen_name = user_record.name.strip()
@@ -117,7 +109,6 @@ async def create_complaint(
     if not final_citizen_name:
         final_citizen_name = "Citizen"
 
-    # Create Complaint DB Record
     complaint = Complaint(
         ticket_number=ticket_num,
         citizen_id=user_record.id if user_record else None,
@@ -148,7 +139,6 @@ async def create_complaint(
     db.commit()
     db.refresh(complaint)
 
-    # Save Vision Detections
     for det in vision_dets:
         v_rec = VisionDetection(
             complaint_id=complaint.id,
@@ -159,7 +149,6 @@ async def create_complaint(
         )
         db.add(v_rec)
 
-    # Save Agent Execution Logs
     for log in final_state.get("agent_logs", []):
         log_rec = AgentExecutionLog(
             complaint_id=complaint.id,
@@ -174,7 +163,6 @@ async def create_complaint(
     db.commit()
     db.refresh(complaint)
 
-    # 5. Dispatch Automated Feedback Email via SMTP
     from app.services.municipality_service import CANONICAL_OFFICERS
     default_canon = CANONICAL_OFFICERS.get(complaint.category, CANONICAL_OFFICERS["Roads & Infrastructure"])
     head_dict = {

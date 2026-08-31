@@ -1,24 +1,3 @@
-"""
-AI Smart City - LLM Copilot & Natural Language Reasoning Service
-----------------------------------------------------------------
-Purpose:
-  Provides high-accuracy, context-grounded conversational intelligence for the
-  SmartGov Municipal Operations AI Copilot using Google Gemini and Groq LLMs.
-  
-Key Features:
-  1. Multi-LLM Provider Support: Google Gemini (2.5 Flash, 2.5 Pro, Flash-Latest) + Groq (Qwen 3.8/3.6, GPT-OSS 120B, Compound).
-  2. Automatic Failover & Retry Pipeline: If one provider is throttled, seamlessly falls back to the next available LLM.
-  3. Dynamic RAG (Retrieval-Augmented Generation):
-     - Live database counts (total, resolved, active, categories, priority breakdown)
-     - Ward density rankings & hotspot distribution
-     - Municipality Heads registry (officers, departments, designations, contact info)
-     - 7-Day Predictive Risk Forecasts from XGBoost/ML predictive engine
-     - Municipal SLAs and Civic Grievance SOP policies
-  4. Specific Ticket / Complaint Lookup:
-     - Detects ticket IDs (e.g., CMP-101, WO-101, #101) and retrieves exact case details.
-  5. Multilingual Native Support: Responds fluently in English, Telugu (తెలుగు), Hindi (हिंदी), Tenglish, or Hinglish.
-"""
-
 import os
 import re
 import json

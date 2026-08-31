@@ -1,15 +1,3 @@
-"""
-AI Smart City - NLP Service (Natural Language Processing Module)
----------------------------------------------------------------
-Purpose:
-  Analyzes citizen complaint text in any regional language (English, Telugu, Hindi, Tenglish, Hinglish).
-  
-Data Science Pipeline Steps:
-  1. Language Detection & Translation: Identifies language and translates to standard English.
-  2. Intent & Category Classification: Maps the problem to municipal departments (Roads, Water, Waste, Electrical, Traffic).
-  3. Entity Extraction & Safety Risk Scoring: Extracts location, hazard type, and safety risk score (1-10).
-"""
-
 import os
 import json
 import re

@@ -625,12 +625,7 @@ export default function AuthPage() {
 
             </div>
           ) : (
-            /* ═══════════════════════════════════════════════════════════════
-               CITIZEN REGISTRATION OPTIONS
-               ═══════════════════════════════════════════════════════════════ */
             <div className="space-y-2.5">
-
-              {/* Back to Sign In button */}
               <button
                 type="button"
                 onClick={() => { setView('login'); setError(''); }}
@@ -656,11 +651,9 @@ export default function AuthPage() {
                 </div>
               )}
 
-              {/* Scrollable Registration Form Area */}
               <form onSubmit={handleRegisterSubmit} className="space-y-2.5">
                 <div className="max-h-[38vh] overflow-y-auto pr-1 space-y-2.5 text-xs custom-scrollbar">
 
-                  {/* 1. Full Name */}
                   <div>
                     <label className="block text-xs font-medium text-[#8ea6b3] mb-1">Full Name</label>
                     <input
@@ -673,7 +666,6 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* 2. Email Address */}
                   <div>
                     <label className="block text-xs font-medium text-[#8ea6b3] mb-1">Email Address</label>
                     <input
@@ -686,7 +678,6 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* 3. Password (with Strict Security Requirements Checklist) */}
                   <div>
                     <label className="block text-xs font-medium text-[#8ea6b3] mb-1">Password</label>
                     <input
@@ -698,7 +689,6 @@ export default function AuthPage() {
                       required
                     />
 
-                    {/* Real-time Password Security Rules Visual Checklist */}
                     <div className="bg-[#12161b] p-2 rounded-lg border border-[#212f37] mt-1.5 space-y-1 text-[10px]">
                       <div className="flex items-center justify-between text-[#8ea6b3] font-semibold pb-0.5 border-b border-[#1c272f]">
                         <span>Security Requirements</span>
@@ -726,7 +716,6 @@ export default function AuthPage() {
                     </div>
                   </div>
 
-                  {/* 4. Confirm Password */}
                   <div>
                     <label className="block text-xs font-medium text-[#8ea6b3] mb-1">Confirm Password</label>
                     <input
@@ -739,7 +728,6 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* 5. Residential Address (with Use Location Button on Top) */}
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <label className="block text-xs font-medium text-[#8ea6b3]">

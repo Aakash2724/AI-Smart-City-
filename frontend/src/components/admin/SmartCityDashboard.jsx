@@ -20,7 +20,10 @@ import {
   RefreshCw,
   Send,
   ShieldCheck,
-  Zap
+  Zap,
+  Activity,
+  Award,
+  Star
 } from 'lucide-react';
 
 const RECENT_PRIORITY_PILLS = {
@@ -769,39 +772,43 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           </div>
         </div>
 
-        {/* Tab 3: Ward SLA & Resolution Efficiency Card */}
+        {/* Tab 3: Live City Health Index (Civic Vital Signs) */}
         <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[340px]">
           
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
             <div>
-              <h3 className="text-sm font-bold text-white">Ward SLA & Efficiency</h3>
-              <p className="text-[11px] text-[#88909d]">Zonal response & turnaround</p>
+              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Activity className="h-4 w-4 text-[#2dd4bf]" />
+                <span>City Health Index</span>
+              </h3>
+              <p className="text-[11px] text-[#88909d]">Real-time municipal vital signs</p>
             </div>
-            <span className="text-[10px] font-bold text-[#2dd4bf] bg-[#0c2e28] px-2.5 py-0.5 rounded-full border border-[#175249]">
-              94.2% On-Time
+            <span className="text-[10px] font-bold text-[#2dd4bf] bg-[#0c2e28] px-2.5 py-0.5 rounded-full border border-[#175249] flex items-center gap-1">
+              <Award className="h-3 w-3 text-amber-400" />
+              <span>Score: 94/100 (A+)</span>
             </span>
           </div>
 
-          {/* Top Wards Performance Items */}
+          {/* 4 Core Civic Vital Signs Progress Meters */}
           <div className="flex-1 flex flex-col justify-around py-1.5 min-h-0 text-xs">
             {[
-              { ward: 'Ward 12 - Jubilee Zone', rate: '96%', avgTime: '3.1h', officers: 18, color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 96 },
-              { ward: 'Ward 8 - Central Market Zone', rate: '94%', avgTime: '4.2h', officers: 14, color: 'from-[#38bdf8] to-[#6366f1]', pct: 94 },
-              { ward: 'Ward 15 - IT Corridor Zone', rate: '91%', avgTime: '2.8h', officers: 22, color: 'from-[#a855f7] to-[#ec4899]', pct: 91 },
-              { ward: 'Ward 14 - Green Park Zone', rate: '93%', avgTime: '3.6h', officers: 16, color: 'from-[#f59e0b] to-[#10b981]', pct: 93 },
-            ].map((item, idx) => (
+              { label: 'Road Surface Integrity', score: '91/100', note: '12 active potholes', color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 91 },
+              { label: 'Clean Water Network', score: '96/100', note: '3 active pipeline leaks', color: 'from-[#38bdf8] to-[#6366f1]', pct: 96 },
+              { label: 'Urban Sanitation', score: '93/100', note: '4 overflow spots', color: 'from-[#10b981] to-[#34d399]', pct: 93 },
+              { label: 'Smart Grid Lighting', score: '95/100', note: '5 dark spots reported', color: 'from-[#f59e0b] to-[#fbbf24]', pct: 95 },
+            ].map((vital, idx) => (
               <div key={idx} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-200 truncate">{item.ward}</span>
-                  <span className="font-mono text-[11px] text-[#2dd4bf] font-bold">
-                    {item.rate} <span className="text-slate-400 font-normal">({item.avgTime} avg)</span>
+                  <span className="font-semibold text-slate-200 truncate">{vital.label}</span>
+                  <span className="font-mono text-[11px] text-slate-300 font-bold">
+                    <strong className="text-white">{vital.score}</strong> <span className="text-slate-400 font-normal">({vital.note})</span>
                   </span>
                 </div>
                 <div className="w-full bg-[#0e1014] rounded-full h-1.5 overflow-hidden border border-[#23252d]">
                   <div
-                    className={`h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
-                    style={{ width: `${item.pct}%` }}
+                    className={`h-full rounded-full bg-gradient-to-r ${vital.color} transition-all duration-500`}
+                    style={{ width: `${vital.pct}%` }}
                   />
                 </div>
               </div>
@@ -810,15 +817,15 @@ export default function SmartCityDashboard({ onNavigateTab }) {
 
           {/* Action Footer */}
           <div className="pt-2 border-t border-[#23252d] flex items-center justify-between flex-shrink-0 text-xs">
-            <span className="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
-              <Zap className="h-3.5 w-3.5 text-amber-400" />
-              <span>Avg SLA: <strong>3.4h</strong></span>
+            <span className="text-[11px] text-slate-300 flex items-center gap-1 font-semibold">
+              <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+              <span><strong>4.8 / 5.0</strong> Citizen Trust Score</span>
             </span>
             <button
               onClick={() => onNavigateTab && onNavigateTab('forecast')}
               className="text-xs text-[#2dd4bf] hover:text-[#5eead4] font-bold flex items-center gap-1 cursor-pointer"
             >
-              <span>Predictive Radar</span>
+              <span>Vital Radar</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>

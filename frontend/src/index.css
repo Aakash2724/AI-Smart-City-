@@ -226,6 +226,7 @@ html.light .bg-slate-950,
 html.light header.bg-\[\#111317\],
 html.light aside.bg-\[\#111317\] {
   background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
 }
 
 html.light .bg-\[\#111317\]\/95,
@@ -234,22 +235,34 @@ html.light .bg-\[\#111317\]\/80,
 html.light .bg-\[\#14151a\]\/95,
 html.light .bg-\[\#101418\]\/90 {
   background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
 }
 
-/* Inset Boxes, Inner Panels, Table Rows Alternate, Input wrappers, Auth Left Canvas */
+/* Inset Boxes, Segmented Pill Controllers, Inner Panels, Input wrappers */
+html.light .bg-\[\#0a0c0f\],
+html.light .bg-\[\#07080b\],
+html.light .bg-\[\#0a0c10\],
+html.light .bg-\[\#0a0d0c\],
+html.light .bg-\[\#0c0d10\],
+html.light .bg-\[\#0c0e12\],
+html.light .bg-\[\#0e0f13\],
 html.light .bg-\[\#080b0a\],
 html.light .bg-\[\#0e1014\],
+html.light .bg-\[\#0e1013\],
 html.light .bg-\[\#131418\],
 html.light .bg-\[\#151b20\],
 html.light .bg-\[\#12161b\],
-html.light .bg-\[\#0c0d10\],
+html.light .bg-\[\#12141a\],
+html.light .bg-\[\#14161d\],
 html.light .bg-\[\#131519\],
 html.light .bg-\[\#1a1d24\],
 html.light .bg-\[\#1c2730\],
 html.light .bg-\[\#181c26\],
 html.light .bg-\[\#171e25\],
 html.light .bg-slate-800 {
-  background-color: #f8fafc !important;
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
 }
 
 /* Voice Input Widget & Dropdown in Light Mode */
@@ -270,8 +283,18 @@ html.light .bg-\[\#1b202c\] {
   color: #475569 !important;
 }
 
-/* Index / Number Badge Circles */
-html.light .bg-black\/40 {
+/* Index / Number Badge Circles & Pill Counters */
+html.light .bg-black\/40,
+html.light .bg-black\/50,
+html.light .bg-black\/60 {
+  background-color: #e2e8f0 !important;
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Badges inside pills and tags */
+html.light .bg-\[\#16181e\],
+html.light .bg-\[\#12141a\] {
   background-color: #e2e8f0 !important;
   color: #475569 !important;
   border-color: #cbd5e1 !important;
@@ -301,8 +324,10 @@ html.light .hover\:bg-\[\#1e272f\]:hover,
 html.light .hover\:bg-\[\#243440\]:hover,
 html.light .hover\:bg-\[\#1a1d23\]:hover,
 html.light .hover\:bg-\[\#16181e\]:hover,
+html.light .hover\:bg-\[\#14161d\]:hover,
 html.light .hover\:bg-\[\#0e1014\]:hover {
-  background-color: #f1f5f9 !important;
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
 html.light .hover\:bg-\[\#2e1818\]:hover {
@@ -396,6 +421,8 @@ html.light .border-\[\#2c2f3a\],
 html.light .border-\[\#212f37\],
 html.light .border-\[\#1a1c22\],
 html.light .border-\[\#1c272f\],
+html.light .border-\[\#1c1e25\],
+html.light .border-\[\#1f222a\],
 html.light .border-\[\#383b46\],
 html.light .border-\[\#282b35\],
 html.light .border-\[\#232836\],

@@ -333,10 +333,11 @@ html.light .bg-\[\#291f16\] {
   border-color: #fed7aa !important;
 }
 
-/* Green / Teal / Medium / Low / Assigned / Resolved / Verified */
+/* Green / Teal / Medium / Low / Assigned / Resolved / Verified / Badge Pills */
 html.light .bg-\[\#142622\],
 html.light .bg-\[\#122822\],
 html.light .bg-\[\#0c2e28\],
+html.light .bg-\[\#13352c\],
 html.light .bg-\[\#0c2e28\]\/30,
 html.light .bg-\[\#0c2e28\]\/50,
 html.light .bg-\[\#0c2e28\]\/90 {
@@ -349,6 +350,10 @@ html.light .hover\:bg-\[\#113f37\]:hover,
 html.light .bg-\[\#113f37\],
 html.light .bg-\[\#175249\] {
   background-color: #ccfbf1 !important;
+}
+
+html.light .border-\[\#1d4f42\] {
+  border-color: #99f6e4 !important;
 }
 
 /* Blue / Submitted */

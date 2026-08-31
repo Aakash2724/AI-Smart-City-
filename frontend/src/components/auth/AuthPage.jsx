@@ -490,7 +490,7 @@ export default function AuthPage() {
         <div className="flex items-center gap-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-[#2dd4bf] shadow-[0_0_10px_#2dd4bf] animate-pulse"></span>
           <span className={`font-bold text-sm tracking-tight flex items-center gap-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            AI Smart City <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#13352c] text-[#5eead4] border border-[#1d4f42] font-mono font-medium">v2.4</span>
+            AI Smart City <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-medium border ${isDark ? 'bg-[#13352c] text-[#5eead4] border-[#1d4f42]' : 'bg-teal-50 text-teal-700 border-teal-200 shadow-xs'}`}>v2.4</span>
           </span>
         </div>
 
@@ -594,16 +594,18 @@ export default function AuthPage() {
                   />
                 </div>
 
-                {/* Remember Me Checkbox */}
+                {/* Keep me signed in Checkbox */}
                 <div className="pt-0.5 flex items-center justify-between">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs text-[#8ea6b3] hover:text-white select-none transition-colors">
+                  <label className={`flex items-center gap-2 cursor-pointer text-xs select-none transition-colors ${
+                    isDark ? 'text-[#8ea6b3] hover:text-white' : 'text-slate-600 hover:text-slate-900 font-medium'
+                  }`}>
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="w-4 h-4 rounded bg-[#151b20] border-[#212f37] text-[#2dd4bf] focus:ring-[#2dd4bf] focus:ring-offset-0 focus:ring-1 cursor-pointer accent-[#2dd4bf]"
                     />
-                    <span>Remember me</span>
+                    <span>Keep me signed in</span>
                   </label>
                 </div>
 
@@ -849,16 +851,18 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* Remember Me for Registration */}
+                  {/* Keep me signed in for Registration */}
                   <div className="pt-0.5">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs text-[#8ea6b3] hover:text-white select-none">
+                    <label className={`flex items-center gap-2 cursor-pointer text-xs select-none transition-colors ${
+                      isDark ? 'text-[#8ea6b3] hover:text-white' : 'text-slate-600 hover:text-slate-900 font-medium'
+                    }`}>
                       <input
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
                         className="w-4 h-4 rounded bg-[#151b20] border-[#212f37] text-[#2dd4bf] focus:ring-[#2dd4bf] focus:ring-offset-0 focus:ring-1 cursor-pointer accent-[#2dd4bf]"
                       />
-                      <span>Remember me</span>
+                      <span>Keep me signed in</span>
                     </label>
                   </div>
 
@@ -1052,7 +1056,7 @@ export default function AuthPage() {
                 </form>
               </div>
 
-              {/* Remember me footer in Google Modal */}
+              {/* Keep me signed in footer in Google Modal */}
               <div className="pt-1 border-t border-[#1e272f] flex items-center justify-between text-[11px] text-[#718691]">
                 <label className="flex items-center gap-2 cursor-pointer hover:text-white select-none">
                   <input
@@ -1061,7 +1065,7 @@ export default function AuthPage() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-3.5 h-3.5 rounded bg-[#171e25] border-[#24323c] text-[#2dd4bf] accent-[#2dd4bf]"
                   />
-                  <span>Remember me</span>
+                  <span>Keep me signed in</span>
                 </label>
               </div>
 

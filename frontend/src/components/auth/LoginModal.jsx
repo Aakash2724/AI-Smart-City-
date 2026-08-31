@@ -324,7 +324,7 @@ export default function LoginModal() {
               </div>
             )}
 
-            {/* Remember Me checkbox */}
+            {/* Keep me signed in checkbox */}
             <div className="pt-1">
               <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-400 hover:text-white select-none">
                 <input
@@ -333,7 +333,7 @@ export default function LoginModal() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded bg-[#0e1014] border-[#23252d] text-[#2dd4bf] accent-[#2dd4bf]"
                 />
-                <span>Remember me</span>
+                <span>Keep me signed in</span>
               </label>
             </div>
 

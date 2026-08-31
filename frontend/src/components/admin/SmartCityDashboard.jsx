@@ -817,17 +817,13 @@ export default function SmartCityDashboard({ onNavigateTab }) {
 
           {/* Action Footer */}
           <div className="pt-2 border-t border-[#23252d] flex items-center justify-between flex-shrink-0 text-xs">
-            <span className="text-[11px] text-slate-300 flex items-center gap-1 font-semibold">
+            <span className="text-[11px] text-slate-300 flex items-center gap-1.5 font-semibold">
               <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
               <span><strong>4.8 / 5.0</strong> Citizen Trust Score</span>
             </span>
-            <button
-              onClick={() => onNavigateTab && onNavigateTab('forecast')}
-              className="text-xs text-[#2dd4bf] hover:text-[#5eead4] font-bold flex items-center gap-1 cursor-pointer"
-            >
-              <span>Vital Radar</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            <span className="text-[10px] font-mono text-[#2dd4bf] bg-[#0c2e28] px-2 py-0.5 rounded-md border border-[#175249]">
+              Municipal Vital Index
+            </span>
           </div>
 
         </div>

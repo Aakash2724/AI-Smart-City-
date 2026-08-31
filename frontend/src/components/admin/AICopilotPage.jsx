@@ -525,56 +525,45 @@ export default function AICopilotPage() {
           {chatMessages.map((msg, idx) => (
             <div
               key={idx}
-              className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed max-w-[92%] ${
+              className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed border transition-all ${
                 msg.sender === 'user'
-                  ? 'ml-auto bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm'
-                  : 'bg-[#0e1014] text-slate-200 border border-[#23252d] shadow-sm'
+                  ? 'bg-[#0c2e28] text-white border-[#175249] ml-auto max-w-[85%]'
+                  : 'bg-[#111317] text-slate-200 border-[#23252d] mr-auto max-w-[95%] shadow-sm'
               }`}
             >
               {msg.sender === 'ai' && (
-                <div className="flex items-center gap-2 mb-2 pb-1.5 border-b border-[#23252d] text-[10px] font-mono text-slate-400">
-                  <span className="flex items-center gap-1 text-[#2dd4bf] font-semibold">
-                    <Zap className="h-3 w-3" />
-                    SmartGov AI
-                  </span>
-                  <span>•</span>
-                  <span className="text-slate-400 capitalize">
-                    {msg.provider === 'gemini' ? 'Google Gemini 2.5 Flash' : msg.provider === 'groq' ? `Groq (${msg.model || 'Qwen'})` : 'Live RAG Engine'}
-                  </span>
+                <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-[#2dd4bf] mb-2 pb-1.5 border-b border-[#23252d]">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Sparkles className="h-3 w-3 text-[#2dd4bf] flex-shrink-0" />
+                    <span className="font-bold truncate">SmartGov AI Copilot</span>
+                    <span>•</span>
+                    <span className="text-slate-400 capitalize truncate">
+                      {msg.provider === 'gemini' ? 'Google Gemini 2.5 Flash' : msg.provider === 'groq' ? `Groq (${msg.model || 'Qwen'})` : 'Live RAG Engine'}
+                    </span>
+                  </div>
+
+                  {/* Speaker Icon in Top Right Corner */}
+                  <button
+                    type="button"
+                    onClick={() => handleSpeak(msg.text, idx)}
+                    className={`p-1.5 rounded-lg border transition-all cursor-pointer flex-shrink-0 ${
+                      speakingIdx === idx 
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse shadow-xs' 
+                        : 'bg-[#151921] hover:bg-[#1c222e] text-slate-400 hover:text-[#2dd4bf] border-[#232734]'
+                    }`}
+                    title={speakingIdx === idx ? "Stop speaking" : "Listen to answer"}
+                    aria-label={speakingIdx === idx ? "Stop speaking" : "Listen to answer"}
+                  >
+                    {speakingIdx === idx ? (
+                      <VolumeX className="h-3.5 w-3.5 text-rose-400" />
+                    ) : (
+                      <Volume2 className="h-3.5 w-3.5 text-[#2dd4bf]" />
+                    )}
+                  </button>
                 </div>
               )}
               {msg.sender === 'ai' ? (
-                <>
-                  <FormattedAIMessage text={msg.text} />
-                  <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-[#23252d]/80 text-[10px]">
-                    <span className="text-[#88909d] flex items-center gap-1">
-                      <Zap className="h-3 w-3 text-[#2dd4bf]" />
-                      SmartGov Voice Intelligence
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleSpeak(msg.text, idx)}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-bold ${
-                        speakingIdx === idx 
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse' 
-                          : 'bg-[#151921] hover:bg-[#1c222e] text-slate-300 hover:text-[#2dd4bf] border-[#232734]'
-                      }`}
-                      title={speakingIdx === idx ? "Stop speaking" : "Listen to answer aloud"}
-                    >
-                      {speakingIdx === idx ? (
-                        <>
-                          <VolumeX className="h-3 w-3 text-rose-400" />
-                          <span>Stop Audio</span>
-                        </>
-                      ) : (
-                        <>
-                          <Volume2 className="h-3 w-3 text-[#2dd4bf]" />
-                          <span>Listen to Answer</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </>
+                <FormattedAIMessage text={msg.text} />
               ) : (
                 <div className="whitespace-pre-line font-medium text-white">{msg.text}</div>
               )}

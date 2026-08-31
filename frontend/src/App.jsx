@@ -94,6 +94,7 @@ function MainApp() {
           activeTab={activeTab} 
           setActiveTab={handleTabChange} 
           isOpen={isSidebarOpen}
+          onToggle={() => setIsSidebarOpen((prev) => !prev)}
         />
 
         {/* Dynamic Full Screen Main Content Area */}

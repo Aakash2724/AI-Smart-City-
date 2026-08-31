@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   CheckCircle2, 
   Clock, 
@@ -93,15 +94,15 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
     complaint.priority === 'HIGH' ? 'bg-amber-500/15 text-amber-300 border-amber-500/40' :
     'bg-emerald-500/15 text-emerald-300 border-emerald-500/40';
 
-  return (
+  const modalContent = (
     <div 
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-black/60 backdrop-blur-[3px] p-3 sm:p-6 text-center animate-in fade-in duration-150"
+      className="fixed inset-0 z-[999999] overflow-y-auto overscroll-contain bg-black/60 backdrop-blur-[2px] p-3 sm:p-6 text-center animate-in fade-in duration-150"
       onClick={onClose}
     >
       <div className="flex min-h-full items-center justify-center p-0">
         {/* Modal Dialog Card - Perfectly Centered, Never Clipped */}
         <div 
-          className="relative my-auto w-full max-w-4xl max-h-[88vh] bg-[#14161b] rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col text-left text-slate-100 ring-1 ring-white/5 animate-in zoom-in-95 duration-150"
+          className="relative my-auto w-full max-w-4xl max-h-[85vh] bg-[#14161b] rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col text-left text-slate-100 ring-1 ring-white/5 animate-in zoom-in-95 duration-150"
           onClick={(e) => e.stopPropagation()}
         >
           
@@ -135,7 +136,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
         </div>
 
         {/* ── 2. Scrollable Body with Clean Balanced Layout ── */}
-        <div className="p-6 sm:p-8 overflow-y-auto overscroll-contain space-y-5 text-xs text-slate-200">
+        <div className="flex-1 min-h-0 p-5 sm:p-7 overflow-y-auto overscroll-contain space-y-5 text-xs text-slate-200">
 
           {/* Top Summary Bar: Ticket, Estimated Resolution Time, Priority & Status */}
           <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 bg-[#111317] rounded-2xl border border-[#23252d]">
@@ -452,5 +453,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
     </div>
   </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }
 

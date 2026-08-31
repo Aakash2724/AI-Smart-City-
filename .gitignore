@@ -38,5 +38,10 @@ Thumbs.db
 *.swp
 *.swo
 
-# Logs
+# Logs & Temporary
 *.log
+scratch/
+backend/uploads/*.json
+backend/uploads/*.jpg
+backend/uploads/*.jpeg
+backend/uploads/*.png

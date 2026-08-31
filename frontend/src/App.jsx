@@ -10,7 +10,6 @@ import AICopilotPage from './components/admin/AICopilotPage';
 import RiskForecastPanel from './components/admin/RiskForecastPanel';
 import AuthPage from './components/auth/AuthPage';
 
-import LoginModal from './components/auth/LoginModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -167,9 +166,6 @@ function MainApp() {
         </main>
 
       </div>
-
-      {/* Login / Auth Modal */}
-      <LoginModal />
 
     </div>
   );

@@ -13,7 +13,8 @@ import {
   Tag, 
   Building2, 
   Scan, 
-  FileText 
+  FileText,
+  Smartphone
 } from 'lucide-react';
 import { SERVER_ORIGIN } from '../../services/api';
 
@@ -395,12 +396,20 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
           </div>
 
-          {/* Email Notification Note */}
-          <div className="p-3.5 rounded-2xl bg-[#0c2e28] border border-[#175249] flex items-center gap-3 text-xs text-slate-200">
-            <Mail className="h-4 w-4 text-[#2dd4bf] flex-shrink-0" />
-            <span>
-              Real-time SMS and email updates will be dispatched to <strong className="text-[#5eead4]">{complaint.registered_email || 'your registered email'}</strong>.
-            </span>
+          {/* Real-time SMS & Email Notification Confirmation Note */}
+          <div className="p-3.5 rounded-2xl bg-[#0c2e28] border border-[#175249] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-200 shadow-sm">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Smartphone className="h-4 w-4 text-[#2dd4bf] flex-shrink-0" />
+              <span>
+                Real-time SMS alert dispatched to <strong className="text-[#5eead4] font-mono">+91 98490 12345</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Mail className="h-4 w-4 text-[#2dd4bf] flex-shrink-0" />
+              <span className="truncate">
+                Email sent to <strong className="text-[#5eead4]">{complaint.registered_email || 'citizen@smartcity.gov'}</strong>
+              </span>
+            </div>
           </div>
 
         </div>

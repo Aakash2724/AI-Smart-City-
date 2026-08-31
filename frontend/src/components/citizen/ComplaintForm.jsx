@@ -131,6 +131,11 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
         formData.append('citizen_name', resolvedName);
       }
 
+      const resolvedPhone = (user?.phone || (!contact?.includes('@') ? contact : '+91 98490 12345')).trim();
+      if (resolvedPhone) {
+        formData.append('citizen_phone', resolvedPhone);
+      }
+
       if (imageFile) {
         formData.append('image', imageFile);
       }

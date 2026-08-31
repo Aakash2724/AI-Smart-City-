@@ -68,7 +68,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   const visionDets = complaint.vision_detections || [];
   const primaryDetection = visionDets.length > 0 ? visionDets[0] : null;
   
-  // High-accuracy fallback based on actual classified category
+  // High-accuracy title based on actual classified category
   const rawClass = primaryDetection?.detected_class || (
     complaint.category === 'Sanitation & Waste' ? 'garbage_overflow' :
     complaint.category === 'Water & Sewage' ? 'water_leakage' :
@@ -78,35 +78,6 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   );
 
   const displayProblemTitle = CLASS_TITLES[rawClass] || complaint.subcategory || complaint.category || 'Civic Defect';
-  const detectionConfidence = primaryDetection?.confidence 
-    ? (primaryDetection.confidence * 100).toFixed(0) 
-    : '96';
-
-  // Calculate dynamic bounding box percentage style ensuring full visibility without clipping
-  const box = primaryDetection?.bounding_boxes?.[0];
-  const imgW = primaryDetection?.img_width || 800;
-  const imgH = primaryDetection?.img_height || 600;
-
-  let boxStyle = { left: '5%', top: '5%', width: '90%', height: '90%' };
-  if (box && box.x2 > box.x1 && box.y2 > box.y1 && imgW > 0 && imgH > 0) {
-    const rawLeft = (box.x1 / imgW) * 100;
-    const rawTop = (box.y1 / imgH) * 100;
-    const rawW = ((box.x2 - box.x1) / imgW) * 100;
-    const rawH = ((box.y2 - box.y1) / imgH) * 100;
-
-    const pad = 3;
-    const left = Math.max(1, rawLeft - pad);
-    const top = Math.max(1, rawTop - pad);
-    const width = Math.min(98 - left, rawW + pad * 2);
-    const height = Math.min(98 - top, rawH + pad * 2);
-
-    boxStyle = {
-      left: `${left}%`,
-      top: `${top}%`,
-      width: `${width}%`,
-      height: `${height}%`
-    };
-  }
 
   const copyTicket = () => {
     navigator.clipboard.writeText(complaint.ticket_number);
@@ -121,17 +92,18 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/40 backdrop-blur-[3px] animate-in fade-in duration-150 overflow-y-auto overscroll-contain"
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-black/60 backdrop-blur-[3px] p-3 sm:p-6 text-center animate-in fade-in duration-150"
       onClick={onClose}
     >
-      {/* Modal Dialog Card */}
-      <div 
-        className="relative my-auto w-full max-w-4xl max-h-[86vh] bg-[#14161b] rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col animate-in zoom-in-95 duration-150 text-slate-100 ring-1 ring-white/5 flex-shrink-0"
-        onClick={(e) => e.stopPropagation()}
-      >
-        
-        {/* ── 1. Top Header Banner ── */}
-        <div className="bg-[#111317] border-b border-[#23252d] px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-between flex-shrink-0">
+      <div className="flex min-h-full items-center justify-center p-0">
+        {/* Modal Dialog Card - Perfectly Centered, Never Clipped */}
+        <div 
+          className="relative my-auto w-full max-w-4xl max-h-[88vh] bg-[#14161b] rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col text-left text-slate-100 ring-1 ring-white/5 animate-in zoom-in-95 duration-150"
+          onClick={(e) => e.stopPropagation()}
+        >
+          
+          {/* ── 1. Top Header Banner ── */}
+          <div className="bg-[#111317] border-b border-[#23252d] px-6 sm:px-8 py-4 sm:py-4.5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="h-12 w-12 rounded-2xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] flex-shrink-0 shadow-sm">
               <CheckCircle2 className="h-6 w-6" />
@@ -389,72 +361,40 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
               </div>
             </div>
 
-            {/* Right: Attached Evidence & YOLOv8 Object Detection Preview */}
+            {/* Right: Attached Evidence Photo Record (Clean Evidence Only) */}
             {imageUrl && (
-              <div className="md:col-span-6 bg-[#111317] border border-[#23252d] rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div className="md:col-span-6 bg-[#111317] border border-[#23252d] rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
                 <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5">
                   <span className="text-xs font-bold text-[#2dd4bf] uppercase tracking-wider flex items-center gap-1.5">
-                    <Scan className="h-3.5 w-3.5" />
-                    AI Vision Defect Localization
+                    <FileText className="h-3.5 w-3.5" />
+                    Uploaded Evidence Photo
                   </span>
-                  <span className="text-[10px] bg-[#0284c7]/20 text-[#38bdf8] font-mono font-bold px-2.5 py-0.5 rounded-full border border-[#0284c7]/40 flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
-                    YOLOv8 + Gemini Vision ({detectionConfidence}%)
+                  <span className="text-[10px] bg-[#0c2e28] text-[#2dd4bf] font-mono font-bold px-2.5 py-0.5 rounded-full border border-[#175249] flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#2dd4bf]" />
+                    Visual Evidence
                   </span>
                 </div>
 
-                {/* Evidence Image Container with Precision Bounding Box Overlay */}
-                <div className="relative rounded-xl overflow-hidden border border-[#23252d] bg-[#07080b] w-full min-h-52 flex items-center justify-center group select-none">
+                {/* Evidence Image Container (Clean image only) */}
+                <div className="relative rounded-xl overflow-hidden border border-[#23252d] bg-[#07080b] w-full min-h-52 flex items-center justify-center select-none shadow-inner">
                   <img 
                     src={imageUrl} 
                     alt="Uploaded Civic Evidence" 
                     className="w-full h-52 object-cover rounded-xl"
                   />
-                  
-                  {/* Bounding Box Overlay */}
-                  <div 
-                    className="absolute border-2 border-[#0284c7] shadow-[0_0_15px_rgba(2,132,199,0.5)] pointer-events-none transition-all duration-300"
-                    style={boxStyle}
-                  >
-                    {/* Top Bounding Box Header Pill (matching user specification) */}
-                    <div className="absolute -top-6 left-0 bg-[#0284c7] text-white px-2 py-0.5 text-[10px] font-black font-mono tracking-tight whitespace-nowrap shadow-md flex items-center gap-1.5 uppercase rounded-t-sm">
-                      <span>YOLOv8: {rawClass.toUpperCase().replace(/-/g, '_')} ({detectionConfidence}%)</span>
-                      <span className="opacity-60">|</span>
-                      <span>Severity: {complaint.priority || 'HIGH'}</span>
-                    </div>
-
-                    {/* Corner Crosshairs */}
-                    <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-white shadow-xs" />
-                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-white shadow-xs" />
-                    <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-white shadow-xs" />
-                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-white shadow-xs" />
-                  </div>
                 </div>
 
-                {/* AI Object Detection & Visual Analysis Breakdown */}
+                {/* AI Visual Inspection Breakdown */}
                 <div className="bg-[#0e1014] p-3 rounded-xl border border-[#23252d] space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-400">Object Identified:</span>
+                    <span className="text-[11px] font-semibold text-slate-400">Classified Problem:</span>
                     <span className="font-bold text-white bg-[#14161b] px-2 py-0.5 rounded-md border border-[#23252d] text-[11px] truncate max-w-[200px]">
                       {displayProblemTitle}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-400">Confidence Score:</span>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-16 h-1.5 bg-[#1f222a] rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-teal-400 to-sky-400 rounded-full" 
-                          style={{ width: `${Math.min(100, Math.max(10, Number(detectionConfidence)))}%` }} 
-                        />
-                      </div>
-                      <span className="font-mono font-bold text-[#38bdf8] text-[11px]">{detectionConfidence}%</span>
-                    </div>
-                  </div>
-
                   <div className="flex items-center justify-between pt-1 border-t border-[#1f222a]">
-                    <span className="text-[11px] font-semibold text-slate-400">Visual Severity:</span>
+                    <span className="text-[11px] font-semibold text-slate-400">Assigned Severity:</span>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${priorityColor}`}>
                       {complaint.priority || 'HIGH'} PRIORITY
                     </span>
@@ -507,6 +447,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
       </div>
     </div>
+  </div>
   );
 }
 

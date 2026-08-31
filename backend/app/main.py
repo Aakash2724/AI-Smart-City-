@@ -14,20 +14,21 @@ Base.metadata.create_all(bind=engine)
 def ensure_sqlite_columns():
     try:
         from sqlalchemy import text
-        with engine.connect() as conn:
-            # Check users table columns
-            res = conn.execute(text("PRAGMA table_info(users)"))
-            cols = [row[1] for row in res.fetchall()]
-            if "photo_url" not in cols:
-                conn.execute(text("ALTER TABLE users ADD COLUMN photo_url TEXT;"))
-                conn.commit()
+        if "sqlite" in str(engine.url):
+            with engine.connect() as conn:
+                # Check users table columns
+                res = conn.execute(text("PRAGMA table_info(users)"))
+                cols = [row[1] for row in res.fetchall()]
+                if "photo_url" not in cols:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN photo_url TEXT;"))
+                    conn.commit()
 
-            # Check complaints table columns
-            res_c = conn.execute(text("PRAGMA table_info(complaints)"))
-            cols_c = [row[1] for row in res_c.fetchall()]
-            if "citizen_name" not in cols_c:
-                conn.execute(text("ALTER TABLE complaints ADD COLUMN citizen_name TEXT;"))
-                conn.commit()
+                # Check complaints table columns
+                res_c = conn.execute(text("PRAGMA table_info(complaints)"))
+                cols_c = [row[1] for row in res_c.fetchall()]
+                if "citizen_name" not in cols_c:
+                    conn.execute(text("ALTER TABLE complaints ADD COLUMN citizen_name TEXT;"))
+                    conn.commit()
     except Exception as e:
         print(f"[Main] Column migration notice: {e}")
 

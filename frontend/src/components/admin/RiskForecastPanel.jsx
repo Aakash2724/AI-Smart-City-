@@ -250,34 +250,36 @@ export default function RiskForecastPanel() {
         </div>
 
         {/* ─── View Switcher Tabs ─── */}
-        <div className="flex items-center bg-[#0e1014] p-0.5 rounded-xl border border-[#23252d] text-xs">
+        <div className="relative flex items-center bg-[#0a0c0f] p-1 rounded-xl border border-[#23252d] shadow-inner text-xs gap-1 select-none">
           <button
+            type="button"
             onClick={() => setActiveView('charts')}
-            className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+            className={`flex-1 py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer active:scale-[0.97] ${
               activeView === 'charts'
-                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm font-bold scale-[1.01]'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-[#14161d] border border-transparent'
             }`}
           >
-            <BarChart3 className="h-3.5 w-3.5" />
+            <BarChart3 className={`h-3.5 w-3.5 transition-transform duration-200 ${activeView === 'charts' ? 'text-[#2dd4bf] scale-110' : 'text-slate-500'}`} />
             <span>Risk Charts</span>
           </button>
           <button
+            type="button"
             onClick={() => setActiveView('leaderboard')}
-            className={`flex-1 py-1.5 px-3 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+            className={`flex-1 py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer active:scale-[0.97] ${
               activeView === 'leaderboard'
-                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-sm font-bold scale-[1.01]'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-[#14161d] border border-transparent'
             }`}
           >
-            <Layers className="h-3.5 w-3.5" />
+            <Layers className={`h-3.5 w-3.5 transition-transform duration-200 ${activeView === 'leaderboard' ? 'text-[#2dd4bf] scale-110' : 'text-slate-500'}`} />
             <span>Priority Zones</span>
           </button>
         </div>
       </div>
 
-      {/* ─── Scrollable Content Area ─── */}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-3.5 my-1">
+      {/* ─── Scrollable Content Area with Smooth Tab Switch Animation ─── */}
+      <div key={activeView} className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-3.5 my-1 animate-tab-switch">
         {loading ? (
           <div className="space-y-3 py-6">
             <div className="h-28 rounded-xl bg-[#0e1014] animate-pulse border border-[#23252d]" />

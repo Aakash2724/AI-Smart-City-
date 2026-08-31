@@ -319,36 +319,76 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
               </div>
             </div>
 
-            {/* Right: Attached Evidence Preview (if image exists) */}
+            {/* Right: Attached Evidence & YOLOv8 Object Detection Preview */}
             {imageUrl && (
-              <div className="md:col-span-6 bg-[#111317] border border-[#23252d] rounded-2xl p-5 space-y-3">
+              <div className="md:col-span-6 bg-[#111317] border border-[#23252d] rounded-2xl p-5 space-y-3.5 shadow-sm">
                 <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5">
                   <span className="text-xs font-bold text-[#2dd4bf] uppercase tracking-wider flex items-center gap-1.5">
                     <Scan className="h-3.5 w-3.5" />
-                    Uploaded Evidence
+                    AI Vision Defect Localization
                   </span>
-                  <span className="text-[10px] bg-[#0c2e28] text-[#5eead4] font-bold px-2.5 py-0.5 rounded-full border border-[#175249]">
-                    AI Verified
+                  <span className="text-[10px] bg-[#0284c7]/20 text-[#38bdf8] font-mono font-bold px-2.5 py-0.5 rounded-full border border-[#0284c7]/40 flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
+                    YOLOv8 + Gemini Vision ({detectionConfidence}%)
                   </span>
                 </div>
 
-                <div className="relative rounded-xl overflow-hidden border border-[#23252d] bg-[#0a0c10] w-full max-h-48 flex items-center justify-center">
+                {/* Evidence Image Container with Precision Bounding Box Overlay */}
+                <div className="relative rounded-xl overflow-hidden border border-[#23252d] bg-[#07080b] w-full min-h-52 flex items-center justify-center group select-none">
                   <img 
                     src={imageUrl} 
-                    alt="Uploaded Evidence" 
-                    className="w-full h-48 object-cover rounded-xl"
+                    alt="Uploaded Civic Evidence" 
+                    className="w-full h-52 object-cover rounded-xl"
                   />
+                  
+                  {/* Bounding Box Overlay */}
+                  <div 
+                    className="absolute border-2 border-[#0284c7] shadow-[0_0_15px_rgba(2,132,199,0.5)] pointer-events-none transition-all duration-300"
+                    style={boxStyle}
+                  >
+                    {/* Top Bounding Box Header Pill (matching user specification) */}
+                    <div className="absolute -top-6 left-0 bg-[#0284c7] text-white px-2 py-0.5 text-[10px] font-black font-mono tracking-tight whitespace-nowrap shadow-md flex items-center gap-1.5 uppercase rounded-t-sm">
+                      <span>YOLOv8: {rawClass.toUpperCase().replace(/-/g, '_')} ({detectionConfidence}%)</span>
+                      <span className="opacity-60">|</span>
+                      <span>Severity: {complaint.priority || 'HIGH'}</span>
+                    </div>
+
+                    {/* Corner Crosshairs */}
+                    <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-white shadow-xs" />
+                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-white shadow-xs" />
+                    <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-white shadow-xs" />
+                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-white shadow-xs" />
+                  </div>
                 </div>
 
-                {/* Classification Result from Backend AI */}
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#0c2e28]/60 border border-[#175249]/50">
-                  <span className="h-2 w-2 rounded-full bg-[#2dd4bf] flex-shrink-0 animate-pulse" />
-                  <span className="text-xs text-slate-200">
-                    Classified as <strong className="text-[#5eead4]">{complaint.category || 'Civic Issue'}</strong>
-                    {complaint.subcategory && complaint.subcategory !== complaint.category && (
-                      <span className="text-[#88909d]"> — {complaint.subcategory}</span>
-                    )}
-                  </span>
+                {/* AI Object Detection & Visual Analysis Breakdown */}
+                <div className="bg-[#0e1014] p-3 rounded-xl border border-[#23252d] space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-400">Object Identified:</span>
+                    <span className="font-bold text-white bg-[#14161b] px-2 py-0.5 rounded-md border border-[#23252d] text-[11px] truncate max-w-[200px]">
+                      {displayProblemTitle}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-400">Confidence Score:</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-16 h-1.5 bg-[#1f222a] rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-teal-400 to-sky-400 rounded-full" 
+                          style={{ width: `${Math.min(100, Math.max(10, Number(detectionConfidence)))}%` }} 
+                        />
+                      </div>
+                      <span className="font-mono font-bold text-[#38bdf8] text-[11px]">{detectionConfidence}%</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-[#1f222a]">
+                    <span className="text-[11px] font-semibold text-slate-400">Visual Severity:</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${priorityColor}`}>
+                      {complaint.priority || 'HIGH'} PRIORITY
+                    </span>
+                  </div>
                 </div>
               </div>
             )}

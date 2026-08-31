@@ -13,20 +13,21 @@ def seed_database():
     Base.metadata.create_all(bind=engine)
     try:
         from sqlalchemy import text
-        with engine.connect() as conn:
-            # Ensure users.photo_url exists
-            res = conn.execute(text("PRAGMA table_info(users)"))
-            cols = [row[1] for row in res.fetchall()]
-            if "photo_url" not in cols:
-                conn.execute(text("ALTER TABLE users ADD COLUMN photo_url TEXT;"))
-                conn.commit()
+        if "sqlite" in str(engine.url):
+            with engine.connect() as conn:
+                # Ensure users.photo_url exists
+                res = conn.execute(text("PRAGMA table_info(users)"))
+                cols = [row[1] for row in res.fetchall()]
+                if "photo_url" not in cols:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN photo_url TEXT;"))
+                    conn.commit()
 
-            # Ensure complaints.citizen_name exists
-            res_c = conn.execute(text("PRAGMA table_info(complaints)"))
-            cols_c = [row[1] for row in res_c.fetchall()]
-            if "citizen_name" not in cols_c:
-                conn.execute(text("ALTER TABLE complaints ADD COLUMN citizen_name TEXT;"))
-                conn.commit()
+                # Ensure complaints.citizen_name exists
+                res_c = conn.execute(text("PRAGMA table_info(complaints)"))
+                cols_c = [row[1] for row in res_c.fetchall()]
+                if "citizen_name" not in cols_c:
+                    conn.execute(text("ALTER TABLE complaints ADD COLUMN citizen_name TEXT;"))
+                    conn.commit()
     except Exception as e:
         print(f"[SeedData] Column migration note: {e}")
 

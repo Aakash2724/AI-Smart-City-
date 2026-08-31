@@ -147,27 +147,29 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
   const displayCity = resolveCityName();
 
   return (
-    <header className="bg-[#111317] border-b border-[#23252d] select-none text-slate-100">
+    <header className="px-3 sm:px-4 pt-3 select-none text-slate-100">
       
-      {/* Main Header Toolbar */}
-      <div className="h-16 px-4 sm:px-8 flex items-center justify-between gap-4">
+      {/* Modern Floating Capsule Header Toolbar */}
+      <div className="h-14 px-4 sm:px-6 bg-[#111317] border border-[#23252d] rounded-2xl sm:rounded-3xl shadow-lg flex items-center justify-between gap-4 transition-all duration-200">
         
-        {/* Left: Brand + Subtitle */}
-        <div className="flex items-center space-x-3.5 min-w-0">
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
-              <h1 className="text-base sm:text-lg font-black text-white tracking-tight leading-none">
-                Smart City Portal
-              </h1>
-              <span className="text-[11px] text-[#88909d] font-normal hidden md:inline">
-                Municipal Complaint & Service Management
-              </span>
-            </div>
+        {/* Left: Brand Logo + Portal Title */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-8 w-8 rounded-xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-xs flex-shrink-0">
+            <i className="ti ti-building-community text-lg"></i>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2.5 min-w-0">
+            <h1 className="text-sm sm:text-base font-extrabold text-white tracking-tight leading-none flex items-center gap-2">
+              <span>Smart City Portal</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2dd4bf] animate-pulse" title="System Online"></span>
+            </h1>
+            <span className="text-[10px] sm:text-[11px] text-[#88909d] font-medium hidden md:inline truncate">
+              Municipal Complaint & Service Management
+            </span>
           </div>
         </div>
 
-        {/* Right Controls */}
-        <div className="flex items-center space-x-2.5 flex-shrink-0 text-xs">
+        {/* Right Controls Cluster */}
+        <div className="flex items-center space-x-2 flex-shrink-0 text-xs">
 
           {/* Refresh Button (Icon Only) */}
           <button
@@ -175,7 +177,7 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
             className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-[#1c1e25] border border-[#23252d] transition-all flex items-center justify-center cursor-pointer"
             title="Refresh Data"
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin text-[#2dd4bf]' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-[#2dd4bf]' : ''}`} />
           </button>
 
           {/* Theme Toggle Button (Dark / Light Mode) */}
@@ -186,9 +188,9 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
             aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDark ? (
-              <Sun className="h-4 w-4 text-amber-400 hover:text-amber-300 transition-colors" />
+              <Sun className="h-3.5 w-3.5 text-amber-400 hover:text-amber-300 transition-colors" />
             ) : (
-              <Moon className="h-4 w-4 text-slate-700 hover:text-slate-900 transition-colors" />
+              <Moon className="h-3.5 w-3.5 text-slate-700 hover:text-slate-900 transition-colors" />
             )}
           </button>
 
@@ -198,7 +200,7 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
             className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-[#1c1e25] border border-[#23252d] transition-all flex items-center justify-center cursor-pointer"
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
-            {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            {isFullscreen ? <Minimize className="h-3.5 w-3.5" /> : <Maximize className="h-3.5 w-3.5" />}
           </button>
 
           {/* Notifications Button */}
@@ -207,7 +209,7 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
             className="relative p-2 text-slate-400 hover:text-white rounded-xl hover:bg-[#1c1e25] border border-[#23252d] transition-all cursor-pointer"
             title="View Notifications"
           >
-            <Bell className="h-4 w-4" />
+            <Bell className="h-3.5 w-3.5" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#2dd4bf] text-slate-950 rounded-full text-[9px] font-extrabold flex items-center justify-center border-2 border-[#111317] shadow-xs">
                 {unreadCount}
@@ -217,7 +219,7 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
 
           {/* Citizen City Location & Sign Out Badge */}
           {user ? (
-            <div className="flex items-center gap-2 bg-[#111317] border border-[#23252d] px-3.5 py-1.5 rounded-full shadow-xs">
+            <div className="flex items-center gap-2 bg-[#111317] border border-[#23252d] px-3 py-1.5 rounded-full shadow-xs">
               <div className="flex items-center gap-1.5 text-slate-200 select-none">
                 <MapPin className="h-3.5 w-3.5 text-[#2dd4bf] flex-shrink-0" />
                 <span className="text-xs font-medium text-slate-200 tracking-tight">
@@ -226,7 +228,7 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
               </div>
               <button
                 onClick={logout}
-                className="ml-1 text-rose-400 hover:text-rose-300 p-1 transition-colors cursor-pointer flex items-center justify-center"
+                className="ml-0.5 text-rose-400 hover:text-rose-300 p-0.5 transition-colors cursor-pointer flex items-center justify-center"
                 title="Sign Out"
               >
                 <LogOut className="h-3.5 w-3.5" />

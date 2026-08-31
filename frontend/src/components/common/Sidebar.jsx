@@ -20,10 +20,23 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
   return (
     <aside 
       className={`relative flex-shrink-0 flex flex-col justify-between my-3 ml-3 mb-3 bg-[#111317] border border-[#23252d] rounded-3xl shadow-xl select-none transition-all duration-300 ease-in-out z-20 text-slate-200 ${
-        isOpen ? 'w-64' : 'w-[72px]'
+        isOpen ? 'w-64' : 'w-[68px]'
       }`}
     >
-      {/* ─── Top Brand Header & Popping Navigation Toggle ─── */}
+      {/* ─── Outer Popping Expand Toggle Button on the Right Edge (Zero Overlap with Icon) ─── */}
+      {!isOpen && onToggle && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="absolute -right-4 top-5 p-1 text-slate-300 hover:text-[#2dd4bf] rounded-full bg-[#181a20] hover:bg-[#23252d] border border-[#2c2f3a] transition-all cursor-pointer shadow-md hover:scale-110 z-30"
+          title="Expand Navigation Menu"
+          aria-label="Expand Navigation Menu"
+        >
+          <ChevronsRight className="h-3.5 w-3.5" />
+        </button>
+      )}
+
+      {/* ─── Top Brand Header ─── */}
       <div className="p-3 space-y-4">
         {isOpen ? (
           /* Expanded Header */
@@ -52,8 +65,8 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             )}
           </div>
         ) : (
-          /* Collapsed Header with Floating Popping Toggle cleanly offset without cutting icon */
-          <div className="w-full relative flex items-center justify-center pt-1 pb-1">
+          /* Collapsed Header - Shield perfectly centered without any button collision */
+          <div className="flex items-center justify-center pt-1.5">
             <div 
               onClick={() => setActiveTab('dashboard')}
               className="h-8 w-8 rounded-xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-sm cursor-pointer hover:scale-105 transition-transform"
@@ -61,19 +74,6 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             >
               <i className="ti ti-shield-check text-base"></i>
             </div>
-
-            {/* Popping Outward Expand Toggle Button */}
-            {onToggle && (
-              <button
-                type="button"
-                onClick={onToggle}
-                className="absolute -right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-300 hover:text-[#2dd4bf] rounded-full bg-[#181a20] hover:bg-[#23252d] border border-[#2c2f3a] transition-all cursor-pointer shadow-md hover:scale-110 z-30"
-                title="Expand Navigation Menu"
-                aria-label="Expand Navigation Menu"
-              >
-                <ChevronsRight className="h-3.5 w-3.5" />
-              </button>
-            )}
           </div>
         )}
 

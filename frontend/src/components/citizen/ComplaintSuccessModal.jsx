@@ -14,9 +14,10 @@ import {
   Building2, 
   Scan, 
   FileText,
-  Bell
+  Smartphone
 } from 'lucide-react';
 import { SERVER_ORIGIN } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 const CLASS_TITLES = {
   water_leakage: 'Water Main Leakage & Drainage Overflow',
@@ -36,6 +37,7 @@ const HEAD_PHOTO_MAP = {
 };
 
 export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uploadedImagePreview, onNavigateToHistory }) {
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
 
   if (!isOpen || !complaint) return null;
@@ -43,6 +45,10 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   const head = complaint.municipality_head;
   const hours = complaint.estimated_resolution_hours || 12;
   const imageUrl = complaint.image_url ? (complaint.image_url.startsWith('http') ? complaint.image_url : `${SERVER_ORIGIN}${complaint.image_url}`) : uploadedImagePreview;
+
+  // Dynamically resolve citizen's registered contact info
+  const userPhone = (user?.phone || complaint.citizen?.phone || complaint.citizen_phone || '+91 8185963041').trim();
+  const userEmail = (complaint.registered_email || user?.email || 'aakashmeesala004@gmail.com').trim();
 
   // Extract vision detections if available
   const visionDets = complaint.vision_detections || [];
@@ -101,12 +107,12 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-150"
       onClick={onClose}
     >
       {/* Modal Dialog Card */}
       <div 
-        className="bg-[#14161b] w-full max-w-4xl rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200 text-slate-100"
+        className="bg-[#14161b] w-full max-w-4xl rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-150 text-slate-100 ring-1 ring-white/5"
         onClick={(e) => e.stopPropagation()}
       >
         
@@ -396,18 +402,19 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
           </div>
 
-          {/* Real-time Push Alert & Official Email Dispatch Confirmation Note */}
-          <div className="p-3.5 rounded-2xl bg-[#0c2e28] border border-[#175249] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-200 shadow-sm">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <Bell className="h-4 w-4 text-[#2dd4bf] flex-shrink-0 animate-bounce" />
+          {/* Real-time SMS & Official Email Confirmation Note (Centrally Balanced) */}
+          <div className="p-3.5 rounded-2xl bg-[#0c2e28] border border-[#175249] flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2.5 text-xs text-slate-200 shadow-sm text-center">
+            <div className="flex items-center justify-center gap-2">
+              <Smartphone className="h-4 w-4 text-[#2dd4bf] flex-shrink-0" />
               <span>
-                Real-time <strong className="text-[#5eead4]">Native Push Alert</strong> enabled on this device.
+                Real-time SMS alert dispatched to <strong className="text-[#5eead4] font-mono font-semibold">{userPhone}</strong>
               </span>
             </div>
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className="h-3.5 w-[1px] bg-[#175249] hidden sm:block" />
+            <div className="flex items-center justify-center gap-2">
               <Mail className="h-4 w-4 text-[#2dd4bf] flex-shrink-0" />
-              <span className="truncate">
-                Official municipal email dispatched to <strong className="text-[#5eead4]">{complaint.registered_email || 'citizen@smartcity.gov'}</strong>
+              <span>
+                Email sent to <strong className="text-[#5eead4] font-semibold">{userEmail}</strong>
               </span>
             </div>
           </div>

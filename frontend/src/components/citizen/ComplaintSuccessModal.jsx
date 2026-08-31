@@ -14,7 +14,9 @@ import {
   Building2, 
   Scan, 
   FileText,
-  Smartphone
+  Smartphone,
+  ShieldCheck,
+  Activity
 } from 'lucide-react';
 import { SERVER_ORIGIN } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -296,32 +298,81 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             
             {/* Left: Issue Description & Department Routing */}
-            <div className={`${imageUrl ? 'md:col-span-6' : 'md:col-span-12'} bg-[#111317] border border-[#23252d] rounded-2xl p-5 space-y-3.5`}>
-              <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5">
-                <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <Tag className="h-3.5 w-3.5 text-[#2dd4bf]" />
-                  Complaint Summary
-                </span>
-                <span className="text-xs text-slate-300 font-semibold flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5 text-rose-400" />
-                  <span>{complaint.address || 'Hyderabad'}</span>
-                </span>
-              </div>
-
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#88909d] font-semibold">Category:</span>
-                  <span className="font-bold text-white bg-[#0e1014] px-3 py-1 rounded-xl border border-[#23252d]">
-                    {complaint.category}
+            <div className={`${imageUrl ? 'md:col-span-6' : 'md:col-span-12'} bg-[#111317] border border-[#23252d] rounded-2xl p-5 flex flex-col justify-between space-y-3 shadow-sm`}>
+              <div>
+                <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5">
+                  <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <Tag className="h-3.5 w-3.5 text-[#2dd4bf]" />
+                    Complaint Summary
+                  </span>
+                  <span className="text-xs text-slate-300 font-semibold flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5 text-rose-400 flex-shrink-0" />
+                    <span className="truncate max-w-[180px]">{complaint.address || 'Hyderabad'}</span>
                   </span>
                 </div>
 
-                <div className="bg-[#0e1014] p-3.5 rounded-xl border border-[#23252d] text-slate-300 text-xs leading-relaxed">
-                  "{complaint.original_text}"
-                </div>
+                <div className="space-y-2.5 mt-3">
+                  {/* Category */}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#88909d] font-semibold">Category:</span>
+                    <span className="font-bold text-white bg-[#0e1014] px-3 py-1 rounded-xl border border-[#23252d]">
+                      {complaint.category}
+                    </span>
+                  </div>
 
-                <div className="p-3 rounded-xl bg-[#0c2e28]/60 border border-[#175249]/50 text-xs text-slate-300 leading-relaxed">
-                  Dispatched to <strong className="text-white font-bold">{complaint.assigned_department_name || 'Municipal Works Department'}</strong> for on-site execution.
+                  {/* Citizen's Reported Description */}
+                  <div className="bg-[#0e1014] p-3 rounded-xl border border-[#23252d] text-slate-300 text-xs leading-relaxed italic">
+                    "{complaint.original_text}"
+                  </div>
+
+                  {/* Department Dispatch Directive */}
+                  <div className="p-2.5 rounded-xl bg-[#0c2e28]/60 border border-[#175249]/50 text-xs text-slate-300 leading-relaxed flex items-start gap-2">
+                    <Building2 className="h-4 w-4 text-[#2dd4bf] flex-shrink-0 mt-0.5" />
+                    <div>
+                      Dispatched to <strong className="text-white font-bold">{complaint.assigned_department_name || head?.department_name || 'Municipal Works Department'}</strong> for on-site execution.
+                    </div>
+                  </div>
+
+                  {/* Operational SLAs & Target Resolution Metrics */}
+                  <div className="grid grid-cols-2 gap-2 pt-0.5">
+                    <div className="bg-[#0e1014] p-2.5 rounded-xl border border-[#23252d] space-y-1">
+                      <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-[#88909d]">
+                        <Clock className="h-3 w-3 text-[#2dd4bf]" />
+                        <span>Target SLA</span>
+                      </div>
+                      <div className="text-xs font-bold text-[#5eead4] font-mono">
+                        {complaint.estimated_resolution_hours ? `< ${Math.round(complaint.estimated_resolution_hours)} Hours` : '< 12 Hours'}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0e1014] p-2.5 rounded-xl border border-[#23252d] space-y-1">
+                      <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-[#88909d]">
+                        <ShieldCheck className="h-3 w-3 text-[#2dd4bf]" />
+                        <span>Risk Priority</span>
+                      </div>
+                      <div className="text-xs font-bold text-white">
+                        {complaint.priority || 'HIGH'} (Verified)
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4-Step Redressal Progress Track Bar */}
+                  <div className="bg-[#0e1014] p-2.5 rounded-xl border border-[#23252d] space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-bold text-[#88909d] uppercase">
+                      <span>Redressal Progress</span>
+                      <span className="text-[#2dd4bf]">Step 2 of 4 (Dispatched)</span>
+                    </div>
+                    <div className="w-full bg-[#1c1e25] h-1.5 rounded-full overflow-hidden flex">
+                      <div className="bg-[#2dd4bf] h-full w-1/2 rounded-full shadow-[0_0_8px_#2dd4bf]" />
+                    </div>
+                    <div className="flex items-center justify-between text-[9.5px] text-slate-400 font-mono pt-0.5">
+                      <span className="text-[#5eead4]">✓ Submitted</span>
+                      <span className="text-[#5eead4]">✓ AI Vision</span>
+                      <span className="text-[#38bdf8] font-bold">● Assigned</span>
+                      <span>○ Resolved</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

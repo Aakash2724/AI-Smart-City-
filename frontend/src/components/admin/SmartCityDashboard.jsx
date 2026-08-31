@@ -887,7 +887,9 @@ export default function SmartCityDashboard({ onNavigateTab }) {
                         <span className="font-mono text-[11px] flex items-center gap-2">
                           {d.breached > 0 && <span className="text-rose-400 font-bold">{d.breached} breach{d.breached > 1 ? 'es' : ''}</span>}
                           {d.warning > 0 && <span className="text-amber-400 font-bold">{d.warning} warn</span>}
-                          {d.breached === 0 && d.warning === 0 && <span className="text-[#2dd4bf] font-bold">On Track</span>}
+                          {d.safe > 0 && (d.breached > 0 || d.warning > 0) && <span className="text-[#2dd4bf]">{d.safe} ok</span>}
+                          {d.breached === 0 && d.warning === 0 && d.safe > 0 && <span className="text-[#2dd4bf] font-bold">✓ On Track</span>}
+                          {d.total === 0 && <span className="text-slate-500">No tickets</span>}
                           <span className="text-slate-500">SLA {d.slaHrs}h</span>
                         </span>
                       </div>

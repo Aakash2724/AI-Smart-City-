@@ -81,6 +81,7 @@ function MainApp() {
 
   const handleRefreshAll = async () => {
     setDashboardKey(prev => prev + 1);
+    window.dispatchEvent(new Event('smartgov_complaints_updated'));
   };
 
   return (

@@ -396,7 +396,7 @@ export default function TrackHistory({ latestComplaint }) {
           {/* Refresh List Button with text */}
           <button
             type="button"
-            onClick={loadHistory}
+            onClick={() => loadHistory(true)}
             disabled={historyLoading}
             className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 hover:text-white border border-[#23252d] rounded-xl text-xs font-semibold transition-all duration-200 shadow-xs disabled:opacity-50 cursor-pointer active:scale-[0.97]"
             title="Refresh list"
@@ -604,7 +604,7 @@ export default function TrackHistory({ latestComplaint }) {
               )}
               <button
                 type="button"
-                onClick={loadHistory}
+                onClick={() => loadHistory(true)}
                 className="px-4 py-2 bg-[#0e1014] text-slate-300 border border-[#23252d] hover:bg-[#181a20] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5 text-[#2dd4bf]" />

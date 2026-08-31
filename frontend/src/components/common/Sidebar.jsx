@@ -46,7 +46,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
                 <i className="ti ti-shield-check text-lg"></i>
               </div>
               <div className="min-w-0">
-                <h2 className="font-bold text-sm text-white leading-tight truncate">Smart City</h2>
+                <h2 className="font-bold text-sm text-white leading-tight truncate">AI Smart City</h2>
                 <p className="text-[10px] text-[#88909d] font-medium truncate">Municipal Services</p>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             <div 
               onClick={() => setActiveTab('dashboard')}
               className="h-8 w-8 rounded-xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-sm cursor-pointer hover:scale-105 transition-transform"
-              title="Smart City Dashboard"
+              title="AI Smart City Dashboard"
             >
               <i className="ti ti-shield-check text-base"></i>
             </div>

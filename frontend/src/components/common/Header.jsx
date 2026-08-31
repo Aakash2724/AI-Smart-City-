@@ -152,14 +152,11 @@ export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory
       {/* Modern Floating Capsule Header Toolbar */}
       <div className="h-14 px-4 sm:px-6 bg-[#111317] border border-[#23252d] rounded-2xl sm:rounded-3xl shadow-lg flex items-center justify-between gap-4 transition-all duration-200">
         
-        {/* Left: Brand Logo + Portal Title */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="h-8 w-8 rounded-xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-xs flex-shrink-0">
-            <i className="ti ti-building-community text-lg"></i>
-          </div>
+        {/* Left: Portal Title */}
+        <div className="flex items-center gap-3 min-w-0 pl-1">
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2.5 min-w-0">
             <h1 className="text-sm sm:text-base font-extrabold text-white tracking-tight leading-none flex items-center gap-2">
-              <span>Smart City Portal</span>
+              <span>AI Smart City</span>
               <span className="h-1.5 w-1.5 rounded-full bg-[#2dd4bf] animate-pulse" title="System Online"></span>
             </h1>
             <span className="text-[10px] sm:text-[11px] text-[#88909d] font-medium hidden md:inline truncate">

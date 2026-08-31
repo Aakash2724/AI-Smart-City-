@@ -441,7 +441,7 @@ export default function AICopilotPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base sm:text-lg font-bold text-white leading-tight">
-                  SmartGov AI Municipal Copilot
+                  AI Smart City Municipal Copilot
                 </h2>
                 <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono font-medium">
                   Gemini & Groq Powered

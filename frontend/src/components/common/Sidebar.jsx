@@ -20,11 +20,11 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
   return (
     <aside 
       className={`relative flex-shrink-0 flex flex-col justify-between my-3 ml-3 mb-3 bg-[#111317] border border-[#23252d] rounded-3xl shadow-xl select-none transition-all duration-300 ease-in-out z-20 text-slate-200 ${
-        isOpen ? 'w-64' : 'w-[68px]'
+        isOpen ? 'w-64' : 'w-[72px]'
       }`}
     >
       {/* ─── Top Brand Header & Popping Navigation Toggle ─── */}
-      <div className="p-3.5 space-y-4">
+      <div className="p-3 space-y-4">
         {isOpen ? (
           /* Expanded Header */
           <div className="px-1 py-0.5 flex items-center justify-between gap-2">
@@ -52,14 +52,14 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             )}
           </div>
         ) : (
-          /* Collapsed Header with Floating Popping Toggle */
-          <div className="flex flex-col items-center relative pt-1">
+          /* Collapsed Header with Floating Popping Toggle cleanly offset without cutting icon */
+          <div className="w-full relative flex items-center justify-center pt-1 pb-1">
             <div 
               onClick={() => setActiveTab('dashboard')}
-              className="h-9 w-9 rounded-2xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-sm cursor-pointer hover:scale-105 transition-transform"
+              className="h-8 w-8 rounded-xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] shadow-sm cursor-pointer hover:scale-105 transition-transform"
               title="Smart City Dashboard"
             >
-              <i className="ti ti-shield-check text-lg"></i>
+              <i className="ti ti-shield-check text-base"></i>
             </div>
 
             {/* Popping Outward Expand Toggle Button */}
@@ -67,7 +67,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
               <button
                 type="button"
                 onClick={onToggle}
-                className="absolute -right-5 top-1.5 p-1 text-slate-300 hover:text-[#2dd4bf] rounded-full bg-[#181a20] hover:bg-[#23252d] border border-[#2c2f3a] transition-all cursor-pointer shadow-md hover:scale-110 z-30"
+                className="absolute -right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-300 hover:text-[#2dd4bf] rounded-full bg-[#181a20] hover:bg-[#23252d] border border-[#2c2f3a] transition-all cursor-pointer shadow-md hover:scale-110 z-30"
                 title="Expand Navigation Menu"
                 aria-label="Expand Navigation Menu"
               >
@@ -85,7 +85,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             </span>
           )}
           
-          <nav className={`flex flex-col gap-1.5 text-xs ${isOpen ? 'w-full' : 'items-center'}`}>
+          <nav className={`flex flex-col gap-2 text-xs ${isOpen ? 'w-full' : 'items-center w-full'}`}>
             {MENU_ITEMS.map((item) => {
               const isActive = activeTab === item.id;
               
@@ -121,13 +121,13 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   title={item.label}
-                  className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
+                  className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                     isActive
                       ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249] shadow-xs'
                       : 'text-[#88909d] hover:text-white hover:bg-[#181a20] border border-transparent'
                   }`}
                 >
-                  <i className={`ti ${item.icon} text-lg ${isActive ? 'text-[#2dd4bf]' : 'text-slate-400'}`} />
+                  <i className={`ti ${item.icon} text-base ${isActive ? 'text-[#2dd4bf]' : 'text-slate-400'}`} />
                 </button>
               );
             })}
@@ -189,7 +189,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onTogg
             type="button"
             onClick={() => setActiveTab('settings')}
             title={`Settings (${displayName})`}
-            className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
+            className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
               activeTab === 'settings'
                 ? 'bg-[#0c2e28] text-[#2dd4bf] border border-[#175249]'
                 : 'text-slate-400 hover:text-[#2dd4bf] hover:bg-[#181a20]'

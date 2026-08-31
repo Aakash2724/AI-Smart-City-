@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Bell, LogIn, LogOut, RefreshCw, Maximize, Minimize, MapPin, Sun, Moon } from 'lucide-react';
+import { Bell, LogIn, LogOut, RefreshCw, Maximize, Minimize, MapPin, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getComplaints } from '../../services/api';
 import NotificationsModal from './NotificationsModal';
 
-export default function Header({ selectedCity, onToggleSidebar, onRefreshAll, onNavigateToHistory, onNavigateToSettings }) {
+export default function Header({ selectedCity, onRefreshAll, onNavigateToHistory, onNavigateToSettings }) {
   const { user, logout, remainingOpens, setIsAuthModalOpen } = useAuth();
   const { theme, toggleTheme, isDark } = useTheme();
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -154,14 +154,6 @@ export default function Header({ selectedCity, onToggleSidebar, onRefreshAll, on
         
         {/* Left: Brand + Subtitle */}
         <div className="flex items-center space-x-3.5 min-w-0">
-          <button 
-            onClick={onToggleSidebar} 
-            className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-[#1c1e25] border border-[#272932] transition-all"
-            title="Toggle Navigation Menu"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
-          
           <div className="flex items-center gap-3">
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
               <h1 className="text-base sm:text-lg font-black text-white tracking-tight leading-none">

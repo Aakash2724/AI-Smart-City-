@@ -79,7 +79,6 @@ function MainApp() {
       <div className="w-full flex-shrink-0 z-20">
         <Header 
           selectedCity={selectedCity} 
-          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
           onRefreshAll={handleRefreshAll}
           onNavigateToHistory={handleNavigateToHistory}
           onNavigateToSettings={() => setActiveTab('settings')}

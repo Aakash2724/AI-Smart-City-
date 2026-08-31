@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, X, UserCheck, ArrowRight, CheckCheck, RefreshCw, Trash2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getComplaints, deleteComplaint } from '../../services/api';
+import { notificationService } from '../../services/notificationService';
 import CopyTicketButton from './CopyTicketButton';
 
 const PRIORITY_BADGES = {
@@ -167,6 +168,27 @@ export default function NotificationsModal({ isOpen, onClose, onNavigateToTicket
             </button>
           </div>
         </div>
+
+        {/* Device Push Notification Opt-in Card */}
+        {notificationService.isSupported && notificationService.permission !== 'granted' && (
+          <div className="mx-4 mt-3 p-3 bg-[#0c2e28] border border-[#175249] rounded-2xl flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Bell className="h-4 w-4 text-[#2dd4bf] flex-shrink-0 animate-bounce" />
+              <span className="text-slate-200 text-[11px]">
+                Enable <strong>Device Push Alerts</strong> for instant grievance updates
+              </span>
+            </div>
+            <button
+              onClick={async () => {
+                await notificationService.requestPermission();
+                loadLiveComplaints();
+              }}
+              className="px-3 py-1 bg-[#2dd4bf] hover:bg-[#5eead4] text-[#08201a] text-[10px] font-bold rounded-lg transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            >
+              Enable
+            </button>
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-[#0e1014]">
           {loading && (

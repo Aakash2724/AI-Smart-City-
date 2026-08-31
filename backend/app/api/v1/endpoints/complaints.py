@@ -16,7 +16,6 @@ from app.agents.workflow import multi_agent_workflow
 
 from app.services.municipality_service import municipality_service
 from app.services.email_service import email_service
-from app.services.sms_service import sms_service
 from app.models.schemas import MunicipalityHeadSchema
 
 router = APIRouter(prefix="/complaints", tags=["Complaints"])
@@ -198,20 +197,6 @@ async def create_complaint(
         priority=complaint.priority or "HIGH",
         estimated_sla_hours=float(complaint.estimated_resolution_hours or 12.0),
         citizen_name=final_citizen_name
-    )
-
-    # 6. Dispatch Real-time SMS Notification via Twilio / Gateway
-    resolved_phone = (citizen_phone or (user_record.phone if user_record else None) or "+919849012345").strip()
-    background_tasks.add_task(
-        sms_service.send_registration_sms,
-        to_phone=resolved_phone,
-        ticket_number=ticket_num,
-        issue_category=complaint.category,
-        priority=complaint.priority or "HIGH",
-        municipality_head_info=head_dict,
-        citizen_name=final_citizen_name,
-        estimated_sla_hours=float(complaint.estimated_resolution_hours or 12.0),
-        address=address or "Hyderabad Ward 12"
     )
 
     # Format response schema explicitly

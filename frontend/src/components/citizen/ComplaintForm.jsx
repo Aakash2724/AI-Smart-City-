@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, MapPin, Sparkles, ArrowRight, Image as ImageIcon, Mail, CheckCircle2, ShieldCheck, Clock, Layers, Navigation, Loader2, User, Phone, Mic } from 'lucide-react';
 import { submitComplaint } from '../../services/api';
+import { notificationService } from '../../services/notificationService';
 import { useAuth } from '../../context/AuthContext';
 import ComplaintSuccessModal from './ComplaintSuccessModal';
 import VoiceInputButton from '../common/VoiceInputButton';
@@ -142,9 +143,17 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
       setLastUploadedPreview(imagePreview);
 
+      // Prompt for native browser / mobile push notifications if not already granted
+      if (notificationService.permission === 'default') {
+        notificationService.requestPermission();
+      }
+
       const response = await submitComplaint(formData);
       setSubmittedComplaint(response);
       setIsModalOpen(true);
+
+      // Fire Native Mobile / Desktop Push Notification
+      notificationService.notifyComplaintRegistered(response);
 
       // Trigger real-time synchronization across Header and Notifications
       window.dispatchEvent(new Event('smartgov_complaints_updated'));

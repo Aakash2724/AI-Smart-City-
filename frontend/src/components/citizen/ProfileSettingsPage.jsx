@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
-import LocationSearchInput from '../common/LocationSearchInput';
 import { 
   User, 
   Mail, 
@@ -283,18 +282,48 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           </h3>
 
           <div className="space-y-4">
-            {/* Residential Address with Live Autocomplete & GPS */}
-            <LocationSearchInput
-              address={address}
-              onAddressChange={setAddress}
-              onWardChange={setWard}
-              placeholder="Search town, colony, landmark or street (e.g. Bhadrachalam, Jubilee Hills)..."
-              label="Residential Address"
-              required
-            />
-            <p className="text-[11px] text-[#88909d]">
-              Your submitted civic complaints will default to this residential address.
-            </p>
+            {/* Residential Address with top Use my location button */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-slate-300">
+                  Residential Address
+                </label>
+                <button
+                  type="button"
+                  onClick={handleUseMyLocation}
+                  disabled={isLocating}
+                  className="text-[11px] text-[#2dd4bf] hover:text-[#5eead4] font-semibold flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                  title="Auto-detect location"
+                >
+                  {isLocating ? (
+                    <>
+                      <Loader2 className="h-3 w-3 animate-spin text-[#2dd4bf]" />
+                      <span>Locating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Navigation className="h-3 w-3 text-[#2dd4bf]" />
+                      <span>Use my location</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="relative">
+                <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter residential address (e.g. Bhadrachalam)"
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2dd4bf] focus:ring-1 focus:ring-[#2dd4bf] transition-all font-medium"
+                  required
+                />
+              </div>
+              <p className="text-[11px] text-[#88909d] mt-1">
+                Your submitted civic complaints will default to this residential address.
+              </p>
+            </div>
 
             {/* Assigned Municipal Ward */}
             <div>

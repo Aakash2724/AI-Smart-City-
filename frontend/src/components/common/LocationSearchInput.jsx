@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Navigation, Loader2, Search, X, Map } from 'lucide-react';
+import { MapPin, Navigation, Loader2, X } from 'lucide-react';
 import { searchAddressSuggestions, detectPreciseLocation } from '../../services/locationService';
-import MapLocationPickerModal from './MapLocationPickerModal';
 
 export default function LocationSearchInput({
   address,
@@ -19,7 +18,6 @@ export default function LocationSearchInput({
   const [isOpen, setIsOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
-  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const containerRef = useRef(null);
   const debounceTimer = useRef(null);
 
@@ -83,13 +81,6 @@ export default function LocationSearchInput({
         ward: s.ward
       }));
     } catch (e) {}
-  };
-
-  const handleMapConfirm = (loc) => {
-    setQuery(loc.address);
-    if (onAddressChange) onAddressChange(loc.address);
-    if (onCoordinatesChange) onCoordinatesChange(loc.latitude, loc.longitude);
-    if (onWardChange && loc.ward) onWardChange(loc.ward);
   };
 
   const handleUseMyLocation = async () => {
@@ -174,7 +165,7 @@ export default function LocationSearchInput({
           </div>
         </div>
 
-        {/* 2. Coordinates (Latitude, Longitude) + Map Pin + Use Location Button (Right Column) */}
+        {/* 2. Coordinates (Latitude, Longitude) + Use Location Button (Right Column) */}
         <div className="lg:col-span-6">
           <label className="block text-xs font-semibold text-slate-300 mb-1.5">
             Coordinates
@@ -200,14 +191,6 @@ export default function LocationSearchInput({
             />
             <button
               type="button"
-              onClick={() => setIsMapModalOpen(true)}
-              className="p-2.5 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer shadow-xs flex-shrink-0"
-              title="Pick exact location on interactive map"
-            >
-              <Map className="h-4 w-4 text-[#2dd4bf]" />
-            </button>
-            <button
-              type="button"
               onClick={handleUseMyLocation}
               disabled={isLocating}
               className="flex-1 px-3 py-2.5 bg-[#0e1014] hover:bg-[#181a20] text-[#2dd4bf] hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shadow-sm disabled:opacity-60 cursor-pointer"
@@ -228,16 +211,6 @@ export default function LocationSearchInput({
         </div>
 
       </div>
-
-      {/* Interactive Map Location Picker Modal */}
-      <MapLocationPickerModal
-        isOpen={isMapModalOpen}
-        onClose={() => setIsMapModalOpen(false)}
-        initialLat={latitude || 17.6688}
-        initialLng={longitude || 80.8940}
-        initialAddress={query}
-        onConfirm={handleMapConfirm}
-      />
     </div>
   );
 }

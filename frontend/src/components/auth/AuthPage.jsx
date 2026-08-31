@@ -3,7 +3,6 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../services/api';
 import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
-import LocationSearchInput from '../common/LocationSearchInput';
 import {
   AlertCircle,
   UserPlus,
@@ -19,7 +18,8 @@ import {
   Navigation,
   Sparkles,
   Sun,
-  Moon
+  Moon,
+  Loader2
 } from 'lucide-react';
 
 // Helper to decode real Google JWT token if returned by Google GIS
@@ -739,15 +739,45 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* 5. Residential Address with Real-Time Indian Place Autocomplete & GPS */}
-                  <LocationSearchInput
-                    address={address}
-                    onAddressChange={setAddress}
-                    onWardChange={setWard}
-                    placeholder="Search town, colony, landmark (e.g. Bhadrachalam, Jubilee Hills)..."
-                    label="Residential Address"
-                    required
-                  />
+                  {/* 5. Residential Address (with Use Location Button on Top) */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-medium text-[#8ea6b3]">
+                        Residential Address
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleDetectLocation}
+                        disabled={isLocating}
+                        className="text-[11px] text-[#2dd4bf] hover:text-[#5eead4] font-semibold flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
+                        title="Auto-detect device location"
+                      >
+                        {isLocating ? (
+                          <>
+                            <Loader2 className="h-3 w-3 animate-spin text-[#2dd4bf]" />
+                            <span>Locating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Navigation className="h-3 w-3 text-[#2dd4bf]" />
+                            <span>Use location</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+                      <input
+                        type="text"
+                        placeholder="Enter residential address (e.g. Bhadrachalam)"
+                        value={address}
+                        onChange={handleAddressChange}
+                        className="w-full pl-9 pr-3 py-1.5 bg-[#151b20] border border-[#212f37] rounded-xl text-xs text-white placeholder-[#4d636e] focus:outline-none focus:border-[#2dd4bf]"
+                        required
+                      />
+                    </div>
+                  </div>
 
                   {/* 6. Ward / Area */}
                   <div>

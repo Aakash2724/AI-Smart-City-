@@ -21,9 +21,9 @@ import {
   Send,
   ShieldCheck,
   Zap,
-  Activity,
-  Award,
-  Star
+  Calendar,
+  ChevronDown,
+  Siren
 } from 'lucide-react';
 
 const RECENT_PRIORITY_PILLS = {
@@ -33,9 +33,26 @@ const RECENT_PRIORITY_PILLS = {
   LOW: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
 };
 
+const TIME_RANGES = [
+  { key: 'today', label: 'Today' },
+  { key: 'week', label: 'This Week' },
+  { key: 'month', label: 'This Month' },
+  { key: 'all', label: 'All Time' }
+];
+
+const DEPT_SLA_HOURS = {
+  'Roads & Infrastructure': 24,
+  'Water & Sewage': 12,
+  'Sanitation & Waste': 18,
+  'Electrical & Power': 8,
+  'Traffic & Safety': 6
+};
+
 export default function SmartCityDashboard({ onNavigateTab }) {
   const { isDark } = useTheme();
   const [summary, setSummary] = useState(null);
+  const [timeRange, setTimeRange] = useState('all');
+  const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
   const [complaints, setComplaints] = useState(() => {
     try {
       const cached = sessionStorage.getItem('smartgov_cached_complaints');
@@ -537,6 +554,41 @@ export default function SmartCityDashboard({ onNavigateTab }) {
   return (
     <div className="space-y-6 font-sans text-slate-100">
 
+      {/* ─── Dashboard Header with Time Range Selector ─── */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">Overview Dashboard</h2>
+          <p className="text-[11px] text-[#88909d]">Municipal complaint analytics & AI insights</p>
+        </div>
+        <div className="relative">
+          <button
+            onClick={() => setTimeDropdownOpen(prev => !prev)}
+            className="flex items-center gap-2 px-3.5 py-2 bg-[#111317] border border-[#23252d] rounded-xl text-xs font-semibold text-slate-200 hover:border-[#2dd4bf]/40 transition-all cursor-pointer shadow-sm"
+          >
+            <Calendar className="h-3.5 w-3.5 text-[#2dd4bf]" />
+            <span>{TIME_RANGES.find(r => r.key === timeRange)?.label}</span>
+            <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${timeDropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {timeDropdownOpen && (
+            <div className="absolute right-0 top-full mt-1.5 z-30 bg-[#111317] border border-[#23252d] rounded-xl shadow-2xl overflow-hidden min-w-[140px]">
+              {TIME_RANGES.map(r => (
+                <button
+                  key={r.key}
+                  onClick={() => { setTimeRange(r.key); setTimeDropdownOpen(false); }}
+                  className={`w-full text-left px-4 py-2.5 text-xs font-medium transition-all cursor-pointer ${
+                    timeRange === r.key
+                      ? 'bg-[#0c2e28] text-[#2dd4bf] font-bold'
+                      : 'text-slate-300 hover:bg-[#16181e] hover:text-white'
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* ─── 1. TOP LINEAR ROW: 4 Metric Cards ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -772,61 +824,96 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           </div>
         </div>
 
-        {/* Tab 3: Live City Health Index (Civic Vital Signs) */}
-        <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[340px]">
-          
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
-            <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                <Activity className="h-4 w-4 text-[#2dd4bf]" />
-                <span>City Health Index</span>
-              </h3>
-              <p className="text-[11px] text-[#88909d]">Real-time municipal vital signs</p>
-            </div>
-            <span className="text-[10px] font-bold text-[#2dd4bf] bg-[#0c2e28] px-2.5 py-0.5 rounded-full border border-[#175249] flex items-center gap-1">
-              <Award className="h-3 w-3 text-amber-400" />
-              <span>Score: 94/100 (A+)</span>
-            </span>
-          </div>
+        {/* Tab 3: SLA Breach Alerts — computed from real complaint data */}
+        {(() => {
+          const now = Date.now();
+          const openComplaints = complaints.filter(c => c.status !== 'RESOLVED' && c.status !== 'CLOSED');
 
-          {/* 4 Core Civic Vital Signs Progress Meters */}
-          <div className="flex-1 flex flex-col justify-around py-1.5 min-h-0 text-xs">
-            {[
-              { label: 'Roads & Infrastructure', score: '91/100', note: '12 active potholes', color: 'from-[#2dd4bf] to-[#0ea5e9]', pct: 91 },
-              { label: 'Water & Sewage', score: '96/100', note: '3 active pipeline leaks', color: 'from-[#38bdf8] to-[#6366f1]', pct: 96 },
-              { label: 'Sanitation & Waste', score: '93/100', note: '4 overflow spots', color: 'from-[#10b981] to-[#34d399]', pct: 93 },
-              { label: 'Electrical & Power', score: '95/100', note: '5 dark spots reported', color: 'from-[#f59e0b] to-[#fbbf24]', pct: 95 },
-            ].map((vital, idx) => (
-              <div key={idx} className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-200 truncate">{vital.label}</span>
-                  <span className="font-mono text-[11px] text-slate-300 font-bold">
-                    <strong className="text-white">{vital.score}</strong> <span className="text-slate-400 font-normal">({vital.note})</span>
-                  </span>
+          const classifyDept = (c) => {
+            const cat = (c.category || c.subcategory || '').toLowerCase();
+            if (cat.includes('road') || cat.includes('pothole') || cat.includes('infra')) return 'Roads & Infrastructure';
+            if (cat.includes('water') || cat.includes('sewag') || cat.includes('drain') || cat.includes('pipe')) return 'Water & Sewage';
+            if (cat.includes('sanitat') || cat.includes('waste') || cat.includes('garbage')) return 'Sanitation & Waste';
+            if (cat.includes('electr') || cat.includes('power') || cat.includes('light')) return 'Electrical & Power';
+            return 'Traffic & Safety';
+          };
+
+          const deptAlerts = Object.entries(DEPT_SLA_HOURS).map(([dept, slaHrs]) => {
+            const deptComplaints = openComplaints.filter(c => classifyDept(c) === dept);
+            let breached = 0, warning = 0, safe = 0;
+            deptComplaints.forEach(c => {
+              const ageHrs = c.created_at ? (now - new Date(c.created_at).getTime()) / 3600000 : 0;
+              const remaining = slaHrs - ageHrs;
+              if (remaining <= 0) breached++;
+              else if (remaining <= slaHrs * 0.25) warning++;
+              else safe++;
+            });
+            return { dept, slaHrs, total: deptComplaints.length, breached, warning, safe };
+          });
+
+          const totalBreached = deptAlerts.reduce((s, d) => s + d.breached, 0);
+          const totalWarning = deptAlerts.reduce((s, d) => s + d.warning, 0);
+
+          return (
+            <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[340px]">
+
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
+                <div>
+                  <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <Siren className="h-4 w-4 text-rose-400" />
+                    <span>SLA Breach Alerts</span>
+                  </h3>
+                  <p className="text-[11px] text-[#88909d]">Live departmental SLA compliance</p>
                 </div>
-                <div className="w-full bg-[#0e1014] rounded-full h-1.5 overflow-hidden border border-[#23252d]">
-                  <div
-                    className={`h-full rounded-full bg-gradient-to-r ${vital.color} transition-all duration-500`}
-                    style={{ width: `${vital.pct}%` }}
-                  />
-                </div>
+                <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border flex items-center gap-1 ${
+                  totalBreached > 0
+                    ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
+                    : 'bg-[#0c2e28] text-[#2dd4bf] border-[#175249]'
+                }`}>
+                  {totalBreached > 0 ? `${totalBreached} Breached` : '0 Breaches ✓'}
+                </span>
               </div>
-            ))}
-          </div>
 
-          {/* Action Footer */}
-          <div className="pt-2 border-t border-[#23252d] flex items-center justify-between flex-shrink-0 text-xs">
-            <span className="text-[11px] text-slate-300 flex items-center gap-1.5 font-semibold">
-              <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-              <span><strong>4.8 / 5.0</strong> Citizen Trust Score</span>
-            </span>
-            <span className="text-[10px] font-mono text-[#2dd4bf] bg-[#0c2e28] px-2 py-0.5 rounded-md border border-[#175249]">
-              Municipal Vital Index
-            </span>
-          </div>
+              {/* Department SLA Rows */}
+              <div className="flex-1 flex flex-col justify-around py-1 min-h-0 text-xs">
+                {deptAlerts.map((d, idx) => {
+                  const pctUsed = d.total > 0 ? Math.min(100, Math.round(((d.breached + d.warning) / Math.max(1, d.total)) * 100)) : 0;
+                  const barColor = d.breached > 0 ? 'from-rose-500 to-rose-400' : d.warning > 0 ? 'from-amber-500 to-amber-400' : 'from-[#2dd4bf] to-[#0ea5e9]';
+                  return (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-slate-200 truncate">{d.dept}</span>
+                        <span className="font-mono text-[11px] flex items-center gap-2">
+                          {d.breached > 0 && <span className="text-rose-400 font-bold">{d.breached} breach{d.breached > 1 ? 'es' : ''}</span>}
+                          {d.warning > 0 && <span className="text-amber-400 font-bold">{d.warning} warn</span>}
+                          {d.breached === 0 && d.warning === 0 && <span className="text-[#2dd4bf] font-bold">On Track</span>}
+                          <span className="text-slate-500">SLA {d.slaHrs}h</span>
+                        </span>
+                      </div>
+                      <div className="w-full bg-[#0e1014] rounded-full h-1.5 overflow-hidden border border-[#23252d]">
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${barColor} transition-all duration-500`}
+                          style={{ width: `${Math.max(pctUsed, 4)}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
 
-        </div>
+              {/* Footer */}
+              <div className="pt-2 border-t border-[#23252d] flex items-center justify-between flex-shrink-0 text-xs">
+                <span className="text-[11px] text-slate-300 flex items-center gap-1.5 font-semibold">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#2dd4bf]" />
+                  <span><strong>{openComplaints.length - totalBreached - totalWarning}</strong> on-track / <strong>{openComplaints.length}</strong> open</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">Auto-refresh</span>
+              </div>
+
+            </div>
+          );
+        })()}
 
       </div>
 

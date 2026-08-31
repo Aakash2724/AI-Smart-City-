@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle2, 
   Clock, 
@@ -41,6 +41,18 @@ const HEAD_PHOTO_MAP = {
 export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uploadedImagePreview, onNavigateToHistory }) {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+
+  // Lock background body scroll whenever modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   if (!isOpen || !complaint) return null;
 

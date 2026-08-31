@@ -125,7 +125,7 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
       formData.append('address', address || user?.registered_location || 'Ward 12 - Jubilee Zone, Hyderabad');
       const resolvedEmail = (user?.email || (contact && contact.includes('@') ? contact : 'citizen@smartcity.gov')).trim().toLowerCase();
       formData.append('registered_email', resolvedEmail);
-      
+
       const resolvedName = (citizenName || user?.name || (user?.email ? user.email.split('@')[0] : '')).trim();
       if (resolvedName) {
         formData.append('citizen_name', resolvedName);
@@ -142,9 +142,17 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
       setLastUploadedPreview(imagePreview);
 
+      // Prompt for native browser / mobile push notifications if not already granted
+      if (notificationService.permission === 'default') {
+        notificationService.requestPermission();
+      }
+
       const response = await submitComplaint(formData);
       setSubmittedComplaint(response);
       setIsModalOpen(true);
+
+      // Fire Native Mobile / Desktop Push Notification
+      notificationService.notifyComplaintRegistered(response);
 
       // Trigger real-time synchronization across Header and Notifications
       window.dispatchEvent(new Event('smartgov_complaints_updated'));

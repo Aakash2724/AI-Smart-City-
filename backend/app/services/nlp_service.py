@@ -272,14 +272,14 @@ Return JSON ONLY (no markdown backticks):
   "safety_risk_score": 7
 }}"""
 
-        for model in ["gemini-2.5-flash", "gemini-flash-latest"]:
+        for model in ["gemini-2.0-flash", "gemini-1.5-flash"]:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_key}"
                 payload = {
                     "contents": [{"parts": [{"text": prompt}]}],
                     "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"}
                 }
-                with httpx.Client(timeout=2.0) as client:
+                with httpx.Client(timeout=3.0) as client:
                     res = client.post(url, json=payload)
                     if res.status_code == 200:
                         data = res.json()

@@ -214,7 +214,7 @@ IMPORTANT RULES:
 Return ONLY valid JSON (no markdown, no backticks):
 {{"detected_class": "one_of_the_five_classes", "confidence": 0.95, "description": "brief description of what you see"}}"""
 
-            for model in ["gemini-2.5-flash", "gemini-2.0-flash"]:
+            for model in ["gemini-2.0-flash", "gemini-1.5-flash"]:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_key}"
                     payload = {
@@ -235,7 +235,7 @@ Return ONLY valid JSON (no markdown, no backticks):
                         }
                     }
 
-                    with httpx.Client(timeout=15.0) as client:
+                    with httpx.Client(timeout=5.0) as client:
                         res = client.post(url, json=payload)
                         if res.status_code == 200:
                             data = res.json()

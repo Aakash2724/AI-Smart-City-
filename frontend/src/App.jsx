@@ -15,7 +15,7 @@ import { ThemeProvider } from './context/ThemeContext';
 
 function MainApp() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('citizen');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedCity, setSelectedCity] = useState('');
   const [latestComplaint, setLatestComplaint] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

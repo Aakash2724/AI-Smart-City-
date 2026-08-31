@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../services/api';
 import {
   AlertCircle,
@@ -14,7 +15,9 @@ import {
   X,
   ShieldCheck,
   Navigation,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 const HYDERABAD_WARDS = [
@@ -85,6 +88,7 @@ function evaluatePasswordSecurity(pwd = '') {
 
 export default function AuthPage() {
   const { login } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
 
   const [view, setView] = useState('login'); // 'login' | 'register'
 
@@ -438,21 +442,55 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row text-slate-100 font-sans select-none bg-[#080b0a] relative overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+    <div className={`min-h-screen lg:h-screen flex flex-col lg:flex-row font-sans select-none relative overflow-x-hidden overflow-y-auto lg:overflow-hidden transition-colors duration-200 ${
+      isDark ? 'bg-[#080b0a] text-slate-100' : 'bg-[#f8fafc] text-slate-800'
+    }`}>
 
-      {/* Seamless unified ambient radial gradient flowing naturally across left, center divider, and right */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_90%_at_22%_42%,rgba(20,56,47,0.45),rgba(8,24,20,0.25)_48%,rgba(8,11,10,0.05)_80%)] pointer-events-none" />
-      <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#2dd4bf]/[0.04] rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#0c2e28]/20 rounded-full blur-[130px] pointer-events-none" />
+      {/* Floating Theme Toggle Switcher on Auth Page */}
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className={`absolute top-4 right-4 z-40 p-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl border transition-all shadow-md cursor-pointer flex items-center gap-1.5 text-xs font-semibold ${
+          isDark 
+            ? 'bg-[#101418] border-[#1b252b] text-slate-300 hover:text-white hover:bg-[#181f25]' 
+            : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+        }`}
+        title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      >
+        {isDark ? (
+          <Sun className="h-4 w-4 text-amber-400" />
+        ) : (
+          <Moon className="h-4 w-4 text-slate-700" />
+        )}
+        <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'}</span>
+      </button>
+
+      {/* Ambient background glows */}
+      {isDark ? (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_90%_at_22%_42%,rgba(20,56,47,0.45),rgba(8,24,20,0.25)_48%,rgba(8,11,10,0.05)_80%)] pointer-events-none" />
+          <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#2dd4bf]/[0.04] rounded-full blur-[140px] pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#0c2e28]/20 rounded-full blur-[130px] pointer-events-none" />
+        </>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_90%_at_22%_42%,rgba(204,251,241,0.5),rgba(240,253,250,0.3)_48%,rgba(248,250,252,0.05)_80%)] pointer-events-none" />
+          <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#2dd4bf]/[0.08] rounded-full blur-[140px] pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#0d9488]/10 rounded-full blur-[130px] pointer-events-none" />
+        </>
+      )}
 
       {/* ─── LEFT HERO SECTION ─── */}
-      <div className="w-full lg:w-1/2 p-6 sm:p-10 lg:px-14 lg:py-10 flex flex-col justify-between relative min-h-[320px] lg:h-full border-b lg:border-b-0 lg:border-r border-[#18332b]/60 bg-transparent z-10 flex-shrink-0">
+      <div className={`w-full lg:w-1/2 p-6 sm:p-10 lg:px-14 lg:py-10 flex flex-col justify-between relative min-h-[320px] lg:h-full border-b lg:border-b-0 lg:border-r bg-transparent z-10 flex-shrink-0 ${
+        isDark ? 'border-[#18332b]/60' : 'border-slate-200'
+      }`}>
 
         {/* Top Brand Tag */}
         <div className="flex items-center gap-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-[#2dd4bf] shadow-[0_0_10px_#2dd4bf] animate-pulse"></span>
-          <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
-            SmartGov AI <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#13352c] text-[#5eead4] border border-[#1d4f42] font-mono font-medium">v2.4</span>
+          <span className={`font-bold text-sm tracking-tight flex items-center gap-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            AI Smart City <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#13352c] text-[#5eead4] border border-[#1d4f42] font-mono font-medium">v2.4</span>
           </span>
         </div>
 
@@ -461,18 +499,24 @@ export default function AuthPage() {
           <p className="text-[11px] font-mono font-bold tracking-[0.25em] text-[#2dd4bf] uppercase mb-3 sm:mb-4">
             CIVIC OPERATIONS PLATFORM
           </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white leading-[1.06]">
+          <h1 className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-[1.06] ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
             Keep<br />
             the city<br />
             moving.
           </h1>
-          <p className="text-xs sm:text-sm text-[#87a59c] mt-4 sm:mt-6 max-w-sm sm:max-w-md leading-relaxed font-normal">
+          <p className={`text-xs sm:text-sm mt-4 sm:mt-6 max-w-sm sm:max-w-md leading-relaxed font-normal ${
+            isDark ? 'text-[#87a59c]' : 'text-slate-600'
+          }`}>
             One calm workspace for incoming reports, GIS hot-spots, automated dispatch, and field intelligence.
           </p>
         </div>
 
         {/* Bottom Feature Pill */}
-        <div className="hidden lg:flex items-center gap-3 text-xs text-[#52796f] pt-4">
+        <div className={`hidden lg:flex items-center gap-3 text-xs pt-4 ${
+          isDark ? 'text-[#52796f]' : 'text-slate-500'
+        }`}>
           <span className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-[#2dd4bf]" /> End-to-End Secure
           </span>
@@ -488,7 +532,9 @@ export default function AuthPage() {
       <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-6 flex items-center justify-center relative bg-transparent z-10 lg:h-full lg:overflow-y-auto">
 
         {/* Floating Card Container */}
-        <div className="w-full max-w-[425px] bg-[#101418]/90 backdrop-blur-md border border-[#1b252b] rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-2xl relative z-10 my-auto">
+        <div className={`w-full max-w-[425px] rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-2xl relative z-10 my-auto backdrop-blur-md border ${
+          isDark ? 'bg-[#101418]/90 border-[#1b252b] text-slate-100' : 'bg-white/95 border-slate-200 shadow-slate-200/50 text-slate-800'
+        }`}>
 
           {view === 'login' ? (
             <div className="space-y-3.5">
@@ -498,10 +544,12 @@ export default function AuthPage() {
                 <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-[#2dd4bf] uppercase block mb-1">
                   SECURE ACCESS
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
                   Welcome back
                 </h2>
-                <p className="text-xs text-[#718691] mt-0.5">
+                <p className={`text-xs mt-0.5 ${isDark ? 'text-[#718691]' : 'text-slate-500'}`}>
                   Sign in to access your municipal operations desk.
                 </p>
               </div>
@@ -634,7 +682,7 @@ export default function AuthPage() {
                 <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-[#2dd4bf] uppercase block mb-0.5">
                   CITIZEN REGISTRATION
                 </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
                   Create an Account
                 </h2>
               </div>
@@ -882,7 +930,7 @@ export default function AuthPage() {
                   <GoogleIcon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Google Account Sign-In</h3>
+                  <h3 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Google Account Sign-In</h3>
                   <p className="text-[11px] text-[#718691]">Sign in with your authentic Google account</p>
                 </div>
               </div>
@@ -907,7 +955,7 @@ export default function AuthPage() {
               {/* Option 1: Instant Real Google Account Authentication */}
               <div className="bg-[#171e25] p-3.5 rounded-xl border border-[#24323c] space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-white flex items-center gap-1.5">
+                  <span className={`font-semibold flex items-center gap-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                     <User className="w-3.5 h-3.5 text-[#2dd4bf]" />
                     Direct Google Account Login
                   </span>
@@ -970,7 +1018,7 @@ export default function AuthPage() {
               {/* Option 2: Live Google Cloud OAuth Popup */}
               <div className="bg-[#171e25] p-3.5 rounded-xl border border-[#24323c] space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-white">Google Cloud OAuth 2.0 Web Client</span>
+                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>Google Cloud OAuth 2.0 Web Client</span>
                   <span className="text-[10px] text-[#8ea6b3]">Popup OAuth</span>
                 </div>
 

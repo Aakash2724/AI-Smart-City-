@@ -213,12 +213,14 @@ html.light main.bg-\[\#0b0c10\] {
   background-color: #f8fafc !important;
 }
 
-/* Cards, Panels, Modals, Drawers, Headers, Sidebars */
+/* Cards, Panels, Modals, Drawers, Headers, Sidebars, Auth Containers */
 html.light .bg-\[\#111317\],
 html.light .bg-\[\#181a1f\],
 html.light .bg-\[\#14151a\],
 html.light .bg-\[\#16181e\],
 html.light .bg-\[\#14161b\],
+html.light .bg-\[\#101418\],
+html.light .bg-\[\#13171c\],
 html.light .bg-slate-900,
 html.light .bg-slate-950,
 html.light header.bg-\[\#111317\],
@@ -229,11 +231,13 @@ html.light aside.bg-\[\#111317\] {
 html.light .bg-\[\#111317\]\/95,
 html.light .bg-\[\#111317\]\/90,
 html.light .bg-\[\#111317\]\/80,
-html.light .bg-\[\#14151a\]\/95 {
+html.light .bg-\[\#14151a\]\/95,
+html.light .bg-\[\#101418\]\/90 {
   background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
-/* Inset Boxes, Inner Panels, Table Rows Alternate, Input wrappers */
+/* Inset Boxes, Inner Panels, Table Rows Alternate, Input wrappers, Auth Left Canvas */
+html.light .bg-\[\#080b0a\],
 html.light .bg-\[\#0e1014\],
 html.light .bg-\[\#131418\],
 html.light .bg-\[\#151b20\],
@@ -243,6 +247,7 @@ html.light .bg-\[\#131519\],
 html.light .bg-\[\#1a1d24\],
 html.light .bg-\[\#1c2730\],
 html.light .bg-\[\#181c26\],
+html.light .bg-\[\#171e25\],
 html.light .bg-slate-800 {
   background-color: #f8fafc !important;
 }
@@ -391,6 +396,13 @@ html.light .border-\[\#282b35\],
 html.light .border-\[\#232836\],
 html.light .border-\[\#26353e\],
 html.light .border-\[\#2e4250\],
+html.light .border-\[\#18332b\],
+html.light .border-\[\#18332b\]\/60,
+html.light .border-\[\#1b252b\],
+html.light .border-\[\#1e272e\],
+html.light .border-\[\#1e272f\],
+html.light .border-\[\#222e37\],
+html.light .border-\[\#24323c\],
 html.light .border-slate-800,
 html.light .border-slate-700 {
   border-color: #e2e8f0 !important;
@@ -407,9 +419,13 @@ html.light .text-slate-300,
 html.light .text-slate-400,
 html.light .text-\[\#88909d\],
 html.light .text-\[\#8ea6b3\],
+html.light .text-\[\#718691\],
+html.light .text-\[\#87a59c\],
+html.light .text-\[\#52796f\],
+html.light .text-\[\#637d8d\],
 html.light .text-\[\#646a78\],
 html.light .text-slate-500 {
-  color: #64748b !important;
+  color: #475569 !important;
 }
 
 html.light .hover\:text-white:hover {

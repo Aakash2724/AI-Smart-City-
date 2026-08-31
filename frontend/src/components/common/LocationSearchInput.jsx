@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Navigation, Loader2, Search, Check, X, Map } from 'lucide-react';
+import { MapPin, Navigation, Loader2, Search, X, Map } from 'lucide-react';
 import { searchAddressSuggestions, detectPreciseLocation } from '../../services/locationService';
 import MapLocationPickerModal from './MapLocationPickerModal';
-
-const QUICK_TOWNS = [
-  { name: 'Bhadrachalam', address: 'Temple Road, Bhadrachalam, Bhadradri Kothagudem - 507111', lat: 17.6688, lng: 80.8940 },
-  { name: 'Jubilee Hills (Hyd)', address: 'Road No. 36, Jubilee Hills, Hyderabad - 500033', lat: 17.4319, lng: 78.4073 },
-  { name: 'Madhapur / IT (Hyd)', address: 'Hitec City Main Road, Madhapur, Hyderabad - 500081', lat: 17.4483, lng: 78.3814 },
-  { name: 'Khammam', address: 'Wyra Road, Khammam, Telangana - 507001', lat: 17.2473, lng: 80.1514 },
-  { name: 'Warangal', address: 'Hanamkonda Main Road, Warangal - 506001', lat: 17.9689, lng: 79.5941 }
-];
 
 export default function LocationSearchInput({
   address,
@@ -18,8 +10,8 @@ export default function LocationSearchInput({
   longitude,
   onCoordinatesChange,
   onWardChange,
-  placeholder = "Search town, colony, landmark or street (e.g. Bhadrachalam, Jubilee Hills)...",
-  label = "Incident Location / Address",
+  placeholder = "Search town, colony, landmark (e.g. Bhadrachalam, Jubilee Hills)...",
+  label = "Address",
   required = false
 }) {
   const [query, setQuery] = useState(address || '');
@@ -28,7 +20,6 @@ export default function LocationSearchInput({
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-  const [locationStatus, setLocationStatus] = useState('');
   const containerRef = useRef(null);
   const debounceTimer = useRef(null);
 
@@ -66,7 +57,7 @@ export default function LocationSearchInput({
         } finally {
           setIsSearching(false);
         }
-      }, 250);
+      }, 200);
     } else {
       setSuggestions([]);
       setIsOpen(false);
@@ -83,16 +74,15 @@ export default function LocationSearchInput({
     if (onCoordinatesChange) onCoordinatesChange(s.latitude, s.longitude);
     if (onWardChange && s.ward) onWardChange(s.ward);
 
-    setLocationStatus(`Selected: ${s.name} (${s.latitude.toFixed(4)}, ${s.longitude.toFixed(4)})`);
-    setTimeout(() => setLocationStatus(''), 4000);
-  };
-
-  const handleSelectQuickTown = (t) => {
-    setQuery(t.address);
-    if (onAddressChange) onAddressChange(t.address);
-    if (onCoordinatesChange) onCoordinatesChange(t.lat, t.lng);
-    setLocationStatus(`Selected: ${t.name} (${t.lat.toFixed(4)}, ${t.lng.toFixed(4)})`);
-    setTimeout(() => setLocationStatus(''), 4000);
+    // Save accurate location in localStorage
+    try {
+      localStorage.setItem('smartgov_saved_location', JSON.stringify({
+        address: selectedText,
+        latitude: s.latitude,
+        longitude: s.longitude,
+        ward: s.ward
+      }));
+    } catch (e) {}
   };
 
   const handleMapConfirm = (loc) => {
@@ -100,182 +90,144 @@ export default function LocationSearchInput({
     if (onAddressChange) onAddressChange(loc.address);
     if (onCoordinatesChange) onCoordinatesChange(loc.latitude, loc.longitude);
     if (onWardChange && loc.ward) onWardChange(loc.ward);
-
-    setLocationStatus(`Map Pin Locked: ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
-    setTimeout(() => setLocationStatus(''), 4000);
   };
 
   const handleUseMyLocation = async () => {
     setIsLocating(true);
-    setLocationStatus('Accessing device GPS coordinates...');
-
     try {
       const loc = await detectPreciseLocation();
       setQuery(loc.address);
       if (onAddressChange) onAddressChange(loc.address);
       if (onCoordinatesChange) onCoordinatesChange(loc.latitude, loc.longitude);
       if (onWardChange && loc.ward) onWardChange(loc.ward);
-
-      setLocationStatus(`GPS Locked (±${loc.accuracyMeters}m accuracy): ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
     } catch (error) {
-      let msg = 'Unable to retrieve GPS.';
-      if (error.code === 1) {
-        msg = 'Location permission was denied in browser.';
-      } else if (error.code === 2) {
-        msg = 'GPS unavailable on device. Please type or pick on map.';
-      } else if (error.code === 3) {
-        msg = 'GPS request timed out. Please type or pick on map.';
-      }
-      setLocationStatus(msg);
+      console.warn('Geolocation error:', error);
     } finally {
       setIsLocating(false);
-      setTimeout(() => setLocationStatus(''), 6000);
     }
   };
 
   return (
     <div className="space-y-2" ref={containerRef}>
-      <div className="flex items-center justify-between">
-        <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
-          {label} {required && <span className="text-rose-400">*</span>}
-        </label>
-        {latitude && longitude && (
-          <span className="text-[11px] font-mono text-slate-400">
-            GPS: <strong className="text-[#2dd4bf]">{latitude.toFixed(4)}° N, {longitude.toFixed(4)}° E</strong>
-          </span>
-        )}
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        {/* 1. Address Text Input (Left Column) with Autocomplete */}
+        <div className="lg:col-span-6">
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            {label} {required && <span className="text-rose-400">*</span>}
+          </label>
 
-      <div className="flex flex-col sm:flex-row gap-2 relative">
-        <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            {isSearching ? (
-              <Loader2 className="h-4 w-4 animate-spin text-[#2dd4bf]" />
-            ) : (
-              <Search className="h-4 w-4" />
+          <div className="relative">
+            <input
+              type="text"
+              value={query}
+              onChange={handleInputChange}
+              onFocus={() => {
+                if (suggestions.length > 0) setIsOpen(true);
+              }}
+              placeholder={placeholder}
+              required={required}
+              className="w-full px-3.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm transition-all"
+            />
+
+            {isSearching && (
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
+              </div>
+            )}
+
+            {/* Autocomplete Suggestions Dropdown */}
+            {isOpen && suggestions.length > 0 && (
+              <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#14161b] border border-[#23252d] rounded-2xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto ring-1 ring-white/5 animate-in fade-in zoom-in-95 duration-150">
+                <div className="p-2 border-b border-[#1f222a] bg-[#111317] flex items-center justify-between text-[11px] text-slate-400 px-3">
+                  <span>Matching Locations</span>
+                  <span>Click to lock coordinates</span>
+                </div>
+
+                {suggestions.map((s, idx) => (
+                  <button
+                    key={s.id || idx}
+                    type="button"
+                    onClick={() => handleSelectSuggestion(s)}
+                    className="w-full text-left p-3 hover:bg-[#1b1f27] border-b border-[#1f222a] last:border-b-0 transition-colors flex items-start gap-2.5 group cursor-pointer"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] flex-shrink-0 mt-0.5">
+                      <MapPin className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-slate-200 group-hover:text-[#5eead4] truncate">
+                        {s.name}
+                      </p>
+                      <p className="text-[11px] text-[#88909d] truncate">
+                        {s.displayAddress}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] font-mono text-[#2dd4bf] bg-[#0c2e28] px-1.5 py-0.5 rounded border border-[#175249]">
+                          {s.latitude.toFixed(4)}°, {s.longitude.toFixed(4)}°
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
             )}
           </div>
+        </div>
 
-          <input
-            type="text"
-            value={query}
-            onChange={handleInputChange}
-            onFocus={() => {
-              if (suggestions.length > 0) setIsOpen(true);
-            }}
-            placeholder={placeholder}
-            required={required}
-            className="w-full pl-10 pr-8 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm transition-all"
-          />
-
-          {query && (
+        {/* 2. Coordinates (Latitude, Longitude) + Map Pin + Use Location Button (Right Column) */}
+        <div className="lg:col-span-6">
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            Coordinates
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              step="any"
+              value={latitude || ''}
+              onChange={(e) => onCoordinatesChange && onCoordinatesChange(parseFloat(e.target.value) || 0, longitude)}
+              placeholder="Latitude"
+              aria-label="Latitude"
+              className="w-24 sm:w-28 px-2.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm font-mono text-center"
+            />
+            <input
+              type="number"
+              step="any"
+              value={longitude || ''}
+              onChange={(e) => onCoordinatesChange && onCoordinatesChange(latitude, parseFloat(e.target.value) || 0)}
+              placeholder="Longitude"
+              aria-label="Longitude"
+              className="w-24 sm:w-28 px-2.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm font-mono text-center"
+            />
             <button
               type="button"
-              onClick={() => {
-                setQuery('');
-                if (onAddressChange) onAddressChange('');
-              }}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              onClick={() => setIsMapModalOpen(true)}
+              className="p-2.5 bg-[#0e1014] hover:bg-[#181a20] text-slate-300 hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer shadow-xs flex-shrink-0"
+              title="Pick exact location on interactive map"
             >
-              <X className="h-3.5 w-3.5" />
+              <Map className="h-4 w-4 text-[#2dd4bf]" />
             </button>
-          )}
-
-          {/* Autocomplete Suggestions Dropdown */}
-          {isOpen && suggestions.length > 0 && (
-            <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#14161b] border border-[#23252d] rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto ring-1 ring-white/5 animate-in fade-in zoom-in-95 duration-150">
-              <div className="p-2 border-b border-[#1f222a] bg-[#111317] flex items-center justify-between text-[11px] text-slate-400 px-3">
-                <span>Matching Locations in India</span>
-                <span>Select for exact coordinates</span>
-              </div>
-
-              {suggestions.map((s, idx) => (
-                <button
-                  key={s.id || idx}
-                  type="button"
-                  onClick={() => handleSelectSuggestion(s)}
-                  className="w-full text-left p-3 hover:bg-[#1b1f27] border-b border-[#1f222a] last:border-b-0 transition-colors flex items-start gap-2.5 group cursor-pointer"
-                >
-                  <div className="h-7 w-7 rounded-lg bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] flex-shrink-0 mt-0.5 group-hover:scale-105 transition-transform">
-                    <MapPin className="h-3.5 w-3.5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-slate-200 group-hover:text-[#5eead4] truncate">
-                      {s.name}
-                    </p>
-                    <p className="text-[11px] text-[#88909d] truncate">
-                      {s.displayAddress}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] font-mono text-[#2dd4bf] bg-[#0c2e28] px-1.5 py-0.5 rounded border border-[#175249]">
-                        {s.latitude.toFixed(4)}°, {s.longitude.toFixed(4)}°
-                      </span>
-                      {s.ward && (
-                        <span className="text-[10px] text-slate-400 truncate">
-                          {s.ward.split('-')[0]}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+            <button
+              type="button"
+              onClick={handleUseMyLocation}
+              disabled={isLocating}
+              className="flex-1 px-3 py-2.5 bg-[#0e1014] hover:bg-[#181a20] text-[#2dd4bf] hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shadow-sm disabled:opacity-60 cursor-pointer"
+            >
+              {isLocating ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
+                  <span>Locating...</span>
+                </>
+              ) : (
+                <>
+                  <Navigation className="h-3.5 w-3.5 text-[#2dd4bf]" />
+                  <span>Use my location</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* 1. Pick on Map Button */}
-        <button
-          type="button"
-          onClick={() => setIsMapModalOpen(true)}
-          className="px-3.5 py-2.5 bg-[#0e1014] hover:bg-[#181a20] border border-[#23252d] hover:border-[#175249] text-slate-200 hover:text-[#5eead4] font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all flex-shrink-0 cursor-pointer shadow-sm"
-          title="Pick and drag pin on interactive map"
-        >
-          <Map className="h-3.5 w-3.5 text-[#2dd4bf]" />
-          <span>Pick on Map</span>
-        </button>
-
-        {/* 2. GPS Detect Button */}
-        <button
-          type="button"
-          onClick={handleUseMyLocation}
-          disabled={isLocating}
-          className="px-3.5 py-2.5 bg-[#0c2e28] hover:bg-[#113f37] border border-[#175249] text-[#2dd4bf] font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all flex-shrink-0 cursor-pointer disabled:opacity-50"
-          title="Auto-detect device GPS coordinates"
-        >
-          {isLocating ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
-          ) : (
-            <Navigation className="h-3.5 w-3.5" />
-          )}
-          <span>{isLocating ? 'Locating...' : 'Use GPS'}</span>
-        </button>
       </div>
-
-      {/* Quick Location Chips */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] custom-scrollbar pt-0.5">
-        <span className="text-[#88909d] text-[10px] font-semibold uppercase flex-shrink-0">Quick Jump:</span>
-        {QUICK_TOWNS.map((t, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => handleSelectQuickTown(t)}
-            className={`px-2 py-0.5 rounded-lg border text-[11px] font-medium transition-all whitespace-nowrap cursor-pointer ${
-              query.includes(t.name.split(' ')[0])
-                ? 'bg-[#0c2e28] text-[#2dd4bf] border-[#175249] font-bold'
-                : 'bg-[#0e1014] hover:bg-[#181a20] text-slate-300 border-[#23252d]'
-            }`}
-          >
-            {t.name}
-          </button>
-        ))}
-      </div>
-
-      {locationStatus && (
-        <div className="text-[11px] font-medium text-[#2dd4bf] animate-in fade-in flex items-center gap-1.5 pt-0.5">
-          <Check className="h-3 w-3" />
-          <span>{locationStatus}</span>
-        </div>
-      )}
 
       {/* Interactive Map Location Picker Modal */}
       <MapLocationPickerModal

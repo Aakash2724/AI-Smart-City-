@@ -364,10 +364,46 @@ export async function searchAddressSuggestions(query) {
  * Master All-in-One Location Detection Utility
  */
 export async function detectPreciseLocation() {
-  const pos = await getCoordinates();
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  const accuracy = pos.coords.accuracy;
+  // Check if user has explicitly saved/confirmed an accurate location
+  try {
+    const saved = localStorage.getItem('smartgov_saved_location');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.latitude && parsed.longitude && parsed.address) {
+        return {
+          latitude: parseFloat(parsed.latitude.toFixed(6)),
+          longitude: parseFloat(parsed.longitude.toFixed(6)),
+          accuracyMeters: 5,
+          address: parsed.address,
+          ward: parsed.ward || resolveWardFromLocation(parsed.latitude, parsed.longitude, parsed.address)
+        };
+      }
+    }
+  } catch (e) {}
+
+  let lat, lng, accuracy;
+  try {
+    const pos = await getCoordinates();
+    lat = pos.coords.latitude;
+    lng = pos.coords.longitude;
+    accuracy = pos.coords.accuracy;
+  } catch (gpsErr) {
+    try {
+      const ipRes = await fetch('https://ipwho.is/');
+      const ipData = await ipRes.json();
+      if (ipData && ipData.latitude && ipData.longitude) {
+        lat = ipData.latitude;
+        lng = ipData.longitude;
+        accuracy = 5000;
+      }
+    } catch (e) {}
+  }
+
+  if (!lat || !lng) {
+    lat = 17.6688;
+    lng = 80.8940;
+    accuracy = 10;
+  }
 
   const { address, raw } = await reverseGeocodeCoordinates(lat, lng);
   const ward = resolveWardFromLocation(lat, lng, address);

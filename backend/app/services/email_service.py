@@ -85,12 +85,15 @@ class EmailService:
 
         subject = f"Your complaint has been received — {issue_category} (Ref: {ticket_number})"
         
-        head_name = municipality_head_info.get("name", "Dr. Rajesh V. Sharma")
-        head_designation = municipality_head_info.get("designation", "Chief Municipal Commissioner & Public Infrastructure Head")
-        head_dept = municipality_head_info.get("department_name", "Roads & Infrastructure Department")
-        head_email = municipality_head_info.get("contact_email", "commissioner.sharma@smartcity.gov")
-        head_phone = municipality_head_info.get("contact_phone", "+91 98765 43210")
-        head_office = municipality_head_info.get("office_address", "Municipal Headquarters, City Secretariat")
+        from app.services.municipality_service import CANONICAL_OFFICERS
+        canon = CANONICAL_OFFICERS.get(issue_category, CANONICAL_OFFICERS["Roads & Infrastructure"])
+        
+        head_name = municipality_head_info.get("name") or canon["name"]
+        head_designation = municipality_head_info.get("designation") or canon["designation"]
+        head_dept = municipality_head_info.get("department_name") or canon["department_name"]
+        head_email = municipality_head_info.get("contact_email") or canon["contact_email"]
+        head_phone = municipality_head_info.get("contact_phone") or canon["contact_phone"]
+        head_office = municipality_head_info.get("office_address") or canon["office_address"]
 
         # Priority Badge Styling & Label (Obsidian Dark Theme Pill)
         p_upper = (priority or "HIGH").upper()

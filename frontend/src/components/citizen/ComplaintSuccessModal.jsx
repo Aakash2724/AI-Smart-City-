@@ -42,15 +42,21 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
 
-  // Lock background body scroll whenever modal is open
+  // Bulletproof background scroll lock whenever modal is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
     return () => {
-      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.overflow = originalOverflow;
+      document.body.style.touchAction = '';
     };
   }, [isOpen]);
 
@@ -121,7 +127,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-150 overscroll-contain overflow-hidden"
       onClick={onClose}
     >
       {/* Modal Dialog Card */}
@@ -160,7 +166,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
         </div>
 
         {/* ── 2. Scrollable Body with Clean Balanced Layout ── */}
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-5 text-xs text-slate-200">
+        <div className="p-6 sm:p-8 overflow-y-auto overscroll-contain space-y-5 text-xs text-slate-200">
 
           {/* Top Summary Bar: Ticket, Estimated Resolution Time, Priority & Status */}
           <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 bg-[#111317] rounded-2xl border border-[#23252d]">

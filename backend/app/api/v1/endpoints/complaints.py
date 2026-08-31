@@ -175,13 +175,15 @@ async def create_complaint(
     db.refresh(complaint)
 
     # 5. Dispatch Automated Feedback Email via SMTP
+    from app.services.municipality_service import CANONICAL_OFFICERS
+    default_canon = CANONICAL_OFFICERS.get(complaint.category, CANONICAL_OFFICERS["Roads & Infrastructure"])
     head_dict = {
-        "name": head_obj.name if head_obj else "Dr. Rajesh V. Sharma",
-        "designation": head_obj.designation if head_obj else "Chief Municipal Commissioner",
-        "department_name": head_obj.department_name if head_obj else "Roads & Infrastructure Department",
-        "contact_email": getattr(head_obj, "contact_email", "commissioner.sharma@smartcity.gov") if head_obj else "commissioner.sharma@smartcity.gov",
-        "contact_phone": getattr(head_obj, "contact_phone", "+91 98765 43210") if head_obj else "+91 98765 43210",
-        "office_address": getattr(head_obj, "office_address", "Municipal Headquarters, City Secretariat") if head_obj else "Municipal Headquarters, City Secretariat"
+        "name": head_obj.name if head_obj else default_canon["name"],
+        "designation": head_obj.designation if head_obj else default_canon["designation"],
+        "department_name": head_obj.department_name if head_obj else default_canon["department_name"],
+        "contact_email": getattr(head_obj, "contact_email", default_canon["contact_email"]) if head_obj else default_canon["contact_email"],
+        "contact_phone": getattr(head_obj, "contact_phone", default_canon["contact_phone"]) if head_obj else default_canon["contact_phone"],
+        "office_address": getattr(head_obj, "office_address", default_canon["office_address"]) if head_obj else default_canon["office_address"]
     }
     
     background_tasks.add_task(

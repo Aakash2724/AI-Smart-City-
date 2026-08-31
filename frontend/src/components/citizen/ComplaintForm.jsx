@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { detectPreciseLocation } from '../../services/locationService';
 import ComplaintSuccessModal from './ComplaintSuccessModal';
 import VoiceInputButton from '../common/VoiceInputButton';
+import LocationSearchInput from '../common/LocationSearchInput';
 
 export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
   const { user, setIsAuthModalOpen } = useAuth();
@@ -259,75 +260,20 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
             </div>
           </div>
 
-          {/* Location & GPS Coordinates (With Device Geolocation) */}
-          <div className="space-y-2">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-              <div className="lg:col-span-6">
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Area, city"
-                  className="w-full px-3.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm"
-                />
-              </div>
-
-              <div className="lg:col-span-6">
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Coordinates
-                </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    step="any"
-                    value={latitude}
-                    onChange={(e) => setLatitude(e.target.value)}
-                    placeholder="Latitude"
-                    aria-label="Latitude"
-                    className="w-24 sm:w-28 px-2.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm font-mono text-center"
-                  />
-                  <input
-                    type="number"
-                    step="any"
-                    value={longitude}
-                    onChange={(e) => setLongitude(e.target.value)}
-                    placeholder="Longitude"
-                    aria-label="Longitude"
-                    className="w-24 sm:w-28 px-2.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#2dd4bf] focus:border-[#2dd4bf] text-white placeholder-slate-500 text-sm font-mono text-center"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleUseMyLocation}
-                    disabled={isLocating}
-                    className="flex-1 px-3 py-2.5 bg-[#0e1014] hover:bg-[#181a20] text-[#2dd4bf] hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shadow-sm disabled:opacity-60 cursor-pointer"
-                  >
-                    {isLocating ? (
-                      <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
-                        <span>Locating...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Navigation className="h-3.5 w-3.5 text-[#2dd4bf]" />
-                        <span>Use my location</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* GPS Feedback message */}
-            {locationStatus && (
-              <p className={`text-[11px] flex items-center gap-1.5 ${locationStatus.includes('Locked') ? 'text-[#2dd4bf]' : 'text-amber-400'}`}>
-                <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                <span>{locationStatus}</span>
-              </p>
-            )}
-          </div>
+          {/* Incident Location & Accurate GPS Coordinates */}
+          <LocationSearchInput
+            address={address}
+            onAddressChange={setAddress}
+            latitude={latitude}
+            longitude={longitude}
+            onCoordinatesChange={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+            }}
+            placeholder="Search town, colony, landmark or street (e.g. Bhadrachalam, Jubilee Hills)..."
+            label="Incident Location / Address"
+            required
+          />
 
           {/* Photo Upload Zone */}
           <div>

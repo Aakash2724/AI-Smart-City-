@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../services/api';
 import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
+import LocationSearchInput from '../common/LocationSearchInput';
 import {
   AlertCircle,
   UserPlus,
@@ -738,49 +739,15 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  {/* 5. Residential Address (with Use Location Button) */}
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-medium text-[#8ea6b3]">
-                        Residential Address
-                      </label>
-                      <button
-                        type="button"
-                        onClick={handleDetectLocation}
-                        disabled={isLocating}
-                        className="text-[11px] text-[#2dd4bf] hover:text-[#5eead4] font-semibold flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
-                        title="Auto-fill device GPS location"
-                      >
-                        {isLocating ? (
-                          <>
-                            <span className="h-2.5 w-2.5 rounded-full border-2 border-[#2dd4bf] border-t-transparent animate-spin" />
-                            <span>Locating...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Navigation className="h-3 w-3" />
-                            <span>Use Location</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
-                      <input
-                        type="text"
-                        placeholder="Plot 42, Road No. 36, Jubilee Hills"
-                        value={address}
-                        onChange={handleAddressChange}
-                        className="w-full pl-9 pr-3 py-1.5 bg-[#151b20] border border-[#212f37] rounded-xl text-xs text-white placeholder-[#4d636e] focus:outline-none focus:border-[#2dd4bf]"
-                        required
-                      />
-                    </div>
-                    {locationStatus && (
-                      <p className="text-[10px] text-[#5eead4] mt-1 flex items-center gap-1 font-mono">
-                        <CheckCircle2 className="h-3 w-3" /> {locationStatus}
-                      </p>
-                    )}
-                  </div>
+                  {/* 5. Residential Address with Real-Time Indian Place Autocomplete & GPS */}
+                  <LocationSearchInput
+                    address={address}
+                    onAddressChange={setAddress}
+                    onWardChange={setWard}
+                    placeholder="Search town, colony, landmark (e.g. Bhadrachalam, Jubilee Hills)..."
+                    label="Residential Address"
+                    required
+                  />
 
                   {/* 6. Ward / Area */}
                   <div>

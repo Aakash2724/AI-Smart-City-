@@ -261,6 +261,106 @@ export function resolveWardFromLocation(lat, lng, addressText = '') {
 }
 
 /**
+ * Real-time Indian Address Autocomplete & Search
+ * Supports searching any colony, temple, landmark, town, district or city (e.g., Bhadrachalam, Hyderabad, Khammam, Warangal)
+ */
+export async function searchAddressSuggestions(query) {
+  if (!query || query.trim().length < 2) return [];
+
+  const cleanQuery = query.trim();
+  const suggestions = [];
+
+  // 1. Try Photon OpenStreetMap Geocoder (Super fast & tailored for India)
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(cleanQuery)}&limit=6&lat=17.3850&lon=78.4867`;
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.features && data.features.length > 0) {
+        for (const f of data.features) {
+          const props = f.properties || {};
+          const coords = f.geometry?.coordinates || [];
+          if (coords.length === 2) {
+            const lng = coords[0];
+            const lat = coords[1];
+
+            const name = props.name || '';
+            const street = props.street || '';
+            const district = props.district || props.city || props.county || '';
+            const state = props.state || 'Telangana';
+            const postcode = props.postcode ? ` - ${props.postcode}` : '';
+
+            const parts = [];
+            if (name) parts.push(name);
+            if (street && street !== name) parts.push(street);
+            if (district && district !== name) parts.push(district);
+            if (state && !parts.includes(state)) parts.push(state);
+
+            const displayLabel = parts.join(', ') + postcode;
+            const ward = resolveWardFromLocation(lat, lng, displayLabel);
+
+            suggestions.push({
+              id: `photon-${lat}-${lng}-${Math.random()}`,
+              name: name || district || 'Location',
+              displayAddress: displayLabel,
+              latitude: parseFloat(lat.toFixed(6)),
+              longitude: parseFloat(lng.toFixed(6)),
+              ward,
+              state: state,
+              district: district
+            });
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // Fallback to Nominatim Search
+  }
+
+  // 2. Fallback to OpenStreetMap Nominatim Search
+  if (suggestions.length === 0) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanQuery)}&countrycodes=in&limit=5&addressdetails=1`;
+      const res = await fetch(url, {
+        headers: { 'Accept-Language': 'en' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          for (const item of data) {
+            const lat = parseFloat(item.lat);
+            const lng = parseFloat(item.lon);
+            const displayLabel = item.display_name;
+            const ward = resolveWardFromLocation(lat, lng, displayLabel);
+
+            suggestions.push({
+              id: `nom-${item.place_id || Math.random()}`,
+              name: item.name || displayLabel.split(',')[0],
+              displayAddress: displayLabel,
+              latitude: parseFloat(lat.toFixed(6)),
+              longitude: parseFloat(lng.toFixed(6)),
+              ward,
+              raw: item
+            });
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  return suggestions;
+}
+
+/**
  * Master All-in-One Location Detection Utility
  */
 export async function detectPreciseLocation() {
@@ -273,8 +373,8 @@ export async function detectPreciseLocation() {
   const ward = resolveWardFromLocation(lat, lng, address);
 
   return {
-    latitude: lat,
-    longitude: lng,
+    latitude: parseFloat(lat.toFixed(6)),
+    longitude: parseFloat(lng.toFixed(6)),
     accuracyMeters: Math.round(accuracy || 10),
     address,
     ward,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
+import LocationSearchInput from '../common/LocationSearchInput';
 import { 
   User, 
   Mail, 
@@ -282,58 +283,18 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
           </h3>
 
           <div className="space-y-4">
-            {/* Residential Address */}
-            <div>
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                <label className="block text-xs font-bold text-slate-300">
-                  Residential Address
-                </label>
-
-                {/* Device Location Auto-Detection Button */}
-                <button
-                  type="button"
-                  onClick={handleUseMyLocation}
-                  disabled={isLocating}
-                  className="px-3 py-1.5 bg-[#0e1014] hover:bg-[#181a20] text-[#2dd4bf] hover:text-[#5eead4] border border-[#23252d] hover:border-[#175249] rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap shadow-xs disabled:opacity-60 cursor-pointer"
-                >
-                  {isLocating ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
-                      <span>Detecting location...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Navigation className="h-3.5 w-3.5 text-[#2dd4bf]" />
-                      <span>Use my location</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className="relative">
-                <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Plot 42, Road No. 36, Jubilee Hills"
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-[#0e1014] border border-[#23252d] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2dd4bf] focus:ring-1 focus:ring-[#2dd4bf] transition-all font-medium"
-                  required
-                />
-              </div>
-
-              {/* Live Location Status Indicator */}
-              {locationStatus && (
-                <p className={`text-[11px] mt-1.5 flex items-center gap-1.5 ${locationStatus.includes('Locked') ? 'text-[#2dd4bf]' : 'text-amber-400'}`}>
-                  <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                  <span>{locationStatus}</span>
-                </p>
-              )}
-
-              <p className="text-[11px] text-[#88909d] mt-1">
-                Your submitted civic complaints will default to this residential address.
-              </p>
-            </div>
+            {/* Residential Address with Live Autocomplete & GPS */}
+            <LocationSearchInput
+              address={address}
+              onAddressChange={setAddress}
+              onWardChange={setWard}
+              placeholder="Search town, colony, landmark or street (e.g. Bhadrachalam, Jubilee Hills)..."
+              label="Residential Address"
+              required
+            />
+            <p className="text-[11px] text-[#88909d]">
+              Your submitted civic complaints will default to this residential address.
+            </p>
 
             {/* Assigned Municipal Ward */}
             <div>

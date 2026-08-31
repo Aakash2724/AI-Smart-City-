@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
 import { 
   User, 
   Mail, 
@@ -14,18 +15,6 @@ import {
   Navigation,
   Loader2
 } from 'lucide-react';
-
-const HYDERABAD_WARDS = [
-  { id: 'Ward 12', label: 'Ward 12 - Jubilee Hills & Banjara Hills Zone' },
-  { id: 'Ward 8', label: 'Ward 8 - Charminar & Central Market Zone' },
-  { id: 'Ward 14', label: 'Ward 14 - Khairatabad & Ameerpet Zone' },
-  { id: 'Ward 18', label: 'Ward 18 - Kukatpally & KPHB Zone' },
-  { id: 'Ward 15', label: 'Ward 15 - IT Corridor / Madhapur & Gachibowli' },
-  { id: 'Ward 10', label: 'Ward 10 - Secunderabad & Begumpet Zone' },
-  { id: 'Ward 4', label: 'Ward 4 - Old City South & Nayapul Zone' },
-  { id: 'Ward 22', label: 'Ward 22 - Dilsukhnagar & LB Nagar Zone' },
-  { id: 'Ward 25', label: 'Ward 25 - Miyapur & Chandanagar Zone' },
-];
 
 export default function ProfileSettingsPage({ onNavigateTab }) {
   const { user, updateUser, logout } = useAuth();
@@ -52,67 +41,33 @@ export default function ProfileSettingsPage({ onNavigateTab }) {
     }
   }, [user]);
 
-  const handleUseMyLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationStatus('Geolocation is not supported by your browser.');
-      return;
-    }
-
+  const handleUseMyLocation = async () => {
     setIsLocating(true);
-    setLocationStatus('Accessing device GPS coordinates...');
+    setLocationStatus('Accessing high-precision GPS coordinates...');
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = parseFloat(position.coords.latitude.toFixed(4));
-        const lng = parseFloat(position.coords.longitude.toFixed(4));
-        setLocationStatus(`GPS Locked: ${lat}, ${lng}`);
-        setIsLocating(false);
-
-        // Reverse geocode via OpenStreetMap Nominatim
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-            headers: { 'Accept-Language': 'en' }
-          });
-          const data = await res.json();
-          if (data && data.display_name) {
-            const parts = data.display_name.split(', ');
-            const shortAddr = parts.slice(0, 3).join(', ');
-            setAddress(shortAddr);
-
-            // Auto-match closest Hyderabad ward
-            const addrLower = data.display_name.toLowerCase();
-            if (addrLower.includes('jubilee') || addrLower.includes('banjara')) {
-              setWard('Ward 12 - Jubilee Hills & Banjara Hills Zone');
-            } else if (addrLower.includes('charminar') || addrLower.includes('central')) {
-              setWard('Ward 8 - Charminar & Central Market Zone');
-            } else if (addrLower.includes('kukatpally') || addrLower.includes('kphb')) {
-              setWard('Ward 18 - Kukatpally & KPHB Zone');
-            } else if (addrLower.includes('madhapur') || addrLower.includes('gachibowli') || addrLower.includes('hitec')) {
-              setWard('Ward 15 - IT Corridor / Madhapur & Gachibowli');
-            } else if (addrLower.includes('secunderabad') || addrLower.includes('begumpet')) {
-              setWard('Ward 10 - Secunderabad & Begumpet Zone');
-            } else if (addrLower.includes('khairatabad') || addrLower.includes('ameerpet')) {
-              setWard('Ward 14 - Khairatabad & Ameerpet Zone');
-            }
-          }
-        } catch (e) {
-          console.warn('Reverse geocoding error:', e);
-        }
-      },
-      (error) => {
-        setIsLocating(false);
-        let msg = 'Unable to retrieve location.';
-        if (error.code === error.PERMISSION_DENIED) {
-          msg = 'Location permission was denied. Please allow location access in your browser.';
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          msg = 'Location information is unavailable on this device.';
-        } else if (error.code === error.TIMEOUT) {
-          msg = 'Location request timed out.';
-        }
-        setLocationStatus(msg);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
+    try {
+      const loc = await detectPreciseLocation();
+      if (loc.address) {
+        setAddress(loc.address);
+      }
+      if (loc.ward) {
+        setWard(loc.ward);
+      }
+      setLocationStatus(`Location locked (±${loc.accuracyMeters}m accuracy)`);
+    } catch (error) {
+      let msg = 'Unable to retrieve location.';
+      if (error.code === 1) {
+        msg = 'Location permission was denied. Please allow location access in your browser settings.';
+      } else if (error.code === 2) {
+        msg = 'GPS / Location information is unavailable on this device.';
+      } else if (error.code === 3) {
+        msg = 'Location request timed out. Please try again.';
+      }
+      setLocationStatus(msg);
+    } finally {
+      setIsLocating(false);
+      setTimeout(() => setLocationStatus(''), 5000);
+    }
   };
 
   const handlePhotoUpload = (e) => {

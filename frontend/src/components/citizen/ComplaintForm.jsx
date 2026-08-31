@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Upload, MapPin, Sparkles, ArrowRight, Image as ImageIcon, Mail, CheckCircle2, ShieldCheck, Clock, Layers, Navigation, Loader2, User, Phone, Mic } from 'lucide-react';
 import { submitComplaint } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { detectPreciseLocation } from '../../services/locationService';
 import ComplaintSuccessModal from './ComplaintSuccessModal';
 import VoiceInputButton from '../common/VoiceInputButton';
 
@@ -24,8 +25,8 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
   useEffect(() => {
     if (user) {
-      setCitizenName(user.name || '');
-      setContact(user.email || user.phone || '');
+      if (user.name) setCitizenName(user.name);
+      if (user.phone || user.email) setContact(user.phone || user.email);
       if (user.registered_location) setAddress(user.registered_location);
     }
   }, [user]);
@@ -39,7 +40,7 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
   const handleVoiceResult = (voiceData) => {
     if (!voiceData) return;
-    const resolvedText = voiceData.translated_text || voiceData.summary || voiceData.original_text;
+    const resolvedText = voiceData.translated_text || voiceData.transcription || voiceData.summary || voiceData.original_text;
     if (resolvedText) {
       setText(resolvedText);
     }
@@ -48,54 +49,32 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
     }
   };
 
-  const handleUseMyLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationStatus('Geolocation is not supported by your browser.');
-      return;
-    }
-
+  const handleUseMyLocation = async () => {
     setIsLocating(true);
-    setLocationStatus('Accessing device GPS coordinates...');
+    setLocationStatus('Accessing high-precision GPS coordinates...');
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = parseFloat(position.coords.latitude.toFixed(4));
-        const lng = parseFloat(position.coords.longitude.toFixed(4));
-        setLatitude(lat);
-        setLongitude(lng);
-        setLocationStatus(`GPS Locked: ${lat}, ${lng}`);
-        setIsLocating(false);
-
-        // Reverse geocode via OpenStreetMap Nominatim
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-            headers: { 'Accept-Language': 'en' }
-          });
-          const data = await res.json();
-          if (data && data.display_name) {
-            // Shorten to area, suburb/city
-            const parts = data.display_name.split(', ');
-            const shortAddr = parts.slice(0, 3).join(', ');
-            setAddress(shortAddr);
-          }
-        } catch (e) {
-          console.warn('Reverse geocoding error:', e);
-        }
-      },
-      (error) => {
-        setIsLocating(false);
-        let msg = 'Unable to retrieve location.';
-        if (error.code === error.PERMISSION_DENIED) {
-          msg = 'Location permission was denied. Please allow location access in your browser.';
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          msg = 'Location information is unavailable on this device.';
-        } else if (error.code === error.TIMEOUT) {
-          msg = 'Location request timed out.';
-        }
-        setLocationStatus(msg);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
+    try {
+      const loc = await detectPreciseLocation();
+      setLatitude(loc.latitude);
+      setLongitude(loc.longitude);
+      if (loc.address) {
+        setAddress(loc.address);
+      }
+      setLocationStatus(`GPS Locked (±${loc.accuracyMeters}m accuracy): ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
+    } catch (error) {
+      let msg = 'Unable to retrieve location.';
+      if (error.code === 1) {
+        msg = 'Location permission was denied. Please allow location access in your browser settings.';
+      } else if (error.code === 2) {
+        msg = 'GPS / Location information is unavailable on this device.';
+      } else if (error.code === 3) {
+        msg = 'Location request timed out. Please try again.';
+      }
+      setLocationStatus(msg);
+    } finally {
+      setIsLocating(false);
+      setTimeout(() => setLocationStatus(''), 6000);
+    }
   };
 
   const handleImageChange = (e) => {

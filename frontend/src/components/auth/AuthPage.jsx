@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../services/api';
+import { HYDERABAD_WARDS, detectPreciseLocation } from '../../services/locationService';
 import {
   AlertCircle,
   UserPlus,
@@ -19,18 +20,6 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
-
-const HYDERABAD_WARDS = [
-  { id: 'Ward 12', label: 'Ward 12 - Jubilee Hills & Banjara Hills Zone', keywords: ['jubilee', 'banjara', 'film nagar', 'shaikpet'] },
-  { id: 'Ward 8', label: 'Ward 8 - Charminar & Central Market Zone', keywords: ['charminar', 'abids', 'koti', 'moazzam jahi', 'nampally', 'afzal gunj'] },
-  { id: 'Ward 14', label: 'Ward 14 - Khairatabad & Ameerpet Zone', keywords: ['khairatabad', 'ameerpet', 'panjagutta', 'somajiguda', 'sr nagar'] },
-  { id: 'Ward 18', label: 'Ward 18 - Kukatpally & KPHB Zone', keywords: ['kukatpally', 'kphb', 'jntu', 'nizampet', 'pragathi nagar'] },
-  { id: 'Ward 15', label: 'Ward 15 - IT Corridor / Madhapur & Gachibowli', keywords: ['madhapur', 'hitec', 'gachibowli', 'kondapur', 'financial district', 'raidurg'] },
-  { id: 'Ward 10', label: 'Ward 10 - Secunderabad & Begumpet Zone', keywords: ['secunderabad', 'begumpet', 'marredpally', 'paradise', 'bowenpally'] },
-  { id: 'Ward 4', label: 'Ward 4 - Old City South & Nayapul Zone', keywords: ['old city', 'nayapul', 'falaknuma', 'chandrayangutta', 'bahadurpura'] },
-  { id: 'Ward 22', label: 'Ward 22 - Dilsukhnagar & LB Nagar Zone', keywords: ['dilsukhnagar', 'lb nagar', 'kothapet', 'malakpet', 'vanasthalipuram'] },
-  { id: 'Ward 25', label: 'Ward 25 - Miyapur & Chandanagar Zone', keywords: ['miyapur', 'chandanagar', 'hafeezpet', 'lingampally', 'bhel'] },
-];
 
 // Helper to decode real Google JWT token if returned by Google GIS
 function parseGoogleJwt(token) {
@@ -137,65 +126,35 @@ export default function AuthPage() {
     }
   };
 
-  // Device Geolocation Handler for Residential Address
-  const handleDetectLocation = () => {
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser.');
-      return;
-    }
-
+  // Device Geolocation Handler for Residential Address (High-Accuracy)
+  const handleDetectLocation = async () => {
     setIsLocating(true);
-    setLocationStatus('Accessing device GPS...');
+    setLocationStatus('Accessing high-precision GPS...');
+    setError('');
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = parseFloat(position.coords.latitude.toFixed(4));
-        const lng = parseFloat(position.coords.longitude.toFixed(4));
-
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-            headers: { 'Accept-Language': 'en' }
-          });
-          const data = await res.json();
-          if (data && data.address) {
-            const addrObj = data.address;
-            const primary = addrObj.road || addrObj.suburb || addrObj.neighbourhood || addrObj.residential || addrObj.subdivision || 'Jubilee Hills';
-            const cityArea = addrObj.city || addrObj.state_district || 'Hyderabad';
-            const resolvedAddress = `${primary}, ${cityArea}`;
-            setAddress(resolvedAddress);
-
-            // Auto select matching ward
-            const fullStr = (data.display_name || '').toLowerCase();
-            for (const w of HYDERABAD_WARDS) {
-              if (w.keywords.some(k => fullStr.includes(k))) {
-                setWard(w.label);
-                break;
-              }
-            }
-            setLocationStatus('Location detected & applied!');
-          } else {
-            setAddress('Road No. 36, Jubilee Hills, Hyderabad');
-            setWard('Ward 12 - Jubilee Hills & Banjara Hills Zone');
-            setLocationStatus('Location applied!');
-          }
-        } catch (e) {
-          setAddress('Road No. 36, Jubilee Hills, Hyderabad');
-          setWard('Ward 12 - Jubilee Hills & Banjara Hills Zone');
-          setLocationStatus('Location applied!');
-        } finally {
-          setIsLocating(false);
-          setTimeout(() => setLocationStatus(''), 4000);
-        }
-      },
-      (err) => {
-        setIsLocating(false);
-        setAddress('Road No. 36, Jubilee Hills, Hyderabad');
-        setWard('Ward 12 - Jubilee Hills & Banjara Hills Zone');
-        setLocationStatus('Location applied!');
-        setTimeout(() => setLocationStatus(''), 4000);
-      },
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
+    try {
+      const loc = await detectPreciseLocation();
+      if (loc.address) {
+        setAddress(loc.address);
+      }
+      if (loc.ward) {
+        setWard(loc.ward);
+      }
+      setLocationStatus(`Location locked (±${loc.accuracyMeters}m accuracy)`);
+    } catch (err) {
+      let msg = 'Unable to retrieve location.';
+      if (err.code === 1) {
+        msg = 'Location permission was denied. Please allow location access in your browser.';
+      } else if (err.code === 2) {
+        msg = 'GPS / Location information is unavailable on this device.';
+      } else if (err.code === 3) {
+        msg = 'Location request timed out. Please try again.';
+      }
+      setLocationStatus(msg);
+    } finally {
+      setIsLocating(false);
+      setTimeout(() => setLocationStatus(''), 5000);
+    }
   };
 
   // ═══════════════════════════════════════════════════════════════

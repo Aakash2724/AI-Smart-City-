@@ -201,7 +201,7 @@ html.light .leaflet-bar a:hover {
 }
 
 /* ==========================================================================
-   LIGHT THEME ADAPTIVE SYSTEM
+   COMPREHENSIVE LIGHT THEME ADAPTIVE SYSTEM
    Replaces dark/black surfaces with crisp whites/light surfaces
    while retaining the signature green/teal sub-color
    ========================================================================== */
@@ -218,6 +218,9 @@ html.light .bg-\[\#111317\],
 html.light .bg-\[\#181a1f\],
 html.light .bg-\[\#14151a\],
 html.light .bg-\[\#16181e\],
+html.light .bg-\[\#14161b\],
+html.light .bg-slate-900,
+html.light .bg-slate-950,
 html.light header.bg-\[\#111317\],
 html.light aside.bg-\[\#111317\] {
   background-color: #ffffff !important;
@@ -225,7 +228,8 @@ html.light aside.bg-\[\#111317\] {
 
 html.light .bg-\[\#111317\]\/95,
 html.light .bg-\[\#111317\]\/90,
-html.light .bg-\[\#111317\]\/80 {
+html.light .bg-\[\#111317\]\/80,
+html.light .bg-\[\#14151a\]\/95 {
   background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
@@ -234,40 +238,147 @@ html.light .bg-\[\#0e1014\],
 html.light .bg-\[\#131418\],
 html.light .bg-\[\#151b20\],
 html.light .bg-\[\#12161b\],
-html.light .bg-\[\#0c0d10\] {
+html.light .bg-\[\#0c0d10\],
+html.light .bg-\[\#131519\],
+html.light .bg-\[\#1a1d24\],
+html.light .bg-\[\#1c2730\],
+html.light .bg-\[\#181c26\],
+html.light .bg-slate-800 {
   background-color: #f8fafc !important;
 }
 
-/* Subtle Hover States */
+/* Voice Input Widget & Dropdown in Light Mode */
+html.light .bg-\[\#11141c\]\/90,
+html.light .bg-\[\#12151e\]\/98,
+html.light .bg-\[\#12151e\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .bg-\[\#232836\] {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .bg-\[\#1b202c\] {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+/* Index / Number Badge Circles */
+html.light .bg-black\/40 {
+  background-color: #e2e8f0 !important;
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* ==========================================================================
+   HOVER STATES IN LIGHT MODE
+   Ensures mouse hover produces crisp, subtle light slate feedback
+   ========================================================================== */
 html.light .bg-\[\#1c1e25\],
 html.light .bg-\[\#181a20\],
-html.light .bg-\[\#20222a\] {
+html.light .bg-\[\#20222a\],
+html.light .bg-\[\#15171c\] {
   background-color: #f1f5f9 !important;
 }
 
 html.light .hover\:bg-\[\#1c1e25\]:hover,
 html.light .hover\:bg-\[\#181a20\]:hover,
-html.light .hover\:bg-\[\#20222a\]:hover {
+html.light .hover\:bg-\[\#20222a\]:hover,
+html.light .hover\:bg-\[\#15171c\]:hover,
+html.light .hover\:bg-\[\#161a24\]:hover,
+html.light .hover\:bg-\[\#181c26\]:hover,
+html.light .hover\:bg-\[\#1f222a\]:hover,
+html.light .hover\:bg-\[\#1c1e26\]:hover,
+html.light .hover\:bg-\[\#1c242b\]:hover,
+html.light .hover\:bg-\[\#1e272f\]:hover,
+html.light .hover\:bg-\[\#243440\]:hover,
+html.light .hover\:bg-\[\#1a1d23\]:hover,
+html.light .hover\:bg-\[\#16181e\]:hover,
+html.light .hover\:bg-\[\#0e1014\]:hover {
   background-color: #f1f5f9 !important;
 }
 
-/* Green/Teal Sub-Accent Brand & Badge Backgrounds in Light Mode */
-html.light .bg-\[\#0c2e28\],
-html.light .bg-\[\#0c2e28\]\/50,
-html.light .bg-\[\#0c2e28\]\/90 {
+html.light .hover\:bg-\[\#2e1818\]:hover {
+  background-color: #fee2e2 !important;
+}
+
+html.light .hover\:bg-\[\#0c2e28\]:hover {
   background-color: #f0fdfa !important;
 }
 
-html.light .hover\:bg-\[\#113f37\]:hover,
-html.light .bg-\[\#113f37\] {
-  background-color: #ccfbf1 !important;
+/* ==========================================================================
+   PRIORITY & STATUS BADGES IN LIGHT MODE
+   Transforms dark badge backgrounds into vibrant, high-contrast light badges
+   ========================================================================== */
+
+/* Red / Critical / Rejected */
+html.light .bg-\[\#2e1818\],
+html.light .bg-\[\#2b1619\] {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border-color: #fecaca !important;
 }
 
-html.light .border-\[\#175249\] {
+/* Orange / High / In Progress */
+html.light .bg-\[\#291f16\] {
+  background-color: #fff7ed !important;
+  color: #c2410c !important;
+  border-color: #fed7aa !important;
+}
+
+/* Green / Teal / Medium / Low / Assigned / Resolved / Verified */
+html.light .bg-\[\#142622\],
+html.light .bg-\[\#122822\],
+html.light .bg-\[\#0c2e28\],
+html.light .bg-\[\#0c2e28\]\/30,
+html.light .bg-\[\#0c2e28\]\/50,
+html.light .bg-\[\#0c2e28\]\/90 {
+  background-color: #f0fdfa !important;
+  color: #0d9488 !important;
   border-color: #99f6e4 !important;
 }
 
-/* Borders in Light Mode */
+html.light .hover\:bg-\[\#113f37\]:hover,
+html.light .bg-\[\#113f37\],
+html.light .bg-\[\#175249\] {
+  background-color: #ccfbf1 !important;
+}
+
+/* Blue / Submitted */
+html.light .bg-\[\#1e2029\] {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Purple / Pending */
+html.light .bg-\[\#20182c\] {
+  background-color: #faf5ff !important;
+  color: #7e22ce !important;
+  border-color: #e9d5ff !important;
+}
+
+/* Gray / Neutral / Closed */
+html.light .border-\[\#592626\] {
+  border-color: #fecaca !important;
+}
+html.light .border-\[\#4a2e1d\] {
+  border-color: #fed7aa !important;
+}
+html.light .border-\[\#175249\],
+html.light .border-\[\#194d3f\] {
+  border-color: #99f6e4 !important;
+}
+html.light .border-\[\#2b354d\] {
+  border-color: #bfdbfe !important;
+}
+html.light .border-\[\#3e265c\] {
+  border-color: #e9d5ff !important;
+}
+
+/* General Dark Borders in Light Mode */
 html.light .border-\[\#23252d\],
 html.light .border-\[\#262830\],
 html.light .border-\[\#272932\],
@@ -276,6 +387,10 @@ html.light .border-\[\#212f37\],
 html.light .border-\[\#1a1c22\],
 html.light .border-\[\#1c272f\],
 html.light .border-\[\#383b46\],
+html.light .border-\[\#282b35\],
+html.light .border-\[\#232836\],
+html.light .border-\[\#26353e\],
+html.light .border-\[\#2e4250\],
 html.light .border-slate-800,
 html.light .border-slate-700 {
   border-color: #e2e8f0 !important;
@@ -315,13 +430,14 @@ html.light .text-\[\#5eead4\] {
   color: #0d9488 !important;
 }
 
-/* Inputs, Textareas, and Dropdowns in Light Mode */
+/* Inputs, Textareas, Selects, and Dropdown Options in Light Mode */
 html.light input[type="text"],
 html.light input[type="email"],
 html.light input[type="password"],
 html.light input[type="search"],
 html.light textarea,
-html.light select {
+html.light select,
+html.light option {
   background-color: #ffffff !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;

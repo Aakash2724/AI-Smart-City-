@@ -46,6 +46,9 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   useEffect(() => {
     if (!isOpen) return;
 
+    // Reset window scroll position so modal is perfectly centered in viewport
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 

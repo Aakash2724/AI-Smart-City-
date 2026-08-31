@@ -68,7 +68,7 @@ def seed_database():
             "department": "Roads & Infrastructure Department",
             "ward": "Ward 12 - Jubilee Zone",
             "photo_url": "/images/heads/prabhas.jpg",
-            "email": "commissioner.prabhas@smartcity.gov",
+            "email": "commissioner.prabhas@smartcity.gov.in",
             "phone": "+91 98765 43210",
             "address": "Municipal Headquarters, Block A, City Secretariat"
         },
@@ -78,7 +78,7 @@ def seed_database():
             "department": "Sanitation & Waste Management Board",
             "ward": "Ward 8 - Central Market Zone",
             "photo_url": "/images/heads/ntr.jpg",
-            "email": "director.ntr@smartcity.gov",
+            "email": "director.ntr@smartcity.gov.in",
             "phone": "+91 98765 43211",
             "address": "Clean City Complex, Ward 8 Office"
         },
@@ -88,7 +88,7 @@ def seed_database():
             "department": "Water Supply & Sewage Board",
             "ward": "Ward 14 - Green Park Zone",
             "photo_url": "/images/heads/ramcharan.jpg",
-            "email": "chief.ramcharan@smartcity.gov",
+            "email": "chief.ramcharan@smartcity.gov.in",
             "phone": "+91 98765 43212",
             "address": "Hydro Works Building, Ward 14"
         },
@@ -98,7 +98,7 @@ def seed_database():
             "department": "Electrical & Power Grid Department",
             "ward": "Ward 15 - IT Corridor Zone",
             "photo_url": "/images/heads/alluarjun.jpg",
-            "email": "commissioner.allu@smartcity.gov",
+            "email": "commissioner.allu@smartcity.gov.in",
             "phone": "+91 98765 43213",
             "address": "Power House Tower, Cyber District"
         },
@@ -108,7 +108,7 @@ def seed_database():
             "department": "Traffic Enforcement & Safety Division",
             "ward": "Ward 4 - Old City Zone",
             "photo_url": "/images/heads/maheshbabu.jpg",
-            "email": "director.mahesh@smartcity.gov",
+            "email": "director.mahesh@smartcity.gov.in",
             "phone": "+91 98765 43214",
             "address": "Traffic Command Center, Central HQ"
         }

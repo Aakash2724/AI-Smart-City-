@@ -9,7 +9,7 @@ CANONICAL_OFFICERS = {
         "department_name": "Sanitation & Waste Management Board",
         "assigned_ward": "Ward 8 - Central Market Zone",
         "photo_url": "/images/heads/ntr.jpg",
-        "contact_email": "director.ntr@smartcity.gov",
+        "contact_email": "director.ntr@smartcity.gov.in",
         "contact_phone": "+91 98765 43211",
         "office_address": "Clean City Complex, Ward 8 Office"
     },
@@ -19,7 +19,7 @@ CANONICAL_OFFICERS = {
         "department_name": "Water Supply & Sewage Board",
         "assigned_ward": "Ward 14 - Green Park Zone",
         "photo_url": "/images/heads/ramcharan.jpg",
-        "contact_email": "chief.ramcharan@smartcity.gov",
+        "contact_email": "chief.ramcharan@smartcity.gov.in",
         "contact_phone": "+91 98765 43212",
         "office_address": "Hydro Works Building, Ward 14"
     },
@@ -29,7 +29,7 @@ CANONICAL_OFFICERS = {
         "department_name": "Electrical & Power Grid Department",
         "assigned_ward": "Ward 15 - IT Corridor Zone",
         "photo_url": "/images/heads/alluarjun.jpg",
-        "contact_email": "commissioner.allu@smartcity.gov",
+        "contact_email": "commissioner.allu@smartcity.gov.in",
         "contact_phone": "+91 98765 43213",
         "office_address": "Power House Tower, Cyber District"
     },
@@ -39,7 +39,7 @@ CANONICAL_OFFICERS = {
         "department_name": "Traffic Enforcement & Safety Division",
         "assigned_ward": "Ward 4 - Old City Zone",
         "photo_url": "/images/heads/maheshbabu.jpg",
-        "contact_email": "director.mahesh@smartcity.gov",
+        "contact_email": "director.mahesh@smartcity.gov.in",
         "contact_phone": "+91 98765 43214",
         "office_address": "Traffic Command Center, Central HQ"
     },
@@ -49,7 +49,7 @@ CANONICAL_OFFICERS = {
         "department_name": "Roads & Infrastructure Department",
         "assigned_ward": "Ward 12 - Jubilee Zone",
         "photo_url": "/images/heads/prabhas.jpg",
-        "contact_email": "commissioner.prabhas@smartcity.gov",
+        "contact_email": "commissioner.prabhas@smartcity.gov.in",
         "contact_phone": "+91 98765 43210",
         "office_address": "Municipal Headquarters, Block A, City Secretariat"
     }

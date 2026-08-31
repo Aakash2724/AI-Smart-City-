@@ -131,7 +131,7 @@ export default function NotificationsModal({ isOpen, onClose, onNavigateToTicket
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-200"
+      className="fixed inset-0 z-50 bg-black/20 backdrop-blur-[1px] transition-opacity duration-200"
       onClick={onClose}
     >
       <div 

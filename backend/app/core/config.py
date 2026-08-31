@@ -51,11 +51,12 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "SmartGov AI Municipal Redressal")
     SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() in ("true", "1", "yes")
 
-    # SMS Gateway Configuration (Twilio / Fast2SMS / Generic)
+    # SMS & Messaging Gateway Configuration (Twilio / Fast2SMS / CallMeBot WhatsApp)
     TWILIO_ACCOUNT_SID: str = os.getenv("TWILIO_ACCOUNT_SID", "")
     TWILIO_AUTH_TOKEN: str = os.getenv("TWILIO_AUTH_TOKEN", "")
     TWILIO_FROM_NUMBER: str = os.getenv("TWILIO_FROM_NUMBER", "")
     FAST2SMS_API_KEY: str = os.getenv("FAST2SMS_API_KEY", "")
+    CALLMEBOT_API_KEY: str = os.getenv("CALLMEBOT_API_KEY", "")
 
     # Frontend URL for email links (Track Grievance button)
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://ai-smart-city-two.vercel.app")

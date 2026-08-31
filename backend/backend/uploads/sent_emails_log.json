@@ -7,5 +7,14 @@
     "category": "Sanitation & Waste",
     "municipality_head": "Dr. Rajesh V. Sharma",
     "status": "SENT_SMTP"
+  },
+  {
+    "timestamp": "2026-08-31T06:07:58.080810",
+    "to_email": "aakashmeesala004@gmail.com",
+    "ticket_number": "CMP-20260831-9999",
+    "subject": "Your complaint has been received \u2014 Sanitation & Waste (Ref: CMP-20260831-9999)",
+    "category": "Sanitation & Waste",
+    "municipality_head": "Dr. Rajesh V. Sharma",
+    "status": "SENT_SMTP"
   }
 ]

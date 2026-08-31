@@ -36,7 +36,10 @@ class EmailService:
 
     @property
     def smtp_from_name(self) -> str:
-        return os.getenv("SMTP_FROM_NAME", settings.SMTP_FROM_NAME)
+        val = os.getenv("SMTP_FROM_NAME", "").strip()
+        if not val or "smartgov" in val.lower():
+            return "AI Smart City"
+        return val
 
     @property
     def is_configured(self) -> bool:
@@ -113,7 +116,7 @@ class EmailService:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartGov AI Redressal - Ticket #{ticket_number}</title>
+  <title>AI Smart City Redressal - Ticket #{ticket_number}</title>
   <style>
     body {{
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;

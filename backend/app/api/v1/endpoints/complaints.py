@@ -20,6 +20,28 @@ from app.models.schemas import MunicipalityHeadSchema
 
 router = APIRouter(prefix="/complaints", tags=["Complaints"])
 
+
+@router.get("", response_model=List[ComplaintResponseSchema])
+@router.head("", include_in_schema=False)
+def list_complaints(
+    skip: int = 0,
+    limit: int = 20,
+    db: Session = Depends(get_db)
+):
+    """
+    List all complaints (paginated). Also serves as a health-check
+    endpoint for uptime monitors that probe with GET or HEAD requests.
+    """
+    complaints = (
+        db.query(Complaint)
+        .order_by(Complaint.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    return complaints
+
+
 @router.post("", response_model=ComplaintResponseSchema, status_code=status.HTTP_201_CREATED)
 async def create_complaint(
     original_text: str = Form(...),

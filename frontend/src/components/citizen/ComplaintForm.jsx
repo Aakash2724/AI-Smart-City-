@@ -12,11 +12,36 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
   const [text, setText] = useState('');
   const [citizenName, setCitizenName] = useState(user?.name || '');
   const [contact, setContact] = useState(user?.phone || user?.email || '');
-  const [address, setAddress] = useState(user?.registered_location || 'Jubilee Hills, Ward 12');
-  const [latitude, setLatitude] = useState(17.4435);
-  const [longitude, setLongitude] = useState(78.3820);
-  const [isLocating, setIsLocating] = useState(false);
-  const [locationStatus, setLocationStatus] = useState('');
+  const [address, setAddress] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartgov_saved_location');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.address) return parsed.address;
+      }
+    } catch (e) {}
+    return user?.registered_location || 'Temple Road, Bhadrachalam, Bhadradri Kothagudem - 507111';
+  });
+  const [latitude, setLatitude] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartgov_saved_location');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.latitude) return parsed.latitude;
+      }
+    } catch (e) {}
+    return 17.6688;
+  });
+  const [longitude, setLongitude] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartgov_saved_location');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.longitude) return parsed.longitude;
+      }
+    } catch (e) {}
+    return 80.8940;
+  });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [lastUploadedPreview, setLastUploadedPreview] = useState(null);
@@ -28,7 +53,6 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
     if (user) {
       if (user.name) setCitizenName(user.name);
       if (user.phone || user.email) setContact(user.phone || user.email);
-      if (user.registered_location) setAddress(user.registered_location);
     }
   }, [user]);
 

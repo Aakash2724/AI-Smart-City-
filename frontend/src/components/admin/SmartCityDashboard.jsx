@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sendAIChat, getAnalyticsSummary, getComplaints } from '../../services/api';
 import { useTheme } from '../../context/ThemeContext';
-import AgentSwarmWarRoom from './AgentSwarmWarRoom';
 import {
   FolderArchive,
   CheckSquare,
@@ -39,7 +38,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch {}
+    } catch { }
     return [];
   });
 
@@ -47,7 +46,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
     try {
       const stored = sessionStorage.getItem('smartgov_complaints_count');
       if (stored) return Number(stored);
-    } catch {}
+    } catch { }
     return 58;
   };
 
@@ -78,7 +77,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
         try {
           sessionStorage.setItem('smartgov_cached_complaints', JSON.stringify(compData));
           sessionStorage.setItem('smartgov_complaints_count', compData.length.toString());
-        } catch {}
+        } catch { }
       }
     } catch (err) {
       console.error('Failed to load dashboard analytics:', err);
@@ -352,7 +351,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               const d = new Date(c.created_at);
               const rawDay = d.getDay(); // 0 is Sun
               dayIdx = rawDay === 0 ? 6 : rawDay - 1; // Mon=0 .. Sun=6
-            } catch (e) {}
+            } catch (e) { }
           }
           dayBuckets[dayIdx].complaints += 1;
         });
@@ -602,10 +601,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
 
       </div>
 
-      {/* ─── 2. AUTONOMOUS AI AGENT WAR ROOM (MULTI-AGENT SWARM VISUALIZER) ─── */}
-      <AgentSwarmWarRoom onNavigateTab={onNavigateTab} />
-
-      {/* ─── 3. SECOND ROW: Forecasting + Complaints Trend + City Assistant ─── */}
+      {/* ─── 2. SECOND ROW: Forecasting + Complaints Trend + City Assistant ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
 
         {/* Tab 1: Garbage Collection Forecast */}
@@ -644,7 +640,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
 
         {/* Tab 3: Department Load Card (from Image 1) */}
         <div className="lg:col-span-4 bg-[#111317] rounded-2xl p-5 border border-[#23252d] shadow-sm flex flex-col justify-between h-[380px]">
-          
+
           {/* Card Header */}
           <div className="flex items-center justify-between border-b border-[#23252d] pb-2.5 flex-shrink-0">
             <h3 className="text-sm font-bold text-white">Department Load</h3>
@@ -668,11 +664,11 @@ export default function SmartCityDashboard({ onNavigateTab }) {
                     <strong className="text-white font-bold">{dept.open}</strong> / {dept.officers} <span className="text-slate-400 font-normal">officers</span>
                   </span>
                 </div>
-                
+
                 {/* Colorful Progress Bar with Vibrant Gradient matching Category */}
                 <div className="w-full bg-[#0e1014] rounded-full h-1.5 overflow-hidden border border-[#23252d]">
-                  <div 
-                    className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${dept.barColor}`} 
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${dept.barColor}`}
                     style={{ width: `${dept.pct}%` }}
                   />
                 </div>
@@ -734,7 +730,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
           {/* Action Button: View All */}
           <div className="pt-2 border-t border-[#23252d] flex-shrink-0">
             <button
-              onClick={() => onNavigateTab && onNavigateTab('agents')}
+              onClick={() => onNavigateTab && onNavigateTab('history')}
               className="px-4 py-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
             >
               <span>View All</span>
@@ -845,9 +841,8 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               <circle cx="210" cy="80" r="20" fill="url(#hotspotEmerald)"></circle>
               <circle cx="210" cy="80" r="4" fill="#10b981"></circle>
             </svg>
-            <div className={`absolute bottom-2.5 left-2.5 text-[9px] font-mono px-2.5 py-1 rounded-lg border backdrop-blur-md flex items-center gap-2 ${
-              isDark ? 'text-slate-200 bg-[#0b0c10]/95 border-[#23252d]' : 'text-slate-700 bg-white/95 border-slate-200 shadow-xs'
-            }`}>
+            <div className={`absolute bottom-2.5 left-2.5 text-[9px] font-mono px-2.5 py-1 rounded-lg border backdrop-blur-md flex items-center gap-2 ${isDark ? 'text-slate-200 bg-[#0b0c10]/95 border-[#23252d]' : 'text-slate-700 bg-white/95 border-slate-200 shadow-xs'
+              }`}>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f43f5e]"></span> Ward 12</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span> Ward 8</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]"></span> Ward 14</span>

@@ -188,11 +188,6 @@ export const getRiskForecast = async () => {
   return response.data;
 };
 
-export const getAgentLogs = async (complaintId) => {
-  const response = await apiClient.get(`/agents/logs/${complaintId}`);
-  return response.data;
-};
-
 export const processNLP = async (text, locationHint = '') => {
   const formData = new FormData();
   formData.append('text', text);
@@ -272,65 +267,5 @@ export const getCurrentUser = async (email) => {
   return response.data;
 };
 
-export const simulateAgentSwarm = async (payload) => {
-  try {
-    const response = await apiClient.post('/agents/simulate-swarm', payload);
-    return response.data;
-  } catch (err) {
-    console.warn('[SmartGov API] Simulating agent swarm fallback:', err);
-    // Realistic fallback data if server is sleeping
-    return {
-      ticket_number: `GRV-${Math.floor(10000 + Math.random() * 90000)}`,
-      scenario: payload.scenario_text,
-      location: payload.location || 'Jubilee Hills, Ward 12',
-      category: 'Water Supply & Sewerage Board',
-      subcategory: 'Water Main Leakage & Drainage Overflow',
-      priority: 'CRITICAL',
-      assigned_head: 'Dr. Uppalapati Venkata Suryanarayana Prabhas Raju',
-      estimated_hours: 12,
-      total_execution_ms: 589,
-      traces: [
-        {
-          agent_id: 'triage_agent',
-          agent_name: 'Sentinel Triage Agent',
-          role: 'NLP & Urgency Scoring',
-          status: 'COMPLETED',
-          execution_ms: 142,
-          output: { category: 'Water Supply & Sewerage Board', subcategory: 'Water Main Leakage', urgency_score: '94/100', priority: 'CRITICAL', hazard_flag: true },
-          log: `Parsed intake stream. Emergency priority evaluated as CRITICAL (94% urgency factor).`
-        },
-        {
-          agent_id: 'vision_agent',
-          agent_name: 'Vision Inspector Agent',
-          role: 'YOLOv8 Localization & Deduplication',
-          status: 'COMPLETED',
-          execution_ms: 285,
-          output: { detected_object: 'WATER_LEAKAGE', confidence: '97.4%', bounding_box: { x1: 120, y1: 84, x2: 450, y2: 310 }, deduplication_status: 'Unique Incident' },
-          log: `YOLOv8 vision inference detected WATER_LEAKAGE (97.4% confidence). 0 duplicates in 50m radius.`
-        },
-        {
-          agent_id: 'routing_agent',
-          agent_name: 'Geo-Logistics & Routing Agent',
-          role: 'Depot Distance & Crew Assignment',
-          status: 'COMPLETED',
-          execution_ms: 98,
-          output: { target_department: 'Water Supply & Sewerage Board', designated_officer: 'Dr. Uppalapati Venkata Suryanarayana Prabhas Raju', assigned_ward: payload.location || 'Ward 12', crew_distance: '1.2 km away' },
-          log: `Haversine routing dispatched automated work order to Dr. Prabhas Raju (Ward 12 Response Team).`
-        },
-        {
-          agent_id: 'sla_agent',
-          agent_name: 'Predictive SLA & Escalation Agent',
-          role: 'Dynamic SLA & Breaching Alarms',
-          status: 'COMPLETED',
-          execution_ms: 64,
-          output: { resolution_target_hours: '12.0 Hours', escalation_alarm: 'Armed (Auto Escalation T+8h)', work_order_status: 'DISPATCHED_LIVE' },
-          log: `Guaranteed municipal SLA locked at 12.0 hours. Auto-escalation trigger armed.`
-        }
-      ]
-    };
-  }
-};
-
 export default apiClient;
-
 

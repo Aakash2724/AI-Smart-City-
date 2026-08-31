@@ -7,7 +7,7 @@ const MENU_ITEMS = [
   { id: 'citizen', label: 'Report Complaint', icon: 'ti-users', badge: null },
   { id: 'copilot', label: 'AI Copilot', icon: 'ti-robot', badge: null },
   { id: 'gis', label: 'GIS & Risk Radar', icon: 'ti-map-pin', badge: null },
-  { id: 'agents', label: 'Complaints & History', icon: 'ti-file-text', badge: null }
+  { id: 'history', label: 'Complaints & History', icon: 'ti-file-text', badge: null }
 ];
 
 export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onToggle }) {

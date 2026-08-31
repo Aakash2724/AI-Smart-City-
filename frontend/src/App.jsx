@@ -30,10 +30,10 @@ function MainApp() {
       const ticketParam = params.get('ticket');
       const tabParam = params.get('tab');
       if (ticketParam) {
-        setActiveTab('agents');
+        setActiveTab('history');
         setLatestComplaint({ ticket_number: ticketParam, id: ticketParam });
       } else if (tabParam) {
-        setActiveTab(tabParam);
+        setActiveTab(tabParam === 'agents' ? 'history' : tabParam);
       }
     } catch (e) {
       console.error(e);
@@ -47,10 +47,10 @@ function MainApp() {
 
   const handleTabChange = (tabId) => {
     // When navigating from sidebar/menus, clear sticky ticket filter
-    if (tabId === 'agents') {
+    if (tabId === 'history' || tabId === 'agents') {
       setLatestComplaint(null);
     }
-    setActiveTab(tabId);
+    setActiveTab(tabId === 'agents' ? 'history' : tabId);
   };
 
   const handleComplaintSubmitted = (complaint) => {
@@ -65,7 +65,7 @@ function MainApp() {
       // From notifications or track button — wrap ticket number string with isDirectNavigation
       setLatestComplaint({ ticket_number: complaintOrTicket, id: complaintOrTicket, isDirectNavigation: true });
     }
-    setActiveTab('agents');
+    setActiveTab('history');
   };
 
   const handleRefreshAll = async () => {
@@ -143,8 +143,8 @@ function MainApp() {
             )}
 
             {/* 4. Track & History */}
-            {activeTab === 'agents' && (
-              <div key="agents" className="animate-view-transition">
+            {(activeTab === 'history' || activeTab === 'agents') && (
+              <div key="history" className="animate-view-transition">
                 <TrackHistory latestComplaint={latestComplaint} />
               </div>
             )}

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import complaints, vision, nlp, agents, predictions, analytics, auth
+from app.api.v1.endpoints import complaints, vision, nlp, predictions, analytics, auth
 
 api_v1_router = APIRouter()
 
@@ -7,7 +7,6 @@ api_v1_router.include_router(auth.router)
 api_v1_router.include_router(complaints.router)
 api_v1_router.include_router(vision.router)
 api_v1_router.include_router(nlp.router)
-api_v1_router.include_router(agents.router)
 api_v1_router.include_router(predictions.router)
 api_v1_router.include_router(analytics.router)
 

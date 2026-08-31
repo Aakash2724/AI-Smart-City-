@@ -249,8 +249,15 @@ html.light .bg-\[\#0e0f13\],
 html.light .bg-\[\#080b0a\],
 html.light .bg-\[\#0e1014\],
 html.light .bg-\[\#0e1013\],
+html.light .bg-\[\#0e2723\],
 html.light .bg-\[\#131418\],
+html.light .bg-\[\#151820\],
+html.light .bg-\[\#151921\],
 html.light .bg-\[\#151b20\],
+html.light .bg-\[\#16181d\],
+html.light .bg-\[\#181f25\],
+html.light .bg-\[\#1b1f27\],
+html.light .bg-\[\#1c222e\],
 html.light .bg-\[\#12161b\],
 html.light .bg-\[\#12141a\],
 html.light .bg-\[\#14161d\],
@@ -294,7 +301,8 @@ html.light .bg-black\/60 {
 
 /* Badges inside pills and tags */
 html.light .bg-\[\#16181e\],
-html.light .bg-\[\#12141a\] {
+html.light .bg-\[\#12141a\],
+html.light .bg-\[\#151921\] {
   background-color: #e2e8f0 !important;
   color: #475569 !important;
   border-color: #cbd5e1 !important;
@@ -347,6 +355,11 @@ html.light .hover\:bg-\[\#20222a\]:hover,
 html.light .hover\:bg-\[\#15171c\]:hover,
 html.light .hover\:bg-\[\#161a24\]:hover,
 html.light .hover\:bg-\[\#181c26\]:hover,
+html.light .hover\:bg-\[\#181f25\]:hover,
+html.light .hover\:bg-\[\#1b1f27\]:hover,
+html.light .hover\:bg-\[\#1c222e\]:hover,
+html.light .hover\:bg-\[\#151921\]:hover,
+html.light .hover\:bg-\[\#151820\]:hover,
 html.light .hover\:bg-\[\#1f222a\]:hover,
 html.light .hover\:bg-\[\#1c1e26\]:hover,
 html.light .hover\:bg-\[\#1c242b\]:hover,
@@ -433,7 +446,9 @@ html.light .border-\[\#4a2e1d\] {
   border-color: #fed7aa !important;
 }
 html.light .border-\[\#175249\],
-html.light .border-\[\#194d3f\] {
+html.light .border-\[\#194d3f\],
+html.light .border-\[\#16493f\],
+html.light .border-\[\#08201a\] {
   border-color: #99f6e4 !important;
 }
 html.light .border-\[\#2b354d\] {
@@ -445,6 +460,9 @@ html.light .border-\[\#3e265c\] {
 
 /* General Dark Borders in Light Mode */
 html.light .border-\[\#23252d\],
+html.light .border-\[\#232734\],
+html.light .border-\[\#2b303d\],
+html.light .border-\[\#1d2027\],
 html.light .border-\[\#262830\],
 html.light .border-\[\#272932\],
 html.light .border-\[\#2c2f3a\],

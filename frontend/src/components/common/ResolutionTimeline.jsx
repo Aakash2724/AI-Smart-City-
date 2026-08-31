@@ -85,7 +85,7 @@ export default function ResolutionTimeline({ complaint }) {
         </span>
       </div>
 
-      <div className="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-[#2dd4bf] before:via-[#175249] before:to-[#23252d]">
+      <div className="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-[#2dd4bf] before:via-[#175249] before:to-slate-200 dark:before:to-[#23252d]">
         {steps.map((step) => {
           const isPassed = step.id < activeIndex;
           const isCurrent = step.id === activeIndex;
@@ -99,7 +99,7 @@ export default function ResolutionTimeline({ complaint }) {
                   ? 'bg-[#0c2e28] border-[#2dd4bf] text-[#2dd4bf] shadow-xs'
                   : isCurrent
                   ? 'bg-[#2dd4bf] border-white text-black shadow-lg shadow-[#2dd4bf]/40 animate-pulse'
-                  : 'bg-[#151820] border-[#2b303d] text-slate-500'
+                  : 'bg-slate-100 dark:bg-[#151820] border-slate-300 dark:border-[#2b303d] text-slate-400 dark:text-slate-500'
               }`}>
                 <StepIcon className="h-3 w-3" />
               </div>
@@ -107,7 +107,7 @@ export default function ResolutionTimeline({ complaint }) {
               <div className="min-w-0 flex-1 pl-2">
                 <div className="flex items-center gap-2">
                   <h4 className={`text-xs font-bold ${
-                    isPassed || isCurrent ? 'text-white' : 'text-slate-500'
+                    isPassed || isCurrent ? 'text-white' : 'text-slate-400 dark:text-slate-500'
                   }`}>
                     {step.title}
                   </h4>
@@ -123,7 +123,9 @@ export default function ResolutionTimeline({ complaint }) {
               </div>
 
               <span className={`text-[10px] font-mono font-semibold flex-shrink-0 px-2 py-0.5 rounded-md ${
-                isPassed || isCurrent ? 'text-slate-300 bg-[#151921] border border-[#232734]' : 'text-slate-600 bg-transparent'
+                isPassed || isCurrent 
+                  ? 'text-slate-700 bg-slate-100 border border-slate-200 dark:text-slate-300 dark:bg-[#151921] dark:border-[#232734]' 
+                  : 'text-slate-400 dark:text-slate-600 bg-transparent'
               }`}>
                 {step.time}
               </span>

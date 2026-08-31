@@ -548,16 +548,16 @@ export default function AICopilotPage() {
                     onClick={() => handleSpeak(msg.text, idx)}
                     className={`p-1.5 rounded-lg border transition-all cursor-pointer flex-shrink-0 ${
                       speakingIdx === idx 
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse shadow-xs' 
-                        : 'bg-[#151921] hover:bg-[#1c222e] text-slate-400 hover:text-[#2dd4bf] border-[#232734]'
+                        ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border-rose-500/40 animate-pulse shadow-xs' 
+                        : 'bg-white hover:bg-slate-100 text-slate-600 hover:text-teal-600 border-slate-200 dark:bg-[#151921] dark:hover:bg-[#1c222e] dark:text-slate-400 dark:hover:text-[#2dd4bf] dark:border-[#232734] shadow-xs'
                     }`}
                     title={speakingIdx === idx ? "Stop speaking" : "Listen to answer"}
                     aria-label={speakingIdx === idx ? "Stop speaking" : "Listen to answer"}
                   >
                     {speakingIdx === idx ? (
-                      <VolumeX className="h-3.5 w-3.5 text-rose-400" />
+                      <VolumeX className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
                     ) : (
-                      <Volume2 className="h-3.5 w-3.5 text-[#2dd4bf]" />
+                      <Volume2 className="h-3.5 w-3.5 text-teal-600 dark:text-[#2dd4bf]" />
                     )}
                   </button>
                 </div>

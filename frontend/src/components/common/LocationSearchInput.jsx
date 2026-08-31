@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Navigation, Loader2, Search, Check, X } from 'lucide-react';
+import { MapPin, Navigation, Loader2, Search, Check, X, Map } from 'lucide-react';
 import { searchAddressSuggestions, detectPreciseLocation } from '../../services/locationService';
+import MapLocationPickerModal from './MapLocationPickerModal';
+
+const QUICK_TOWNS = [
+  { name: 'Bhadrachalam', address: 'Temple Road, Bhadrachalam, Bhadradri Kothagudem - 507111', lat: 17.6688, lng: 80.8940 },
+  { name: 'Jubilee Hills (Hyd)', address: 'Road No. 36, Jubilee Hills, Hyderabad - 500033', lat: 17.4319, lng: 78.4073 },
+  { name: 'Madhapur / IT (Hyd)', address: 'Hitec City Main Road, Madhapur, Hyderabad - 500081', lat: 17.4483, lng: 78.3814 },
+  { name: 'Khammam', address: 'Wyra Road, Khammam, Telangana - 507001', lat: 17.2473, lng: 80.1514 },
+  { name: 'Warangal', address: 'Hanamkonda Main Road, Warangal - 506001', lat: 17.9689, lng: 79.5941 }
+];
 
 export default function LocationSearchInput({
   address,
@@ -18,6 +27,7 @@ export default function LocationSearchInput({
   const [isOpen, setIsOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [locationStatus, setLocationStatus] = useState('');
   const containerRef = useRef(null);
   const debounceTimer = useRef(null);
@@ -77,6 +87,24 @@ export default function LocationSearchInput({
     setTimeout(() => setLocationStatus(''), 4000);
   };
 
+  const handleSelectQuickTown = (t) => {
+    setQuery(t.address);
+    if (onAddressChange) onAddressChange(t.address);
+    if (onCoordinatesChange) onCoordinatesChange(t.lat, t.lng);
+    setLocationStatus(`Selected: ${t.name} (${t.lat.toFixed(4)}, ${t.lng.toFixed(4)})`);
+    setTimeout(() => setLocationStatus(''), 4000);
+  };
+
+  const handleMapConfirm = (loc) => {
+    setQuery(loc.address);
+    if (onAddressChange) onAddressChange(loc.address);
+    if (onCoordinatesChange) onCoordinatesChange(loc.latitude, loc.longitude);
+    if (onWardChange && loc.ward) onWardChange(loc.ward);
+
+    setLocationStatus(`Map Pin Locked: ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
+    setTimeout(() => setLocationStatus(''), 4000);
+  };
+
   const handleUseMyLocation = async () => {
     setIsLocating(true);
     setLocationStatus('Accessing device GPS coordinates...');
@@ -94,9 +122,9 @@ export default function LocationSearchInput({
       if (error.code === 1) {
         msg = 'Location permission was denied in browser.';
       } else if (error.code === 2) {
-        msg = 'GPS unavailable on device. Please type your location.';
+        msg = 'GPS unavailable on device. Please type or pick on map.';
       } else if (error.code === 3) {
-        msg = 'GPS request timed out. Please type your location.';
+        msg = 'GPS request timed out. Please type or pick on map.';
       }
       setLocationStatus(msg);
     } finally {
@@ -195,20 +223,51 @@ export default function LocationSearchInput({
           )}
         </div>
 
+        {/* 1. Pick on Map Button */}
+        <button
+          type="button"
+          onClick={() => setIsMapModalOpen(true)}
+          className="px-3.5 py-2.5 bg-[#0e1014] hover:bg-[#181a20] border border-[#23252d] hover:border-[#175249] text-slate-200 hover:text-[#5eead4] font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all flex-shrink-0 cursor-pointer shadow-sm"
+          title="Pick and drag pin on interactive map"
+        >
+          <Map className="h-3.5 w-3.5 text-[#2dd4bf]" />
+          <span>Pick on Map</span>
+        </button>
+
+        {/* 2. GPS Detect Button */}
         <button
           type="button"
           onClick={handleUseMyLocation}
           disabled={isLocating}
-          className="px-4 py-2.5 bg-[#0c2e28] hover:bg-[#113f37] border border-[#175249] text-[#2dd4bf] font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-all flex-shrink-0 cursor-pointer disabled:opacity-50"
-          title="Auto-detect high precision GPS"
+          className="px-3.5 py-2.5 bg-[#0c2e28] hover:bg-[#113f37] border border-[#175249] text-[#2dd4bf] font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all flex-shrink-0 cursor-pointer disabled:opacity-50"
+          title="Auto-detect device GPS coordinates"
         >
           {isLocating ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin text-[#2dd4bf]" />
           ) : (
             <Navigation className="h-3.5 w-3.5" />
           )}
-          <span>{isLocating ? 'Locating...' : 'Use My Location'}</span>
+          <span>{isLocating ? 'Locating...' : 'Use GPS'}</span>
         </button>
+      </div>
+
+      {/* Quick Location Chips */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] custom-scrollbar pt-0.5">
+        <span className="text-[#88909d] text-[10px] font-semibold uppercase flex-shrink-0">Quick Jump:</span>
+        {QUICK_TOWNS.map((t, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => handleSelectQuickTown(t)}
+            className={`px-2 py-0.5 rounded-lg border text-[11px] font-medium transition-all whitespace-nowrap cursor-pointer ${
+              query.includes(t.name.split(' ')[0])
+                ? 'bg-[#0c2e28] text-[#2dd4bf] border-[#175249] font-bold'
+                : 'bg-[#0e1014] hover:bg-[#181a20] text-slate-300 border-[#23252d]'
+            }`}
+          >
+            {t.name}
+          </button>
+        ))}
       </div>
 
       {locationStatus && (
@@ -217,6 +276,16 @@ export default function LocationSearchInput({
           <span>{locationStatus}</span>
         </div>
       )}
+
+      {/* Interactive Map Location Picker Modal */}
+      <MapLocationPickerModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
+        initialLat={latitude || 17.6688}
+        initialLng={longitude || 80.8940}
+        initialAddress={query}
+        onConfirm={handleMapConfirm}
+      />
     </div>
   );
 }

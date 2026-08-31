@@ -21,7 +21,7 @@ function MainApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardKey, setDashboardKey] = useState(0);
 
-  // This useEffect MUST be before any early return to respect React's rules of hooks
+  // Handle deep-link query parameters on initial authenticated load
   React.useEffect(() => {
     if (!user) return;
     try {
@@ -30,9 +30,13 @@ function MainApp() {
       const tabParam = params.get('tab');
       if (ticketParam) {
         setActiveTab('history');
-        setLatestComplaint({ ticket_number: ticketParam, id: ticketParam });
+        setLatestComplaint({ ticket_number: ticketParam, id: ticketParam, isDirectNavigation: true });
+        window.history.replaceState({}, document.title, window.location.pathname);
       } else if (tabParam) {
         setActiveTab(tabParam === 'agents' ? 'history' : tabParam);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        setActiveTab('dashboard');
       }
     } catch (e) {
       console.error(e);

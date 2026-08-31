@@ -142,17 +142,9 @@ export default function ComplaintForm({ onSubmitted, onNavigateToHistory }) {
 
       setLastUploadedPreview(imagePreview);
 
-      // Prompt for native browser / mobile push notifications if not already granted
-      if (notificationService.permission === 'default') {
-        notificationService.requestPermission();
-      }
-
       const response = await submitComplaint(formData);
       setSubmittedComplaint(response);
       setIsModalOpen(true);
-
-      // Fire Native Mobile / Desktop Push Notification
-      notificationService.notifyComplaintRegistered(response);
 
       // Trigger real-time synchronization across Header and Notifications
       window.dispatchEvent(new Event('smartgov_complaints_updated'));

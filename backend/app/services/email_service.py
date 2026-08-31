@@ -95,6 +95,17 @@ class EmailService:
         head_phone = municipality_head_info.get("contact_phone") or canon["contact_phone"]
         head_office = municipality_head_info.get("office_address") or canon["office_address"]
 
+        officer_avatar_map = {
+            "Dr. Uppalapati Venkata Suryanarayana Prabhas Raju": "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/prabhas.jpg",
+            "Mr. Nandamuri Taraka Rama Rao Jr": "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/ntr.jpg",
+            "Mr. Ram Charan Tej Konidela": "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/ramcharan.jpg",
+            "Dr. Allu Arjun": "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/alluarjun.jpg",
+            "Mr. Mahesh Babu Ghattamaneni": "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/maheshbabu.jpg"
+        }
+        head_photo_url = municipality_head_info.get("photo_url")
+        if not head_photo_url or not head_photo_url.startswith("http"):
+            head_photo_url = officer_avatar_map.get(head_name, "https://raw.githubusercontent.com/Aakash2724/AI-Smart-City-/main/frontend/public/images/heads/prabhas.jpg")
+
         # Priority Badge Styling & Label (Obsidian Dark Theme Pill)
         p_upper = (priority or "HIGH").upper()
         if "CRIT" in p_upper:
@@ -362,11 +373,20 @@ class EmailService:
         </div>
       </div>
 
-      <!-- Assigned Officer Contact (Green Outline) -->
+      <!-- Assigned Officer Contact (With Circular WhatsApp-style DP) -->
       <div class="officer-box">
         <div class="card-title">Assigned Municipal Authority</div>
-        <div class="officer-name">{head_name}</div>
-        <div class="officer-role">{head_designation} • {head_dept}</div>
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin-top: 10px; margin-bottom: 12px; border-collapse: collapse; width: 100%;">
+          <tr>
+            <td style="vertical-align: middle; padding-right: 14px; width: 48px;">
+              <img src="{head_photo_url}" alt="{head_name}" width="48" height="48" style="width: 48px; height: 48px; min-width: 48px; max-width: 48px; border-radius: 50%; object-fit: cover; display: block; border: 2px solid #2dd4bf; box-shadow: 0 2px 8px rgba(45, 212, 191, 0.25);" />
+            </td>
+            <td style="vertical-align: middle;">
+              <div class="officer-name" style="margin: 0 0 2px 0; font-size: 14.5px; font-weight: 700; color: #ffffff;">{head_name}</div>
+              <div class="officer-role" style="margin: 0; font-size: 11.5px; color: #94a3b8;">{head_designation} &bull; <span style="color: #2dd4bf; font-weight: 600;">{head_dept}</span></div>
+            </td>
+          </tr>
+        </table>
         <div>
           <a href="mailto:{head_email}" class="contact-link">✉️ {head_email}</a>
           <a href="tel:{head_phone}" class="contact-link">📞 {head_phone}</a>

@@ -42,21 +42,15 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
 
-  // Bulletproof background scroll lock whenever modal is open
+  // Lock background body scroll whenever modal is open
   useEffect(() => {
     if (!isOpen) return;
 
     const originalOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-
-    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
 
     return () => {
-      document.documentElement.style.overflow = originalHtmlOverflow;
       document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = '';
     };
   }, [isOpen]);
 
@@ -127,17 +121,17 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-150 overscroll-contain overflow-hidden"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/40 backdrop-blur-[3px] animate-in fade-in duration-150 overflow-y-auto overscroll-contain"
       onClick={onClose}
     >
       {/* Modal Dialog Card */}
       <div 
-        className="bg-[#14161b] w-full max-w-4xl rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-150 text-slate-100 ring-1 ring-white/5"
+        className="relative my-auto w-full max-w-4xl max-h-[86vh] bg-[#14161b] rounded-3xl shadow-2xl border border-[#23252d] overflow-hidden flex flex-col animate-in zoom-in-95 duration-150 text-slate-100 ring-1 ring-white/5 flex-shrink-0"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* ── 1. Top Header Banner ── */}
-        <div className="bg-[#111317] border-b border-[#23252d] px-6 sm:px-8 py-5 flex items-center justify-between">
+        <div className="bg-[#111317] border-b border-[#23252d] px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="h-12 w-12 rounded-2xl bg-[#0c2e28] border border-[#175249] flex items-center justify-center text-[#2dd4bf] flex-shrink-0 shadow-sm">
               <CheckCircle2 className="h-6 w-6" />
@@ -491,7 +485,7 @@ export default function ComplaintSuccessModal({ isOpen, onClose, complaint, uplo
         </div>
 
         {/* ── 3. Footer Action Buttons ── */}
-        <div className="px-6 sm:px-8 py-4 bg-[#111317] border-t border-[#23252d] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-6 sm:px-8 py-3.5 sm:py-4 bg-[#111317] border-t border-[#23252d] flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
           <button
             onClick={onClose}
             className="w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-slate-300 hover:text-white bg-[#0e1014] hover:bg-[#181a20] border border-[#23252d] rounded-xl transition-all cursor-pointer"

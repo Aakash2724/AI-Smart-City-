@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sendAIChat, getAnalyticsSummary, getComplaints } from '../../services/api';
 import { useTheme } from '../../context/ThemeContext';
+import AgentSwarmWarRoom from './AgentSwarmWarRoom';
 import {
   FolderArchive,
   CheckSquare,
@@ -601,7 +602,10 @@ export default function SmartCityDashboard({ onNavigateTab }) {
 
       </div>
 
-      {/* ─── 2. SECOND ROW: Forecasting + Complaints Trend + City Assistant ─── */}
+      {/* ─── 2. AUTONOMOUS AI AGENT WAR ROOM (MULTI-AGENT SWARM VISUALIZER) ─── */}
+      <AgentSwarmWarRoom onNavigateTab={onNavigateTab} />
+
+      {/* ─── 3. SECOND ROW: Forecasting + Complaints Trend + City Assistant ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
 
         {/* Tab 1: Garbage Collection Forecast */}

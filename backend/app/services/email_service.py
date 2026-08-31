@@ -370,19 +370,6 @@ class EmailService:
         </div>
       </div>
 
-      <!-- 24x7 Helpline & Grievance Escalation Path -->
-      <div style="background: #0a0c0f; border: 1px solid #175249; border-radius: 12px; padding: 14px 18px; margin-top: 18px; margin-bottom: 20px; font-size: 11.5px; color: #94a3b8; line-height: 1.6;">
-        <div style="color: #2dd4bf; font-weight: 700; text-transform: uppercase; font-size: 10.5px; margin-bottom: 6px; letter-spacing: 0.5px;">
-          🚨 24x7 Citizen Helpline &amp; Grievance Escalation
-        </div>
-        <div style="color: #cbd5e1;">
-          <strong>Toll-Free Helpline:</strong> <a href="tel:18004251980" style="color: #38bdf8; text-decoration: none; font-weight: 600;">1800-425-1980</a> &bull; <strong>Direct Desk:</strong> <a href="tel:+914021111111" style="color: #38bdf8; text-decoration: none; font-weight: 600;">+91 40 2111 1111</a>
-        </div>
-        <div style="margin-top: 6px; color: #94a3b8; font-size: 11px;">
-          <strong style="color: #cbd5e1;">Escalation Path:</strong> If this issue is not resolved within the estimated SLA ({sla_display}), it will automatically escalate to the Zonal Municipal Commissioner &amp; Ombudsman.
-        </div>
-      </div>
-
       <!-- Direct Tracking CTA Button -->
       <div class="cta-container">
         <a href="{settings.FRONTEND_URL}/?ticket={ticket_number}" class="btn-track">View Grievance Status &rarr;</a>
@@ -392,6 +379,9 @@ class EmailService:
 
     <!-- Footer -->
     <div class="footer-bar">
+      <div style="margin-bottom: 10px; font-size: 11.5px; color: #cbd5e1;">
+        <strong>24x7 Citizen Helpline:</strong> <a href="tel:18004251980" style="color: #38bdf8; text-decoration: none; font-weight: 600;">1800-425-1980</a> | <a href="tel:+914021111111" style="color: #38bdf8; text-decoration: none; font-weight: 600;">+91 40 2111 1111</a>
+      </div>
       <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 11px;">
         <strong>Disclaimer:</strong> This is a system-generated email. Please do not reply directly to this email.
       </p>

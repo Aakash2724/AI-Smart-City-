@@ -300,6 +300,36 @@ html.light .bg-\[\#12141a\] {
   border-color: #cbd5e1 !important;
 }
 
+/* Emerald / Teal Success Badges and Dispatch Boxes in Light Mode */
+html.light .bg-\[\#0c2e28\],
+html.light .bg-\[\#0c2e28\]\/60,
+html.light .bg-\[\#0c2e28\]\/50,
+html.light .bg-\[\#0c2e28\]\/40 {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #065f46 !important;
+}
+
+html.light .bg-\[\#0c2e28\] strong,
+html.light .bg-\[\#0c2e28\]\/60 strong,
+html.light .bg-\[\#0c2e28\] span {
+  color: #065f46 !important;
+}
+
+html.light .border-\[\#175249\],
+html.light .border-\[\#175249\]\/50,
+html.light .border-\[\#175249\]\/40 {
+  border-color: #a7f3d0 !important;
+}
+
+html.light .text-\[\#2dd4bf\] {
+  color: #0d9488 !important;
+}
+
+html.light .text-\[\#5eead4\] {
+  color: #0f766e !important;
+}
+
 /* ==========================================================================
    HOVER STATES IN LIGHT MODE
    Ensures mouse hover produces crisp, subtle light slate feedback

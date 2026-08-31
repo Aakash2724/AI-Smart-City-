@@ -80,7 +80,7 @@ class EmailService:
             else:
                 clean_name = "Citizen"
 
-        subject = f"🏛️ [SmartGov Confirmation] Civic Grievance #{ticket_number} - {issue_category}"
+        subject = f"Your complaint has been received — {issue_category} (Ref: {ticket_number})"
         
         head_name = municipality_head_info.get("name", "Dr. Rajesh V. Sharma")
         head_designation = municipality_head_info.get("designation", "Chief Municipal Commissioner & Public Infrastructure Head")
@@ -303,7 +303,7 @@ class EmailService:
     <!-- Exact Themed Header as Uploaded -->
     <div class="header-banner">
       <div class="gov-badge">OFFICIAL MUNICIPAL ADMINISTRATION</div>
-      <h1 class="header-title">SmartGov AI Redressal Portal</h1>
+      <h1 class="header-title">AI Smart City Redressal Portal</h1>
       <p class="header-subtitle">Citizen Grievance Registration &amp; Immediate Action Directive</p>
       <div class="ticket-badge">
         TRACKING TICKET: <span class="ticket-highlight">#{ticket_number}</span>
@@ -367,17 +367,35 @@ class EmailService:
         </div>
       </div>
 
+      <!-- 24x7 Helpline & Grievance Escalation Path -->
+      <div style="background: #0a0c0f; border: 1px solid #175249; border-radius: 12px; padding: 14px 18px; margin-top: 18px; margin-bottom: 20px; font-size: 11.5px; color: #94a3b8; line-height: 1.6;">
+        <div style="color: #2dd4bf; font-weight: 700; text-transform: uppercase; font-size: 10.5px; margin-bottom: 6px; letter-spacing: 0.5px;">
+          🚨 24x7 Citizen Helpline &amp; Grievance Escalation
+        </div>
+        <div style="color: #cbd5e1;">
+          <strong>Toll-Free Helpline:</strong> <a href="tel:18004251980" style="color: #38bdf8; text-decoration: none; font-weight: 600;">1800-425-1980</a> &bull; <strong>Direct Desk:</strong> <a href="tel:+914021111111" style="color: #38bdf8; text-decoration: none; font-weight: 600;">+91 40 2111 1111</a>
+        </div>
+        <div style="margin-top: 6px; color: #94a3b8; font-size: 11px;">
+          <strong style="color: #cbd5e1;">Escalation Path:</strong> If this issue is not resolved within the estimated SLA ({sla_display}), it will automatically escalate to the Zonal Municipal Commissioner &amp; Ombudsman.
+        </div>
+      </div>
+
       <!-- Direct Tracking CTA Button -->
       <div class="cta-container">
-        <a href="{settings.FRONTEND_URL}/?ticket={ticket_number}" class="btn-track">Track Grievance Online &rarr;</a>
+        <a href="{settings.FRONTEND_URL}/?ticket={ticket_number}" class="btn-track">View Grievance Status &rarr;</a>
       </div>
 
     </div>
 
     <!-- Footer -->
     <div class="footer-bar">
-      Greater Hyderabad Municipal Corporation &bull; SmartGov Civic Operations System<br/>
-      This is an automated municipal grievance dispatch notification. For real-time updates, access the portal.
+      <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 11px;">
+        <strong>Disclaimer:</strong> This is a system-generated email. Please do not reply directly to this email.
+      </p>
+      <p style="margin: 0; color: #64748b; font-size: 10.5px;">
+        AI Smart City Operations System &bull; Greater Hyderabad Municipal Corporation (GHMC)<br/>
+        For real-time status updates and resolution records, access the portal.
+      </p>
     </div>
 
   </div>
@@ -405,10 +423,10 @@ class EmailService:
                 msg["From"] = formataddr((self.smtp_from_name, self.smtp_user))
                 msg["To"] = to_email
                 msg["Date"] = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
-                msg["Message-ID"] = f"<{datetime.utcnow().timestamp()}-{ticket_number}@smartgov.ai>"
+                msg["Message-ID"] = f"<{datetime.utcnow().timestamp()}-{ticket_number}@aismartcity.gov>"
 
                 # Attach Plain Text Fallback
-                plain_text = f"""SmartGov AI Municipal Administration
+                plain_text = f"""AI Smart City Municipal Administration
 Official Grievance Registration Acknowledgement
 
 Dear {clean_name},
@@ -418,7 +436,7 @@ Thank you for reporting this civic issue to the Municipal Corporation. Your comp
 Ticket Number: #{ticket_number}
 Category: {issue_category}
 Priority: {priority}
-Target SLA: Within {int(estimated_sla_hours)} Hours
+Target SLA: {sla_display}
 
 Assigned Officer: {head_name} ({head_designation})
 Department: {head_dept}
@@ -430,7 +448,14 @@ Inspection Findings:
 Municipal Directive:
 {gov_agent_msg}
 
-Track live status on the SmartGov portal using your ticket number #{ticket_number}.
+24x7 Citizen Helpline: 1800-425-1980 | +91 40 2111 1111
+Escalation: If unresolved within SLA ({sla_display}), the ticket escalates automatically to the Zonal Commissioner.
+
+Track live status on the portal: {settings.FRONTEND_URL}/?ticket={ticket_number}
+
+---
+Disclaimer: This is a system-generated email. Please do not reply directly to this email.
+AI Smart City Operations System • Greater Hyderabad Municipal Corporation (GHMC)
 """
                 msg.attach(MIMEText(plain_text, "plain"))
                 msg.attach(MIMEText(html_content, "html"))

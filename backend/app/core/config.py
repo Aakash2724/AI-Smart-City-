@@ -48,7 +48,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER: str = os.getenv("SMTP_USER", "")
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "SmartGov AI Municipal Redressal")
+    SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "AI Smart City")
     SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() in ("true", "1", "yes")
 
     # Frontend URL for email links (Track Grievance button)

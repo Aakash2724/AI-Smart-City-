@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
@@ -48,6 +49,21 @@
         }
       }
     </script>
+    <script>
+      // Immediate theme initialization to prevent flash
+      try {
+        const savedTheme = localStorage.getItem('smartgov_theme') || 'dark';
+        if (savedTheme === 'light') {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    </script>
 
     <!-- Tabler Icons Webfont -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
@@ -66,7 +82,7 @@
     <!-- Google Identity Services (GIS) Official SDK for Real Google Sign-In -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
-  <body class="bg-[#0e1013] text-slate-100 antialiased font-sans">
+  <body class="antialiased font-sans transition-colors duration-150">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

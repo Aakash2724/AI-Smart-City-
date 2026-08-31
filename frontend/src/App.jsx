@@ -12,6 +12,7 @@ import AuthPage from './components/auth/AuthPage';
 
 import LoginModal from './components/auth/LoginModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function MainApp() {
   const { user } = useAuth();
@@ -177,8 +178,10 @@ function MainApp() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

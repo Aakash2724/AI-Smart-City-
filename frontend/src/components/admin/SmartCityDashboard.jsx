@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sendAIChat, getAnalyticsSummary, getComplaints } from '../../services/api';
+import { useTheme } from '../../context/ThemeContext';
 import {
   FolderArchive,
   CheckSquare,
@@ -28,6 +29,7 @@ const RECENT_PRIORITY_PILLS = {
 };
 
 export default function SmartCityDashboard({ onNavigateTab }) {
+  const { isDark } = useTheme();
   const [summary, setSummary] = useState(null);
   const [complaints, setComplaints] = useState(() => {
     try {
@@ -218,6 +220,12 @@ export default function SmartCityDashboard({ onNavigateTab }) {
   useEffect(() => {
     if (!window.Chart) return;
 
+    const gridColor = isDark ? '#23252d' : '#e2e8f0';
+    const tickColor = isDark ? '#64748b' : '#64748b';
+    const legendColor = isDark ? '#94a3b8' : '#475569';
+    const pointBorderColor = isDark ? '#0b1120' : '#ffffff';
+    const donutBorder = isDark ? '#111317' : '#ffffff';
+
     // 1. Forecasting Line Chart - Dynamic projection based on active waste/sanitation complaints
     if (forecastCanvasRef.current) {
       if (forecastInstanceRef.current) forecastInstanceRef.current.destroy();
@@ -247,7 +255,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               borderColor: '#0ea5e9',
               backgroundColor: 'rgba(14, 165, 233, 0.16)',
               pointBackgroundColor: '#0ea5e9',
-              pointBorderColor: '#0b1120',
+              pointBorderColor: pointBorderColor,
               pointBorderWidth: 2,
               pointRadius: 4,
               pointHoverRadius: 6,
@@ -270,7 +278,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               ],
               borderColor: '#f43f5e',
               borderDash: [6, 4],
-              pointBackgroundColor: '#0b1120',
+              pointBackgroundColor: pointBorderColor,
               pointBorderColor: '#f43f5e',
               pointBorderWidth: 2,
               pointRadius: 4,
@@ -294,7 +302,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
                 pointStyle: 'circle',
                 font: { family: "'JetBrains Mono', monospace", size: 11, weight: '600' },
                 padding: 14,
-                color: '#94a3b8'
+                color: legendColor
               }
             },
             tooltip: {
@@ -311,15 +319,15 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               ticks: {
                 stepSize: 2,
                 font: { family: "'JetBrains Mono', monospace", size: 10 },
-                color: '#64748b'
+                color: tickColor
               },
-              grid: { color: '#23252d' },
-              title: { display: true, text: 'Incidents', font: { family: "Inter, sans-serif", size: 11, weight: 'bold' }, color: '#94a3b8' }
+              grid: { color: gridColor },
+              title: { display: true, text: 'Incidents', font: { family: "Inter, sans-serif", size: 11, weight: 'bold' }, color: legendColor }
             },
             x: {
               ticks: {
                 font: { family: "'JetBrains Mono', monospace", size: 10 },
-                color: '#64748b'
+                color: tickColor
               },
               grid: { display: false }
             }
@@ -405,7 +413,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
                 boxHeight: 12,
                 font: { family: "'JetBrains Mono', monospace", size: 11, weight: '600' },
                 padding: 14,
-                color: '#94a3b8'
+                color: legendColor
               }
             },
             tooltip: {
@@ -422,13 +430,13 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               ticks: {
                 stepSize: 1,
                 font: { family: "'JetBrains Mono', monospace", size: 10 },
-                color: '#64748b'
+                color: tickColor
               },
-              grid: { color: '#23252d' }
+              grid: { color: gridColor }
             },
             x: {
               grid: { display: false },
-              ticks: { font: { family: "'JetBrains Mono', monospace", size: 10 }, color: '#64748b' }
+              ticks: { font: { family: "'JetBrains Mono', monospace", size: 10 }, color: tickColor }
             }
           }
         }
@@ -454,7 +462,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
             backgroundColor: donutColors,
             hoverBackgroundColor: donutHover,
             borderWidth: 3,
-            borderColor: '#111317',
+            borderColor: donutBorder,
             hoverOffset: 6
           }]
         },
@@ -481,7 +489,7 @@ export default function SmartCityDashboard({ onNavigateTab }) {
       if (trendInstanceRef.current) trendInstanceRef.current.destroy();
       if (donutInstanceRef.current) donutInstanceRef.current.destroy();
     };
-  }, [summary, complaints, categoryStats]);
+  }, [summary, complaints, categoryStats, isDark]);
 
   const handleChatSubmit = async (e) => {
     if (e) e.preventDefault();

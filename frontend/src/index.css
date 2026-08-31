@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
-:root {
+:root,
+html.dark {
   --graphite-bg: #0b0c10;
   --graphite-canvas: #111317;
   --graphite-card: #111317;
@@ -18,6 +19,22 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
+html.light,
+[data-theme="light"] {
+  --graphite-bg: #f8fafc;
+  --graphite-canvas: #ffffff;
+  --graphite-card: #ffffff;
+  --graphite-inset: #f1f5f9;
+  --graphite-border: #e2e8f0;
+  --graphite-border-subtle: #f1f5f9;
+  --graphite-hover: #f1f5f9;
+  --graphite-text-main: #0f172a;
+  --graphite-text-muted: #64748b;
+  --graphite-teal: #0d9488;
+  --graphite-teal-bg: #f0fdfa;
+  --graphite-teal-border: #99f6e4;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -29,8 +46,9 @@ html, body, #root {
   width: 100%;
   overflow: hidden;
   font-family: var(--font-sans);
-  background-color: #0b0c10;
-  color: #f8fafc;
+  background-color: var(--graphite-bg);
+  color: var(--graphite-text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Headings & Navigation geometric typography */
@@ -50,7 +68,7 @@ code, kbd, samp, pre {
   font-feature-settings: "tnum" 1, "zero" 1;
 }
 
-/* Custom Dark Graphite Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -64,6 +82,13 @@ code, kbd, samp, pre {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Graphite Badge Styles */
@@ -88,6 +113,27 @@ code, kbd, samp, pre {
   border: 1px solid rgba(52, 211, 153, 0.25);
 }
 
+html.light .badge-critical {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+html.light .badge-high {
+  background: rgba(249, 115, 22, 0.1);
+  color: #ea580c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+html.light .badge-medium {
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+  border: 1px solid rgba(13, 148, 136, 0.3);
+}
+html.light .badge-low {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
 /* Leaflet Container Styles */
 .leaflet-container {
   width: 100% !important;
@@ -108,7 +154,7 @@ code, kbd, samp, pre {
   background: #ffffff;
 }
 
-/* Leaflet Dark-Themed Zoom Control */
+/* Leaflet Zoom Control */
 .leaflet-bar {
   border: 1px solid #23252d !important;
   border-radius: 12px !important;
@@ -133,7 +179,173 @@ code, kbd, samp, pre {
   color: #2dd4bf !important;
 }
 
+html.light .leaflet-bar {
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .leaflet-bar a {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light .leaflet-bar a:hover {
+  background-color: #f1f5f9 !important;
+  color: #0d9488 !important;
+}
+
 .leaflet-bottom.leaflet-right {
   margin-bottom: 12px !important;
   margin-right: 12px !important;
+}
+
+/* ==========================================================================
+   LIGHT THEME ADAPTIVE SYSTEM
+   Replaces dark/black surfaces with crisp whites/light surfaces
+   while retaining the signature green/teal sub-color
+   ========================================================================== */
+
+/* Main Containers & Page Canvas */
+html.light .bg-\[\#0b0c10\],
+html.light .bg-\[\#0e1013\],
+html.light main.bg-\[\#0b0c10\] {
+  background-color: #f8fafc !important;
+}
+
+/* Cards, Panels, Modals, Drawers, Headers, Sidebars */
+html.light .bg-\[\#111317\],
+html.light .bg-\[\#181a1f\],
+html.light .bg-\[\#14151a\],
+html.light .bg-\[\#16181e\],
+html.light header.bg-\[\#111317\],
+html.light aside.bg-\[\#111317\] {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-\[\#111317\]\/95,
+html.light .bg-\[\#111317\]\/90,
+html.light .bg-\[\#111317\]\/80 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Inset Boxes, Inner Panels, Table Rows Alternate, Input wrappers */
+html.light .bg-\[\#0e1014\],
+html.light .bg-\[\#131418\],
+html.light .bg-\[\#151b20\],
+html.light .bg-\[\#12161b\],
+html.light .bg-\[\#0c0d10\] {
+  background-color: #f8fafc !important;
+}
+
+/* Subtle Hover States */
+html.light .bg-\[\#1c1e25\],
+html.light .bg-\[\#181a20\],
+html.light .bg-\[\#20222a\] {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .hover\:bg-\[\#1c1e25\]:hover,
+html.light .hover\:bg-\[\#181a20\]:hover,
+html.light .hover\:bg-\[\#20222a\]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Green/Teal Sub-Accent Brand & Badge Backgrounds in Light Mode */
+html.light .bg-\[\#0c2e28\],
+html.light .bg-\[\#0c2e28\]\/50,
+html.light .bg-\[\#0c2e28\]\/90 {
+  background-color: #f0fdfa !important;
+}
+
+html.light .hover\:bg-\[\#113f37\]:hover,
+html.light .bg-\[\#113f37\] {
+  background-color: #ccfbf1 !important;
+}
+
+html.light .border-\[\#175249\] {
+  border-color: #99f6e4 !important;
+}
+
+/* Borders in Light Mode */
+html.light .border-\[\#23252d\],
+html.light .border-\[\#262830\],
+html.light .border-\[\#272932\],
+html.light .border-\[\#2c2f3a\],
+html.light .border-\[\#212f37\],
+html.light .border-\[\#1a1c22\],
+html.light .border-\[\#1c272f\],
+html.light .border-\[\#383b46\],
+html.light .border-slate-800,
+html.light .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Typography in Light Mode */
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400,
+html.light .text-\[\#88909d\],
+html.light .text-\[\#8ea6b3\],
+html.light .text-\[\#646a78\],
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Retain vibrant, high-contrast Teal/Green Accent Text in Light Mode */
+html.light .text-\[\#2dd4bf\],
+html.light .text-teal-400 {
+  color: #0d9488 !important;
+}
+
+html.light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-\[\#5eead4\] {
+  color: #0d9488 !important;
+}
+
+/* Inputs, Textareas, and Dropdowns in Light Mode */
+html.light input[type="text"],
+html.light input[type="email"],
+html.light input[type="password"],
+html.light input[type="search"],
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2) !important;
+}
+
+/* Elevation & Shadows in Light Mode */
+html.light .shadow-sm,
+html.light .shadow-xs {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .shadow-lg,
+html.light .shadow-xl {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04) !important;
 }

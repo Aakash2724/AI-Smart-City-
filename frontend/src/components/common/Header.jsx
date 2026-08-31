@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Bell, LogIn, LogOut, RefreshCw, Maximize, Minimize, MapPin } from 'lucide-react';
+import { Menu, Bell, LogIn, LogOut, RefreshCw, Maximize, Minimize, MapPin, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { getComplaints } from '../../services/api';
 import NotificationsModal from './NotificationsModal';
 
 export default function Header({ selectedCity, onToggleSidebar, onRefreshAll, onNavigateToHistory, onNavigateToSettings }) {
   const { user, logout, remainingOpens, setIsAuthModalOpen } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -182,6 +184,20 @@ export default function Header({ selectedCity, onToggleSidebar, onRefreshAll, on
             title="Refresh Data"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin text-[#2dd4bf]' : ''}`} />
+          </button>
+
+          {/* Theme Toggle Button (Dark / Light Mode) */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-[#1c1e25] border border-[#23252d] transition-all flex items-center justify-center cursor-pointer"
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4 text-amber-400 hover:text-amber-300 transition-colors" />
+            ) : (
+              <Moon className="h-4 w-4 text-slate-700 hover:text-slate-900 transition-colors" />
+            )}
           </button>
 
           {/* Fullscreen Toggle Button */}

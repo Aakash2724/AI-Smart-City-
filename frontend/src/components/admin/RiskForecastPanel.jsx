@@ -14,6 +14,7 @@ import {
   Info
 } from 'lucide-react';
 import { getRiskForecast } from '../../services/api';
+import { useTheme } from '../../context/ThemeContext';
 
 const CATEGORY_COLORS = {
   'Sanitation & Waste': { color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' },
@@ -24,6 +25,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function RiskForecastPanel() {
+  const { isDark } = useTheme();
   const [riskForecast, setRiskForecast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState('charts'); // 'charts' | 'leaderboard'
@@ -77,6 +79,14 @@ export default function RiskForecastPanel() {
   useEffect(() => {
     if (!window.Chart || !riskForecast || loading) return;
 
+    const pointBorder = isDark ? '#111317' : '#ffffff';
+    const donutBorder = isDark ? '#111317' : '#ffffff';
+    const gridColor = isDark ? '#23252d' : '#e2e8f0';
+    const tickColor = isDark ? '#64748b' : '#64748b';
+    const tooltipBg = isDark ? '#0e1014' : '#ffffff';
+    const tooltipTitle = isDark ? '#ffffff' : '#0f172a';
+    const tooltipBorder = isDark ? '#23252d' : '#e2e8f0';
+
     // 1. 7-Day Trend Chart
     if (trendChartRef.current && riskForecast.daily_forecast) {
       if (trendInstanceRef.current) trendInstanceRef.current.destroy();
@@ -102,7 +112,7 @@ export default function RiskForecastPanel() {
             backgroundColor: gradient,
             borderWidth: 2.5,
             pointBackgroundColor: '#f97316',
-            pointBorderColor: '#111317',
+            pointBorderColor: pointBorder,
             pointBorderWidth: 2,
             pointRadius: 4,
             pointHoverRadius: 6,
@@ -116,10 +126,10 @@ export default function RiskForecastPanel() {
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0e1014',
-              titleColor: '#fff',
+              backgroundColor: tooltipBg,
+              titleColor: tooltipTitle,
               bodyColor: '#2dd4bf',
-              borderColor: '#23252d',
+              borderColor: tooltipBorder,
               borderWidth: 1,
               padding: 8,
               displayColors: false,
@@ -131,11 +141,11 @@ export default function RiskForecastPanel() {
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: '#64748b', font: { size: 10, family: 'Inter' } }
+              ticks: { color: tickColor, font: { size: 10, family: 'Inter' } }
             },
             y: {
-              grid: { color: '#23252d', drawBorder: false },
-              ticks: { color: '#64748b', font: { size: 10, family: 'Inter' }, precision: 0 },
+              grid: { color: gridColor, drawBorder: false },
+              ticks: { color: tickColor, font: { size: 10, family: 'Inter' }, precision: 0 },
               beginAtZero: true
             }
           }
@@ -155,7 +165,7 @@ export default function RiskForecastPanel() {
           datasets: [{
             data: categoryBreakdown.map(c => c.count),
             backgroundColor: categoryBreakdown.map(c => c.color),
-            borderColor: '#111317',
+            borderColor: donutBorder,
             borderWidth: 3,
             hoverOffset: 4
           }]
@@ -167,10 +177,10 @@ export default function RiskForecastPanel() {
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0e1014',
-              titleColor: '#fff',
+              backgroundColor: tooltipBg,
+              titleColor: tooltipTitle,
               bodyColor: '#2dd4bf',
-              borderColor: '#23252d',
+              borderColor: tooltipBorder,
               borderWidth: 1,
               padding: 8,
               displayColors: true
@@ -184,7 +194,7 @@ export default function RiskForecastPanel() {
       if (trendInstanceRef.current) trendInstanceRef.current.destroy();
       if (donutInstanceRef.current) donutInstanceRef.current.destroy();
     };
-  }, [riskForecast, activeView, loading, categoryBreakdown]);
+  }, [riskForecast, activeView, loading, categoryBreakdown, isDark]);
 
   const totalIncidents = riskForecast?.top_risk_areas?.reduce((sum, a) => sum + (a.predicted_incidents_7d || 0), 0) || 61;
 
@@ -301,8 +311,8 @@ export default function RiskForecastPanel() {
                 <div className="h-24 w-24 relative flex-shrink-0">
                   <canvas ref={donutChartRef} />
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xs font-bold text-white font-mono leading-none">100%</span>
-                    <span className="text-[8px] text-slate-400 mt-0.5">Risk</span>
+                    <span className={`text-xs font-bold font-mono leading-none ${isDark ? 'text-white' : 'text-slate-800'}`}>100%</span>
+                    <span className={`text-[8px] mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500 font-medium'}`}>Risk</span>
                   </div>
                 </div>
 

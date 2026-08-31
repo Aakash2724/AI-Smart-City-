@@ -813,13 +813,13 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               </defs>
 
               {/* Grid / Radar lines */}
-              <circle cx="200" cy="120" r="100" fill="none" stroke="#23252d" strokeDasharray="3,3" strokeWidth="1" />
-              <circle cx="200" cy="120" r="60" fill="none" stroke="#23252d" strokeDasharray="3,3" strokeWidth="1" />
-              <line x1="200" y1="20" x2="200" y2="220" stroke="#23252d" strokeWidth="1" />
-              <line x1="100" y1="120" x2="300" y2="120" stroke="#23252d" strokeWidth="1" />
+              <circle cx="200" cy="120" r="100" fill="none" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeDasharray="3,3" strokeWidth="1" />
+              <circle cx="200" cy="120" r="60" fill="none" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeDasharray="3,3" strokeWidth="1" />
+              <line x1="200" y1="20" x2="200" y2="220" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeWidth="1" />
+              <line x1="100" y1="120" x2="300" y2="120" stroke={isDark ? "#23252d" : "#cbd5e1"} strokeWidth="1" />
 
               {/* City Ward Boundary Path */}
-              <path d="M40 60 Q120 20 220 50 T360 80 L350 200 Q200 230 40 190 Z" fill="#141822" stroke="#2c3444" strokeWidth="1.5"></path>
+              <path d="M40 60 Q120 20 220 50 T360 80 L350 200 Q200 230 40 190 Z" fill={isDark ? "#141822" : "#e2e8f0"} stroke={isDark ? "#2c3444" : "#cbd5e1"} strokeWidth="1.5"></path>
 
               {/* Hotspot 1: Critical Waste Overflow (Rose/Red) */}
               <circle cx="115" cy="95" r="32" fill="url(#hotspotRed)"></circle>
@@ -841,7 +841,9 @@ export default function SmartCityDashboard({ onNavigateTab }) {
               <circle cx="210" cy="80" r="20" fill="url(#hotspotEmerald)"></circle>
               <circle cx="210" cy="80" r="4" fill="#10b981"></circle>
             </svg>
-            <div className="absolute bottom-2.5 left-2.5 text-[9px] font-mono text-slate-200 bg-[#0b0c10]/95 px-2.5 py-1 rounded-lg border border-[#23252d] backdrop-blur-md flex items-center gap-2">
+            <div className={`absolute bottom-2.5 left-2.5 text-[9px] font-mono px-2.5 py-1 rounded-lg border backdrop-blur-md flex items-center gap-2 ${
+              isDark ? 'text-slate-200 bg-[#0b0c10]/95 border-[#23252d]' : 'text-slate-700 bg-white/95 border-slate-200 shadow-xs'
+            }`}>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f43f5e]"></span> Ward 12</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span> Ward 8</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]"></span> Ward 14</span>
